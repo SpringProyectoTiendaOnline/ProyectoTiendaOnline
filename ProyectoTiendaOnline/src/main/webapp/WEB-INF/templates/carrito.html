@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="master">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+</head>
+<body>
+
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<main layout:fragment="contenido">
+		<div class="col-12">
+			<h2>Vender</h2>
+
+			<div class="container">
+				<div class="panel panel-default">
+
+					<div class="table-responsive">
+						<table class="table table-bordered text-center">
+							<thead>
+								<tr>
+									<th>Código de Pedido</th>
+									<th>Nombre</th>
+									<th>Precio</th>
+									<th>Descuento</th>
+									<th>Cantidad</th>
+									<th>Total</th>
+									<th>Quitar de lista</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="producto : ${session.sessionCarrito}">
+									<td th:each="entry : ${producto}"
+										th:text="${entry.key.codProducto}"></td>
+									<td th:each="entry : ${producto}" th:text="${entry.key.titulo}">
+									</td>
+									<td th:each="entry : ${producto}" th:text="${entry.key.precio}">
+									</td>
+									<td th:each="entry : ${producto}"
+										th:text="${entry.key.descuento}"></td>
+									<td th:each="entry : ${producto}" th:text="${entry.value}">
+									</td>
+									<td th:each="entry : ${producto}"
+										th:text="${entry.key.precio * entry.value}"></td>
+
+									<td th:each="entry : ${producto}"><a
+										th:href="@{/Compra/eliminar-producto-carrito/{idCliente}/{idProducto}(idCliente=${Cliente.idCliente},idProducto=${entry.key.idProducto})}">
+											<button type="button" class="btn btn-outline-danger"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+									</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="btn-group btn-group-lg" role="group">
+
+						<form class="mb-2"
+							th:action="@{/Compra/realizar-pedido/{idCliente}(idCliente=${Cliente.idCliente})}"
+							method="post">
+							<button type="submit" class="btn btn-outline-success">Realizar
+								el pedido</button>
+						</form>
+
+						<form class="mb-2"
+							th:action="@{/Compra/limpiar-pedido/{idCliente}(idCliente=${Cliente.idCliente})}"
+							method="post">
+							<button type="submit" class="btn btn-outline-warning">Limpiar
+								Carrito</button>
+						</form>
+					</div>
+					<a
+						th:href="@{/Cliente/perfil-cliente/{idCliente}(idCliente=${Cliente.idCliente})}"
+						th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"
+						class="alert alert-danger"> </a>
+
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

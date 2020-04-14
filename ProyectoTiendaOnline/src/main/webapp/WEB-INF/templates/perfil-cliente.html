@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Perfil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<div class="container my-2">
+		<div class="card">
+			<div class="card-body">
+
+				<div th:switch="${Cliente.roles.iterator().next().idRol}"
+					class="container my-5">
+					<div th:case="'1'">
+						<h3>El perfil de usuario de :</h3>
+
+						<p class="text-primary">
+							Nombre : <span class="text-dark" th:text="${Cliente.nombre}"></span>
+						</p>
+						<p class="text-primary">
+							Apellido : <span class="text-dark" th:text="${Cliente.apellido}">
+							</span>
+						</p>
+						<p class="text-primary">
+							Fecha de Nacimiento : <span class="text-dark"
+								th:text="${Cliente.fnacimiento}"> </span>
+						</p>
+						<p class="text-primary">
+							Email : <span class="text-dark" th:text="${Cliente.email}">
+							</span>
+						</p>
+
+						<p class="text-primary">
+							Dirección : <span class="text-dark"
+								th:text="${Cliente.direccion}"></span>
+						</p>
+
+						<div class="col-md-6">
+							<a class="btn btn-primary"
+								th:href="@{/Banco/create-banco/{idCliente}(idCliente=${Cliente.idCliente})}">Añadir
+								la cuenta bancaria</a> <a class="btn btn-primary"
+								th:href="@{/Cliente/editar-cliente/{idCliente}(idCliente=${Cliente.idCliente})}">Modificar
+								Datos </a>
+						</div>
+
+						<div th:switch="${listaBanco}">
+							<div th:case="null">
+								<p>No hay datos de Bancaria !</p>
+							</div>
+
+							<div th:case="*">
+								<table class="table table-striped table-responsive-md">
+									<thead>
+										<tr>
+											<th>Nombre de Banco:</th>
+											<th>Número de Tarjeta:</th>
+											<th>Titular:</th>
+											<th>Código de Seguridad:</th>
+											<th>Dirección de Factura:</th>
+											<th>Editar:</th>
+											<th>Eliminar:</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr th:each="Banco : ${listaBanco}">
+											<td th:text="${Banco.nombre}"></td>
+											<td th:text="${Banco.numTarjeta}"></td>
+											<td th:text="${Banco.titular}"></td>
+											<td th:text="${Banco.codSeguridad}"></td>
+											<td th:text="${Banco.dirFactura}"></td>
+											<!-- " -->
+											<td><a
+												th:href="@{/Banco/editar-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
+												class="btn btn-outline-warning"><i
+													class="fas fa-banco-user ml-2">Editar</i></a></td>
+											<!--  -->
+											<td><a
+												th:href="@{/Banco/delete-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
+												class="btn btn-outline-danger"><i
+													class="fas fa-user-times ml-2">Eliminar</i> </a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div th:case="'2'">
+						<h3>El perfil de Administrador de :</h3>
+
+						<p class="text-primary">
+							Nombre : <span class="text-dark" th:text="${Cliente.nombre}"></span>
+						</p>
+						<p class="text-primary">
+							Apellido : <span class="text-dark" th:text="${Cliente.apellido}">
+							</span>
+						</p>
+						<p class="text-primary">
+							Fecha de Nacimiento : <span class="text-dark"
+								th:text="${Cliente.fnacimiento}"> </span>
+						</p>
+						<p class="text-primary">
+							Email : <span class="text-dark" th:text="${Cliente.email}">
+							</span>
+						</p>
+						<p class="text-primary">
+							Contraseña : <span class="text-dark"
+								th:text="${Cliente.password}"></span>
+						</p>
+						<p class="text-primary">
+							Dirección : <span class="text-dark"
+								th:text="${Cliente.direccion}"></span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

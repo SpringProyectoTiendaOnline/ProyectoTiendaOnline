@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Indices</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<div class="container">
+		<br /> <br />
+		<h1>Productos de oferta :</h1>
+		<br /> <br />
+
+		<div class="row">
+			<div th:each="producto, stats: ${listaProductos}">
+				<div th:if="${stats.index < 8}">
+
+					<div th:if="${stats.index >= 4}">
+						<div class="w-100"></div>
+						<br />
+					</div>
+
+					<div class="col">
+						<div class="card" style="width: 15rem; height: 15rem;">
+							<div class="card-body">
+								<h5 class="card-title"
+									th:text="'Título : ' + ${producto.titulo}"></h5>
+								<p class="card-text"
+									th:text="'Descripción : ' +${producto.descripcion}"></p>
+
+								<a
+									th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+									class="btn btn-primary text-right">Ver</a>
+								<div class="d-flex flex-row-reverse">
+									<div class="p-2 mb-2 bg-light text-dark"> Precio :
+										<p th:text= "${producto.precio} + '&euro;'"></p>
+									</div>
+									
+									<div class="p-2 mb-2 bg-danger text-white">
+										<p th:text="${producto.descuento}"></div>	
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pedido</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+	<br />
+	<br />
+	<div class="container">
+		<h2>Pedidos :</h2>
+		<div id="accordion">
+			<div th:each="compra: ${Compra}">
+				<div class="card">
+					<div class="card-header">
+						<span> Nº Pedido : </span><a class="card-link"
+							data-toggle="collapse" th:href="'#collapse' + ${compra.idCompra}"
+							th:text="${compra.idCompra}"></a> <span id="fecha"
+							style="float: right;"
+							th:text="'Pedido Realizado : ' + ${#dates.format(compra.fechaCompra, 'dd-MM-yyyy')}"></span>
+						<!-- compra.fechaCompra.getYear()+1900} + '-'+ ${compra.fechaCompra.getMonth()+1} + '-' + ${compra.fechaCompra.getDate() -->
+					</div>
+
+					<div th:id="'collapse' + ${compra.idCompra}" class="collapse "
+						data-parent="#accordion">
+						<div th:each="pedido: ${LineaDeCompraServer.findByCompra(compra)}">
+							<div class="card-body">
+								<table class="table table-hover text-center">
+									<thead>
+										<tr>
+											<td>Nombre Producto :</td>
+											<td>Precio Unidad</td>
+											<td>Cantidad</td>
+											<td>Precio Total</td>
+											<td>Estado</td>
+											<td
+												th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
+												th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
+
+												<span th:case="false">Acción</span>
+											</td>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr>
+											<td th:text="${pedido.productos.titulo}"></td>
+											<td th:text="${pedido.productos.precio}"></td>
+											<td th:text="${pedido.cantidad}"></td>
+											<td th:text="${pedido.precioTotal} + '&euro;'"></td>
+											<td th:text="${pedido.estado.iterator().next().estado}"></td>
+											<td
+												th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
+												th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
+
+												<a th:if="${pedido.estado.iterator().next().idEstado != 2}"
+												th:case="false"
+												th:href="@{/ListaPedido/devolucion-pedido/{idCliente}/{idLineaCompra}(idCliente=${Cliente.idCliente}, idLineaCompra=${pedido.idLineaCompra})}">
+													<button type="button" class="btn btn-outline-warning">Devolución</button>
+											</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

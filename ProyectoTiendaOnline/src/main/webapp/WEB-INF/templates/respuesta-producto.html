@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Preguntas y Respuestas del Cliente</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+
+<body>
+
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<br />
+	<br />
+
+	<div class="container my-2">
+		<div class="card">
+			<div class="card-body">
+				<h4>
+					Respuesta de Preguntas de Producto : <span
+						th:text="${Pregunta.productos.titulo}"></span>
+				</h4>
+				
+				<h6>Pregunta : <span th:text="${Pregunta.texto}"></span></h6>
+				<form method="post"
+					th:action="@{/Producto/enviar-respuesta/{idPregunta}(idPregunta=${Pregunta.idPregunta})}">
+					<div class="form-group">
+						<label for="textoRespuesta">Respuesta : </label>
+						<textarea class="form-control" id="textoRespuesta"
+							name="textoRespuesta" rows="3"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary mb-2">Enviar</button>
+				</form>
+
+				<hr />
+
+				<h4>Respuestas :</h4>
+
+				<div th:if="${listaRespuestas != null} ">
+					<div th:each="respuesta : ${listaRespuestas}">
+						<p th:text="${respuesta.texto}"></p>
+						<p>
+							By Cliente : <span th:text="${respuesta.clientes.nombre}"></span>
+						</p>
+						<hr />
+					</div>
+				</div>
+				
+				<div th:unless="{listaRespuestas==null}">
+					<p> No hay respuestas! </p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

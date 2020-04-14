@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Añadir Banco</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<div class="container my-5">
+		<h3>Añadir Banco</h3>
+		<div class="card">
+			<div class="card-body">
+				<div class="col-md-8">
+					<form action="#"
+						th:action="@{/Banco/create-banco/{idCliente}(idCliente=${Cliente.idCliente})}"
+						th:object="${Banco}" method="post">
+						<div class="row">
+
+							<div class="form-group col-md-8">
+								<label for="nombre" class="col-form-label">Nombre : </label> <input
+									type="text" th:field="*{nombre}" class="form-control"
+									id="nombre" name="nombre" placeholder="Nombre">
+							</div>
+
+
+							<div class="form-group col-md-8">
+								<label for="numTarjeta" class="col-form-label"> Número
+									de Tarjeta : </label> <input type="text" th:field="*{numTarjeta}"
+									class="form-control" id="numTarjeta" name="numTarjeta"
+									maxlength="19" placeholder="Ejemplo: xxxx xxxx xxxx xxxx">
+							</div>
+
+
+							<div class="form-group col-md-8">
+								<label for="titular" class="col-form-label"> Titular : </label>
+								<input type="text" th:field="*{titular}" class="form-control"
+									id="titular" name="titular" placeholder="Ejemplo: Juan">
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="codSeguridad" class="col-form-label">Código
+									de Seguridad : </label> <input type="text" th:field="*{codSeguridad}"
+									class="form-control" id="codSeguridad" name="codSeguridad"
+									maxlength="3" size="3" placeholder="012">
+							</div>
+
+
+
+							<div class="form-group col-md-8">
+								<label for="dirFactura" class="col-form-label">Dirección
+									de Factura: </label> <input type="text" th:field="*{dirFactura}"
+									class="form-control" id="dirFactura" name="dirFactura"
+									placeholder="C/ XXXX NX PX ">
+							</div>
+
+
+							<div class="col-md-6">
+								<input type="submit" class="btn btn-primary" value="Modificar">
+							</div>
+
+							<div class="form-group col-md-8"></div>
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>

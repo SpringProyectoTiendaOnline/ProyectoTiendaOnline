@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Modificar Datos de Cliente</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<div class="container my-5">
+		<h3>Modificar Datos de Cliente :</h3>
+		<div class="card">
+			<div class="card-body">
+				<div class="col-md-8">
+					<form action="#"
+						th:action="@{/Cliente/editar-cliente/{idCliente}(idCliente=${Cliente.idCliente})}"
+						th:object="${Cliente}" method="post">
+						<div class="row">
+							<div class="form-group col-md-6">
+								<label for="nombre" class="col-form-label">Nombre :</label> <input
+									type="text" th:field="*{nombre}" class="form-control"
+									id="nombre" th:value="${Cliente.nombre}"> <span
+									th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
+									class="text-danger"></span>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="apellido" class="col-form-label">Apellido :</label>
+								<input type="text" th:field="*{apellido}" class="form-control"
+									id="apellido" th:value="${Cliente.apellido}"> <span
+									th:if="${#fields.hasErrors('apellido')}"
+									th:errors="*{apellido}" class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="apellido" class="col-form-label">Fecha de
+									Nacimiento :</label> <input type="date" th:field="*{fnacimiento}"
+									class="form-control" id="fnacimiento"
+									th:value="${Cliente.fnacimiento}"> <span
+									th:if="${#fields.hasErrors('apellido')}"
+									th:errors="*{apellido}" class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="email" class="col-form-label">Email</label> <input
+									type="email" th:field="*{email}" class="form-control"
+									id="email" th:value="${Cliente.email}" readonly> <span
+									th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+									class="text-danger"></span>
+							</div>
+							<div class="form-group col-md-8">
+								<label for="direccion" class="col-form-label">Dirección</label>
+								<input type="text" th:field="*{direccion}" class="form-control"
+									id="direccion" th:value="${Cliente.direccion}"> <span
+									th:if="${#fields.hasErrors('direccion')}" th:errors="direccion"
+									class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="password" class="col-form-label">Password</label> <input
+									type="text" th:field="*{password}" class="form-control"
+									id="password" th:value="${Cliente.password}"> <span
+									th:if="${#fields.hasErrors('password')}" th:errors="password"
+									class="text-danger"></span>
+							</div>
+
+
+							<div class="form-group col-md-8">
+								<input type="submit" class="btn btn-primary" value="Editar">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
