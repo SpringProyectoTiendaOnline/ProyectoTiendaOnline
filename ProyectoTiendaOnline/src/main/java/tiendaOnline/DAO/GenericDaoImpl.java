@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.springframework.transaction.UnexpectedRollbackException;
 
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
@@ -18,6 +17,7 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
 	private Class<T> type;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GenericDaoImpl() {
 		Type t = getClass().getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) t;

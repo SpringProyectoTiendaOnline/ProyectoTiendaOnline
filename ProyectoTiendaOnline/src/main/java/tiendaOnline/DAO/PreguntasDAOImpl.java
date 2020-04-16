@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import tiendaOnline.Entity.Clientes;
 import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
 

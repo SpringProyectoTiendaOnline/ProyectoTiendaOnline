@@ -13,7 +13,28 @@
 	<div class="container">
 
 		<h1>Lista de productos</h1>
-		<br>
+		<br> <br>
+		<form role="form">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown">
+								Categoría <span class="caret"></span>
+							</button>
+							<ul th:each="categoria : ${listaCategoria}"class="dropdown-menu">
+								<li th:text="${categoria.nombreCategoria}"><a href="#"></a></li>
+							</ul>
+						</div>
+						<!-- /btn-group -->
+					</div>
+					<!-- /input-group -->
+				</div>
+				<!-- /.col-lg-6 -->
+			</div>
+			<!-- /.row -->
+		</form>
 		<div class="panel panel-default">
 			<div class="panel-heading"></div>
 			<table class="table">
@@ -41,9 +62,8 @@
 						<td th:text=" ${producto.descuento}"></td>
 						<td th:text=" ${producto.stock}"></td>
 						<td><a href=#
-							th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}" type="button" class="btn btn-default">
-								Ver Perfil
-						</a></td>
+							th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+							type="button" class="btn btn-default"> Ver Perfil </a></td>
 						<td><a href=#
 							th:href="@{/Producto/editar-producto/{idCliente}/{id}(idCliente=${Cliente.idCliente},id=${producto.idProducto})}">
 								<button type="button" class="btn btn-info">

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Entity.Clientes;
@@ -259,6 +261,13 @@ public class ProductoController {
 		return mav;
 
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/searchProducto/{nombreProducto}")
+	public @ResponseBody List<Productos> buscarProductos(@PathVariable("nombreProducto") String nombreProducto){
+		List<Productos> listaProducto = productoServer.getAll();
+		return listaProducto;
+	}
+	
 
 	@GetMapping("/searchProducto/{idCliente}")
 	public ModelAndView buscarProducto(@PathVariable("idCliente") long idCliente, HttpServletRequest request) {

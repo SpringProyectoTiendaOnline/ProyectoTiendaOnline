@@ -66,96 +66,9 @@ public class IndexController {
 		return mav;
 	}
 
-//	@RequestMapping(method = RequestMethod.POST, value = "/login") public
-//	  ModelAndView handleLogin(HttpServletRequest request, Map<String, Object> map)
-//	  { ModelAndView mav = new ModelAndView();
-//	  
-//	  String email = request.getParameter("email"); String password = request.getParameter("password");
-//	  
-//	  if (email.isEmpty() || password.isEmpty()) { map.put("msg",
-//	  "Los campos no pueden ser nulo"); mav.setViewName("login"); 
-//	  }
-//	  
-//	  Clientes cliente = ClienteServer.logIn(email, password);
-//	  
-//	  // Comprobar si existe el cliente. if (cliente != null) { // si el rol de
-//	  cliente == 2; if (cliente.getRoles().iterator().next().getIdRol() == 2) {
-//	  List<Clientes> list = ClienteServer.getAll(); mav.addObject("Cliente",
-//	  cliente); mav.addObject("listaCliente", list);
-//	  mav.setViewName("list-cliente"); } else { // sino cliente normal. List<Banco>
-//	  listBanco = BancoServer.findByCliente(cliente); mav.addObject("listaBanco",
-//	  listBanco); mav.addObject("Cliente", cliente);
-//	  mav.addObject("listaProductos", productoServer.getAll());
-//	  mav.setViewName("index"); } }else
-//
-//	{ // Captura el error map.put("msg",
-//	  "Invalid Username o Password"); mav.setViewName("login"); }return mav;
-//	}
-
-	// ------------------------------------------ Registrar Cliente
-	// ------------------------------------------//
-
-	@GetMapping("/signup")
-	public String showForm(Model theModel) {
-		Clientes cliente = new Clientes();
-		theModel.addAttribute("Cliente", cliente);
-		return "signup";
-	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/create-cliente")
-	public ModelAndView create_cliente(@ModelAttribute Clientes cliente, BindingResult bindingResult) {
-		ModelAndView mav = new ModelAndView();
-		List<String> mensaje = new ArrayList<String>();
-
-		if (bindingResult.hasFieldErrors()) {
-			for (int i = 0; i < bindingResult.getAllErrors().size(); i++) {
-				mensaje.add(bindingResult.getAllErrors().get(i).getDefaultMessage());
-			}
-			mav.addObject("Error", mensaje);
-			mav.addObject("Cliente", cliente);
-			mav.setViewName("signup");
-		} else {
-			Clientes clienteSave = ClienteServer.save(cliente);
-			if (clienteSave != null) {
-				mav.addObject("Cliente", clienteSave);
-				mav.setViewName("perfil-cliente");
-			}
-
-		}
-
-		return mav;
-
-	}
-
 	@GetMapping("/access-denied")
 	public String accessDenied() {
 		return "/error/access-denied";
 	}
-
-	/*
-	 * public List<String> inputValid(Clientes cliente) { List<String> mensaje = new
-	 * ArrayList<String>(); SimpleDateFormat formatter = new
-	 * SimpleDateFormat("dd-mm-yyyy"); if (cliente.getEmail().length() == 0) {
-	 * mensaje.add("El campo de cliente.getEmail() está vacío. "); } if
-	 * (cliente.getPassword().length() == 0 || cliente.getPassword().isEmpty()) {
-	 * mensaje.add("El campo de contraseña está vacío."); } if
-	 * (cliente.getDireccion().length() == 0 || cliente.getDireccion().isEmpty()) {
-	 * mensaje.add("El campo de dirección está vacío."); } if
-	 * (cliente.getNombre().length() == 0 || cliente.getNombre().isEmpty()) {
-	 * mensaje.add("El campo de cliente.getNombre() está vacío."); } if
-	 * (cliente.getApellido().length() == 0 || cliente.getApellido().isEmpty()) {
-	 * mensaje.add("El campo de cliente.getApellido() está vacío."); } if
-	 * (cliente.getFnacimiento().length() == 0 ||
-	 * cliente.getFnacimiento().isEmpty()) {
-	 * mensaje.add("El campo de fecha de nacimiento está vacío."); } else { try {
-	 * formatter.parse(cliente.getFnacimiento()); } catch (ParseException e) {
-	 * mensaje.add("El campo de fecha de nacimiento no es válido."); }
-	 * 
-	 * }
-	 * 
-	 * return mensaje;
-	 * 
-	 * }
-	 */
 
 }

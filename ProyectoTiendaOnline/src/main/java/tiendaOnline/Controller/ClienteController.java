@@ -1,5 +1,6 @@
 package tiendaOnline.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,15 +43,42 @@ public class ClienteController {
 	@Autowired
 	private RolRepository rol;
 
+	// Registrar Cliente
+	@GetMapping("/signup")
+	public String showForm(Model theModel) {
+		Clientes cliente = new Clientes();
+		theModel.addAttribute("Cliente", cliente);
+		return "signup";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/create-cliente")
+	public ModelAndView create_cliente(@ModelAttribute Clientes cliente, BindingResult bindingResult) {
+		ModelAndView mav = new ModelAndView();
+		List<String> mensaje = new ArrayList<String>();
+
+		if (bindingResult.hasFieldErrors()) {
+			for (int i = 0; i < bindingResult.getAllErrors().size(); i++) {
+				mensaje.add(bindingResult.getAllErrors().get(i).getDefaultMessage());
+			}
+			mav.addObject("Error", mensaje);
+			mav.addObject("Cliente", cliente);
+			mav.setViewName("signup");
+		} else {
+			Clientes clienteSave = ClienteServer.save(cliente);
+			if (clienteSave != null) {
+				mav.addObject("Cliente", clienteSave);
+				mav.setViewName("perfil-cliente");
+			}
+		}
+		return mav;
+	}
+
 	// Perfil de cliente
 	@RequestMapping(method = RequestMethod.GET, value = "/perfil-cliente/{idCliente}")
 	public ModelAndView profile(HttpServletRequest request, @PathVariable("idCliente") long idCliente) {
 		ModelAndView mav = new ModelAndView();
-
-		HttpSession session = request.getSession();
-
+		HttpSession session = request.getSession(true);
 		if (session != null && session.getAttribute("idUsuario") != null) {
-			System.out.println(session.getAttribute("idUsuario"));
 			mav.addObject("Cliente", ClienteServer.findById(idCliente));
 			mav.addObject("listaBanco", bancoServer.findByCliente(ClienteServer.findById(idCliente)));
 			mav.setViewName("perfil-cliente");

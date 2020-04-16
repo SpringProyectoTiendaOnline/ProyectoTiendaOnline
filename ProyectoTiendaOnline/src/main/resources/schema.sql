@@ -59,6 +59,13 @@ create table Productos (
 	primary key (idProducto)
 );
 
+drop table if exists Categoria;
+create table Categoria (
+	id_Categoria bigint not null auto_increment,
+	nombre_Categoria varchar(225) not null,
+	primary key (id_Categoria)
+);
+
 drop table if exists LineaCompra;
 drop table if exists Compra;
 create table Compra (
