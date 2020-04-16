@@ -7,13 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import tiendaOnline.DAO.CategoriaDAO;
+import tiendaOnline.DAO.ProductosDAO;
 import tiendaOnline.Entity.Categoria;
+import tiendaOnline.Entity.Productos;
 
 @Service
+@Transactional
 public class CategoriaServerImpl implements CategoriaServer {
 
 	@Autowired
 	public CategoriaDAO categoriaDao;
+
+	@Autowired
+	public ProductosDAO productoDao;
 
 	@Override
 	@Transactional
@@ -49,6 +55,26 @@ public class CategoriaServerImpl implements CategoriaServer {
 	@Override
 	public Categoria findByProducto(long idProducto) {
 		return categoriaDao.findProducto(idProducto);
+	}
+
+	@Override
+	@Transactional
+	public Categoria saveProductoCateg(long idCategoria, Productos producto) {
+		boolean existe = false;
+		Categoria categoria = categoriaDao.find(idCategoria);
+
+		for (Productos p : categoria.getProducto()) {
+			if (p.getIdProducto() == producto.getIdProducto()) {
+				existe = true;
+			}
+		}
+		
+		if (!existe) {
+			Categoria cat = categoriaDao.saveProductoCateg(idCategoria, producto);
+			return cat;
+		}
+
+		return null;
 	}
 
 }

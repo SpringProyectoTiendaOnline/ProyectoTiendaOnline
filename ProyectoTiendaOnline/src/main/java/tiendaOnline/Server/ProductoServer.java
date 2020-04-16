@@ -2,6 +2,7 @@ package tiendaOnline.Server;
 
 import java.util.List;
 
+import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Productos;
 
 public interface ProductoServer {
@@ -19,5 +20,8 @@ public interface ProductoServer {
 	public Productos update(Productos producto);
 
 	public List<Productos> getAll();
+	
+	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto);
+
 
 }

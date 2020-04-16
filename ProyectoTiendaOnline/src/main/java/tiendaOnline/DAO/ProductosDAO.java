@@ -2,6 +2,7 @@ package tiendaOnline.DAO;
 
 import java.util.List;
 
+import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Productos;
 
 public interface ProductosDAO extends GenericDao<Productos>{
@@ -14,5 +15,7 @@ public interface ProductosDAO extends GenericDao<Productos>{
 	public List<Productos> findByNombre(String nombreProdcuto);
 
 	public List<Productos> getAll();
+	
+	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto);
 
 }

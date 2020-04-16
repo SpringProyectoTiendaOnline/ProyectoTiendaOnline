@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import tiendaOnline.DAO.*;
+import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.*;
 
 @Service
@@ -55,5 +56,10 @@ public class ProductoServerImpl implements ProductoServer {
 	@Override
 	public List<Productos> findByNombre(String nombreProducto) {
 		return productoDAO.findByNombre(nombreProducto);
+	}
+
+	@Override
+	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto) {
+		return productoDAO.findByNombreAndCodProducto(nombreCodProducto);
 	}
 }

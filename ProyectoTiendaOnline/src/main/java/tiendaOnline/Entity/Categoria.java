@@ -2,6 +2,7 @@ package tiendaOnline.Entity;
 
 import java.io.Serializable;
 
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -73,6 +76,32 @@ public class Categoria implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((nombreCategoria == null) ? 0 : nombreCategoria.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Categoria other = (Categoria) obj;
+		if (nombreCategoria == null) {
+			if (other.nombreCategoria != null)
+				return false;
+		} else if (!nombreCategoria.equals(other.nombreCategoria))
+			return false;
+		return true;
+	}
+
 
 	@Override
 	public String toString() {

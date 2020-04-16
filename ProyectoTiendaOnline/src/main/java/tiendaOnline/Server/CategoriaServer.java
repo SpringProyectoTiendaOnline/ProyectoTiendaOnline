@@ -3,6 +3,7 @@ package tiendaOnline.Server;
 import java.util.List;
 
 import tiendaOnline.Entity.Categoria;
+import tiendaOnline.Entity.Productos;
 
 public interface CategoriaServer {
 
@@ -17,5 +18,8 @@ public interface CategoriaServer {
 	public List<Categoria> getAll();
 
 	public Categoria findByProducto(long idProducto);
+	
+	public Categoria saveProductoCateg(long idCategoria, Productos producto);
+
 
 }
