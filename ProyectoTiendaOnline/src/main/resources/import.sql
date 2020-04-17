@@ -10,10 +10,6 @@ INSERT INTO Cliente (nombre,apellido,fnacimiento,direccion,email,password) VALUE
 INSERT INTO Clientes_rol VALUES  (1,2);
 
 
-
-
-
-
 INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(123,'x1','o1',123,0,100);
 INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1223,'x2','o2',123,0,100);
 INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1243,'x3','o3',123,0,100);

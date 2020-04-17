@@ -1,9 +1,8 @@
 package tiendaOnline.Controller;
 
-import java.util.ArrayList;
-
 
 import java.util.List;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
-import tiendaOnline.Entity.Clientes;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
@@ -33,7 +31,6 @@ import tiendaOnline.Server.LineaDeCompraServer;
 import tiendaOnline.Server.PreguntaServer;
 import tiendaOnline.Server.ProductoServer;
 import tiendaOnline.Server.RespuestaServer;
-import tiendaOnline.Utilidades.Utilidades;
 
 /**
  * @author six
@@ -263,8 +260,9 @@ public class ProductoController {
 
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/searchProducto/{nombreProducto}")
-	public @ResponseBody List<ProductosDto> buscarProductos(@PathVariable("nombreProducto") String nombreProducto){
+	@RequestMapping(method = RequestMethod.GET, value = "/searchProducto/{titulo}")
+	public @ResponseBody List<ProductosDto> buscarProductos(@PathVariable("titulo") String nombreProducto){
+		System.out.println(nombreProducto);
 		List<ProductosDto> listaProducto = productoServer.findByNombreAndCodProducto(nombreProducto);
 		return listaProducto;
 	}

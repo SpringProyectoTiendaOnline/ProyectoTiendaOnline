@@ -13,4 +13,6 @@ public interface CategoriaDAO extends GenericDao<Categoria> {
 	
 	public Categoria saveProductoCateg(long idCategoria, Productos producto);
 	
+	public List<Productos> findCategProductos(long idCategoria);
+	
 }

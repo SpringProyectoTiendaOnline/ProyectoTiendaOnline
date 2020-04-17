@@ -59,14 +59,10 @@
 						</tr>
 
 						<tr th:each="producto : ${categoria.producto}">
-						<td style="display:none;" id="idCategoria" th:text="${categoria.idCategoria}"> 
-							</td>
+						<td style="display:none;" id="idCategoria" th:text="${categoria.idCategoria}"> </td>
 							<td th:text="${producto.codProducto}"></td>
 							<td th:text="${producto.titulo}"></td>
-							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
-								class="btn btn-primary"><i class="fas fa-user"></i></a></td>
-							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
-								class="btn btn-danger borrar"><i class="fas fa-user-times"></i></a></td>
+							<td><a class="btn btn-danger borrar"><i class="fas fa-user-times"></i></a></td>
 						</tr>
 					</tbody>
 					<!-- /tabla -->

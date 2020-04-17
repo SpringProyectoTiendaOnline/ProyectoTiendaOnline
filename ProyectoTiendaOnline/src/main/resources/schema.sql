@@ -44,9 +44,10 @@ create table Banco (
 	dirFactura varchar(225) not null,
 	idCliente bigint null,
 	PRIMARY KEY(idBanco),
-	FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente) ON DELETE NO ACTION
+	FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
 );
 
+drop table if exists Producto_Categoria;
 drop table if exists Productos;
 create table Productos ( 
 	idProducto bigint not null auto_increment,
@@ -65,6 +66,16 @@ create table Categoria (
 	nombre_Categoria varchar(225) not null,
 	primary key (id_Categoria)
 );
+drop table if exists Producto_Categoria;
+
+create table Producto_Categoria (
+	id_Categoria bigint not null,
+	idProducto bigint not null,
+	PRIMARY KEY (id_Categoria, idProducto),
+    CONSTRAINT FK_Producto_Categoria_1 FOREIGN KEY (id_Categoria) REFERENCES Categoria (id_Categoria) On delete cascade,
+    FOREIGN KEY (idProducto) REFERENCES Productos(idProducto)
+);
+	
 
 drop table if exists LineaCompra;
 drop table if exists Compra;

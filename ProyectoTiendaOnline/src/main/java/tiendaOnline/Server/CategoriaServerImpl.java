@@ -18,8 +18,6 @@ public class CategoriaServerImpl implements CategoriaServer {
 	@Autowired
 	public CategoriaDAO categoriaDao;
 
-	@Autowired
-	public ProductosDAO productoDao;
 
 	@Override
 	@Transactional

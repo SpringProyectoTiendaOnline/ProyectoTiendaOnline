@@ -3,7 +3,7 @@ package tiendaOnline.Dto;
 public class ProductosDto {
 
 	private Long idProducto;
-	private String nombreProducto;
+	private String titulo;
 	private Long codProducto;
 
 	public Long getIdProducto() {
@@ -14,12 +14,12 @@ public class ProductosDto {
 		this.idProducto = idProducto;
 	}
 
-	public String getNombreProducto() {
-		return nombreProducto;
+	public String getTitulo() {
+		return titulo;
 	}
 
-	public void setNombreProducto(String nombreProducto) {
-		this.nombreProducto = nombreProducto;
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 
 	public Long getCodProducto() {

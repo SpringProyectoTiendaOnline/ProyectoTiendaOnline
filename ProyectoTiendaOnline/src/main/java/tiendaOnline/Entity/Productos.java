@@ -1,14 +1,21 @@
 package tiendaOnline.Entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
 import javax.persistence.Table;
 
 @Entity
@@ -41,7 +48,9 @@ public class Productos implements Serializable {
 	@NotNull(message = "Debes especificar cantidad de stock de producto")
 	private long stock;
 
-
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
+	private Set<Categoria> categoria = new HashSet<>();
 
 	public Productos() {
 
@@ -118,7 +127,45 @@ public class Productos implements Serializable {
 		this.stock = stock;
 	}
 
-	
+	public Set<Categoria> getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Set<Categoria> categoria) {
+		this.categoria = categoria;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
+		result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Productos other = (Productos) obj;
+		if (titulo == null) {
+			if (other.titulo != null)
+				return false;
+		} else if (!titulo.equals(other.titulo))
+			return false;
+
+		return true;
+	}
 
 	@Override
 	public String toString() {

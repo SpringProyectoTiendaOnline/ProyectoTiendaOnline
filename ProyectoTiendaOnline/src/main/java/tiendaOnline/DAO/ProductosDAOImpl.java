@@ -101,7 +101,6 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 				.createQuery("From Productos p where concat(p.codProducto,' ',p.titulo) like :nc");
 		query.setParameter("nc", "%" + nombreCodProducto + "%");
 		
-		System.err.println(nombreCodProducto);
 		List<Productos> lProducto = query.getResultList();
 
 		if (lProducto != null) {

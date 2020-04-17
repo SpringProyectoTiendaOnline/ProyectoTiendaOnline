@@ -1,9 +1,6 @@
 package tiendaOnline.Controller;
 
-import java.util.HashSet;
-
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -22,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Categoria;
-import tiendaOnline.Entity.Productos;
 import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ProductoServer;
 
@@ -83,7 +79,6 @@ public class CategoriaController {
 	@RequestMapping(method = RequestMethod.POST, value = "/insertarProducto/{idCategoria}")
 	public @ResponseBody ResponseEntity insertarProducto(@PathVariable("idCategoria") long idCategoria,
 			@RequestBody ProductosDto productoDto) {
-		System.err.println(productoDto.getIdProducto());
 		// si no existe el producto
 		Categoria categoria = categoriaServer.saveProductoCateg(idCategoria,
 				productoServer.findById(productoDto.getIdProducto()));
