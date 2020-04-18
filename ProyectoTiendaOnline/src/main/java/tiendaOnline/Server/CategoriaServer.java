@@ -21,5 +21,6 @@ public interface CategoriaServer {
 	
 	public Categoria saveProductoCateg(long idCategoria, Productos producto);
 
+	public Categoria eliminarProductoCateg(long idCategoria, long idProducto);
 
 }

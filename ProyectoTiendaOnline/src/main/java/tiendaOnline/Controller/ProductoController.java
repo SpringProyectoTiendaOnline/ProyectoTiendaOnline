@@ -1,6 +1,7 @@
 package tiendaOnline.Controller;
 
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
@@ -39,6 +44,9 @@ import tiendaOnline.Server.RespuestaServer;
 @Controller
 @RequestMapping("/Producto")
 public class ProductoController {
+	
+    private static final Logger logger = LoggerFactory.getLogger("ProductoController.class");
+
 
 	@Autowired
 	private ProductoServer productoServer;
@@ -51,19 +59,16 @@ public class ProductoController {
 	@Autowired
 	private RespuestaServer respuestaServer;
 
-	@GetMapping("/create-producto/{idCliente}")
-	public String productsForm(Model model, @PathVariable("idCliente") long idCliente) {
+	@GetMapping("/create-producto")
+	public String productsForm(Model model) {
 		Productos producto = new Productos();
 		model.addAttribute("products", producto);
-		model.addAttribute("Cliente", clienteServer.findById(idCliente));
 		return "add-producto";
 	}
 
-	@PostMapping("/create-producto/{idCliente}")
-	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto,
-			@PathVariable("idCliente") long idCliente, BindingResult bindingResult) {
+	@PostMapping("/create-producto")
+	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult, @RequestParam("imagen") MultipartFile imagenFile) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		List<Productos> list = productoServer.getAll();
 		boolean existe = false;
 		String mensaje = "";
@@ -96,18 +101,16 @@ public class ProductoController {
 		return mav;
 	}
 
-	@GetMapping("/editar-producto/{idCliente}/{id}")
-	public String update_producto(@PathVariable("idCliente") long idCliente, @PathVariable("id") long id, Model model) {
-		model.addAttribute("Cliente", clienteServer.findById(idCliente));
+	@GetMapping("/editar-producto/{idProducto}")
+	public String update_producto(@PathVariable("idProducto") long id, Model model) {
 		model.addAttribute("products", productoServer.findById(id));
 		return "update-producto";
 	}
 
-	@PostMapping("editar-producto/{idCliente}/{id}")
-	public ModelAndView update_producto_post(@PathVariable("idCliente") long idCliente, @PathVariable("id") long id,
+	@PostMapping("editar-producto/{idProducto}")
+	public ModelAndView update_producto_post(@PathVariable("idProducto") long id,
 			@ModelAttribute @Valid Productos producto, BindingResult bindingResult) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		producto.setIdProducto(id);
 		if (bindingResult.hasFieldErrors()) {
 			mav.addObject("products", producto);
@@ -134,11 +137,11 @@ public class ProductoController {
 		return mav;
 	}
 
-	@GetMapping("/removeproducto/{idCliente}/{idProducto}")
-	public ModelAndView removeProducto(@PathVariable("idCliente") long idCliente, @PathVariable("idProducto") long id) {
+	@GetMapping("/removeproducto/{idProducto}")
+	public ModelAndView removeProducto(@PathVariable("idProducto") long idProdcuto) {
 		ModelAndView mav = new ModelAndView();
 
-		Productos producto = productoServer.findById(id);
+		Productos producto = productoServer.findById(idProdcuto);
 
 		List<LineaCompra> linea = lineaServer.getAll();
 
@@ -163,7 +166,6 @@ public class ProductoController {
 			productoServer.delete(producto);
 		}
 
-		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.setViewName("list-producto");
 		return mav;
@@ -260,12 +262,15 @@ public class ProductoController {
 
 	}
 	
+	//Buscar el producto por titulo
 	@RequestMapping(method = RequestMethod.GET, value = "/searchProducto/{titulo}")
 	public @ResponseBody List<ProductosDto> buscarProductos(@PathVariable("titulo") String nombreProducto){
 		System.out.println(nombreProducto);
 		List<ProductosDto> listaProducto = productoServer.findByNombreAndCodProducto(nombreProducto);
 		return listaProducto;
 	}
+	
+	
 	
 
 	/*@GetMapping("/searchProducto/{idCliente}")

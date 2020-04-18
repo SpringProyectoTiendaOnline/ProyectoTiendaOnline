@@ -59,10 +59,10 @@
 						</tr>
 
 						<tr th:each="producto : ${categoria.producto}">
-						<td style="display:none;" id="idCategoria" th:text="${categoria.idCategoria}"> </td>
+						<td style="display:none;" id="idProducto" th:text="${producto.idProducto}"> </td>
 							<td th:text="${producto.codProducto}"></td>
 							<td th:text="${producto.titulo}"></td>
-							<td><a class="btn btn-danger borrar"><i class="fas fa-user-times"></i></a></td>
+							<td><a class="btn btn-danger borrarProductoCategoria"><i>&times;</i></a></td>
 						</tr>
 					</tbody>
 					<!-- /tabla -->

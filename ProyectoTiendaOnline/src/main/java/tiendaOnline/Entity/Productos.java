@@ -1,6 +1,7 @@
 package tiendaOnline.Entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -48,6 +50,10 @@ public class Productos implements Serializable {
 	@NotNull(message = "Debes especificar cantidad de stock de producto")
 	private long stock;
 
+	@Lob
+	@Column(name="imagen", nullable=true)
+	private byte[] imagen;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
 	private Set<Categoria> categoria = new HashSet<>();
@@ -138,6 +144,14 @@ public class Productos implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	public byte[] getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(byte[] imagen) {
+		this.imagen = imagen;
+	}
 
 	@Override
 	public int hashCode() {
@@ -164,6 +178,24 @@ public class Productos implements Serializable {
 		} else if (!titulo.equals(other.titulo))
 			return false;
 
+		if (idProducto == 0) {
+			if (other.idProducto != 0)
+				return false;
+		} else if (idProducto != other.idProducto)
+			return false;
+
+		if (codProducto == 0) {
+			if (other.codProducto != 0)
+				return false;
+		} else if (codProducto != other.codProducto)
+			return false;
+		
+		if (descripcion == null) {
+			if (other.descripcion != null)
+				return false;
+		} else if (!descripcion.equals(other.descripcion))
+			return false;
+
 		return true;
 	}
 
@@ -171,7 +203,9 @@ public class Productos implements Serializable {
 	public String toString() {
 		return "Productos [idProducto=" + idProducto + ", titulo=" + titulo + ", descripcion=" + descripcion
 				+ ", codProducto=" + codProducto + ", precio=" + precio + ", descuento=" + descuento + ", stock="
-				+ stock + "]";
+				+ stock + ", imagen=" + Arrays.toString(imagen) + ", categoria=" + categoria + "]";
 	}
+
+	
 
 }

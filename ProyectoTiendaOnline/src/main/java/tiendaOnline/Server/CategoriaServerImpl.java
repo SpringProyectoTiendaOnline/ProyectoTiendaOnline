@@ -17,6 +17,9 @@ public class CategoriaServerImpl implements CategoriaServer {
 
 	@Autowired
 	public CategoriaDAO categoriaDao;
+	
+	@Autowired
+	public ProductosDAO productosDao;
 
 
 	@Override
@@ -72,6 +75,21 @@ public class CategoriaServerImpl implements CategoriaServer {
 			return cat;
 		}
 
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public Categoria eliminarProductoCateg(long idCategoria, long idProducto) {
+		Productos producto = productosDao.find(idProducto);
+		Categoria categoria = categoriaDao.find(idCategoria);
+		
+		for (Productos p: categoria.getProducto()) {
+			if (p.getIdProducto() == idProducto) {
+				return categoriaDao.eliminarProductoCateg(idCategoria, producto);
+			}
+		}
+		
 		return null;
 	}
 

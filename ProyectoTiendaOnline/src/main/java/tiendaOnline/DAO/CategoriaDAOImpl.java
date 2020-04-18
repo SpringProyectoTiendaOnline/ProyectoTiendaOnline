@@ -1,9 +1,11 @@
 package tiendaOnline.DAO;
 
-
 import java.util.List;
 import java.util.Set;
 import javax.persistence.NoResultException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,8 @@ import tiendaOnline.Utilidades.Utilidades;
 @Repository
 @Component("CategoriaDAO")
 public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements CategoriaDAO {
+
+    private static final Logger logger = LoggerFactory.getLogger("CategoriaDAO.class");
 
 	@Override
 	public List<Categoria> getAll() {
@@ -36,7 +40,7 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 				return categoria;
 			}
 		} catch (NoResultException n) {
-			n.printStackTrace();
+			logger.error("Error", n);
 			return null;
 
 		}
@@ -59,6 +63,20 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 
 		return categ;
 
+	}
+
+	@Override
+	public Categoria eliminarProductoCateg(long idCategoria, Productos producto) {
+		Categoria categ = this.find(idCategoria);
+
+		List<Productos> list = findCategProductos(idCategoria);
+		Set<Productos> lProducto = Utilidades.convertListToSet(list);
+		lProducto.remove(producto);
+
+		categ.setProducto(lProducto);
+		System.out.print("Remove :" + categ);
+
+		return categ;
 	}
 
 	@Override

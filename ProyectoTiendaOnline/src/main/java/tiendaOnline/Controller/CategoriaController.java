@@ -90,4 +90,17 @@ public class CategoriaController {
 
 	}
 
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/eliminarProducto/{idCategoria}/{idProducto}")
+	public @ResponseBody ResponseEntity eliminarProducto(@PathVariable("idCategoria") long idCategoria,
+			@PathVariable("idProducto") long idProducto) {
+
+		Categoria categoria = categoriaServer.eliminarProductoCateg(idCategoria, idProducto);
+		
+		if (categoria == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(HttpStatus.OK);
+	}
+
 }

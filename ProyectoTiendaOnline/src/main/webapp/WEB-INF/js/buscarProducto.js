@@ -48,10 +48,17 @@ function addProductoCategoria(productoDto) {
 							+ "<td>"
 							+ productoDto.titulo
 							+ "</td>"
-							+ "<td><a class='btn btn-danger borrar'><i class='fas fa-user-times'></i></a></td>"
+							+ "<td><a class='btn btn-danger borrarProductoCategoria'><i>&times;</i></a></td>"
 							+ "</tr>"
 
 					$('#tablaProductosCategoria').append(fila);
+					
+					var botonEliminar = document.getElementsByClassName('borrarProductoCategoria');
+					for (var i = 0; i < botonEliminar.length; i++) {
+						botonEliminar[i]
+								.addEventListener('click', eliminarProductoCategoria, false);
+					}
+					
 					$('#aviso').html("");
 
 				},// success
@@ -67,12 +74,15 @@ function addProductoCategoria(productoDto) {
 				}// error
 			});// ajax
 
-}//add Producto
+};//add Producto
 
+//Borrar los productos dentro de la categoria
 function eliminarProductoCategoria() {
 	var obj = $(this);
-	var idProducto = $(this).closet("tr").find("#idProducto").text();//si encuentra, se cierra "tr"
+	var idProducto = $(this).closest("tr").find("#idProducto").text();//si encuentra, se cierra "tr"
 	var idCategoria = document.getElementById("idCategoria").value;
+	
+	console.log(idProducto + " " + idCategoria + " " + obj)
 	
 	// token de html
 	var token = $("meta[name='_csrf']").attr("content");
@@ -84,15 +94,29 @@ function eliminarProductoCategoria() {
 	});//ajaxSend
 	
 	$.ajax({
+		url : "http://localhost:8080/ProyectoTiendaOnline/Categoria/eliminarProducto/"+idCategoria+"/"+idProducto,
+		contentType : "application/json; charset=utf-8",
+		method : "DELETE",
+		success : function(response){
+			$(obj).closest("tr").remove(); //eliminar el elemento de obj dentro del tr de producyo
+			
+		},
 		
-	})
-	
-	
+		error : function(xhr, status, error) {
+			var aviso = "<div class='alert alert-danger' role='alert'>"
+					+ "El producto ya no imparte este categoria"
+					+ "</div>" + "";
+			$('#aviso').html(aviso);
+		}
+	});
 
 };
 
-var botonEliminar = document.getElementsByClassName('borrar');
-for (var i = 0; i < botonEliminar.length; i++) {
-	botonEliminar[i]
-			.addEventListener('click', eliminarProductoCategoria, false);
-}
+$(document).ready(function() {
+	var boton = document.getElementsByClassName('borrarProductoCategoria');
+	for (var i = 0; i < boton.length; i++) {
+		boton[i].addEventListener('click', eliminarProductoCategoria, false);
+	
+	}
+});
+
