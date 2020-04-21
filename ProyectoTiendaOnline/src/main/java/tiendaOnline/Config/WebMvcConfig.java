@@ -11,6 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -97,12 +99,27 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		bean.setValidationMessageSource(messageSource());
 		return bean;
 	}
-
+	
+	//Mapper para Dto
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
-
+	
+	//Configuracion de muulti part para upload file 
+	@Bean(name = "multipartResolver")
+	public CommonsMultipartResolver multipartResolver() {
+	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+	    multipartResolver.setMaxUploadSize(20848820);
+	    return multipartResolver;
+	}
+	
+	@Bean
+	public StandardServletMultipartResolver multipartResolvers() {
+	   return new StandardServletMultipartResolver();
+	}
+	
+	//
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler(

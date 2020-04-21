@@ -82,8 +82,6 @@ function eliminarProductoCategoria() {
 	var idProducto = $(this).closest("tr").find("#idProducto").text();//si encuentra, se cierra "tr"
 	var idCategoria = document.getElementById("idCategoria").value;
 	
-	console.log(idProducto + " " + idCategoria + " " + obj)
-	
 	// token de html
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");

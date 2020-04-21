@@ -1,39 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es-es">
 
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>Añadir Producto</title>
+<title>Modificar Productos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
 <body>
-
 	<nav th:replace="fragmentos/header_loader"></nav>
 
 	<div class="container my-5">
-		<h3>Añadir los productos:</h3>
+		<h3>Modificar los productos:</h3>
 		<div class="card">
 			<div class="card-body">
 				<div class="col-md-10">
 					<form action="#"
-						th:action="@{/Producto/create-producto}"
-						th:object="${products}" method="post">
+						th:action="@{/Producto/editar-producto/{idProducto}(idProducto=${products.idProducto})}"
+						th:object="${products}" method="post" enctype="multipart/form-data">
 
 						<div class="row">
-							<p th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"
-								class="alert alert-danger"></p>
-								
-								
+
+
 							<div class="form-group col-md-8">
-								<label for="imagen" class="col-form-label"> Selecciona Imagen : </label> <input
-									type="file" class="form-control" th:field="*{imagen}" name="imagen" id="imagen"> 
+								<label for="imagenFile" class="col-form-label">Título :
+								</label> <input type="file" class="form-control" id="imagenFile"
+									name="imagenFile" placeholder="Selecciona Imagen">
+								<div th:switch="${products.imagen}">
+									<img th:case="''" th:src="@{/images/productoSinFoto.png}"
+										style="width: 100px; height: 100px"> 
+									<img th:case="*"
+										th:src="@{'/images/' + ${products.imagen}}"
+										style="width: 100px; height: 100px">
+								</div>
 							</div>
-							
-							
+
+
 							<div class="form-group col-md-8">
 								<label for="titulo" class="col-form-label">Título : </label> <input
 									type="text" th:field="*{titulo}" class="form-control"
@@ -43,7 +48,7 @@
 
 							<div class="form-group col-md-8">
 								<label for="descripcion" class="col-form-label">
-									Descripción : </label> <input type="text" th:field="*{descripcion}"
+									Descripción </label> <input type="text" th:field="*{descripcion}"
 									class="form-control" id="descripcion" name="descripcion"
 									placeholder="Escribe la descripción del producto">
 							</div>
@@ -58,7 +63,7 @@
 
 							<div class="form-group col-md-8">
 								<label for="precio" class="col-form-label"> Precio : </label> <input
-									type="number" step="0.01" th:field="*{precio}"
+									type="number" th:field="*{precio}" step="0.01"
 									class="form-control" id="precio" name="precio"
 									placeholder="Escribe el precio del producto">
 							</div>
@@ -67,23 +72,22 @@
 
 							<div class="form-group col-md-8">
 								<label for="descuento" class="col-form-label"> Descuento
-									: </label> <input type="number" step="0.01" th:field="*{descuento}"
+									: : </label> <input type="number" step="0.01" th:field="*{descuento}"
 									class="form-control" id="descuento" name="descuento"
-									placeholder="Escribe si quiere aplicar el descuento">
+									placeholder="Escribe eñ `recio">
 							</div>
+
+
 
 							<div class="form-group col-md-8">
 								<label for="stock" class="col-form-label"> Stock : </label> <input
 									type="number" th:field="*{stock}" class="form-control"
-									id="stock" name="stock"
-									placeholder="Escribe la cantidad de Stock">
+									id="stock" name="stock" placeholder=" ">
 							</div>
 
-
-							
 							<div class="col-md-6">
 								<input type="submit" class="btn btn-lg btn-primary btn-block"
-									value="Añadir">
+									value="Modificar">
 							</div>
 
 

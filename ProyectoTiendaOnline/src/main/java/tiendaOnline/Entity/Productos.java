@@ -1,11 +1,9 @@
 package tiendaOnline.Entity;
 
 import java.io.Serializable;
-import java.util.Arrays;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,7 +50,7 @@ public class Productos implements Serializable {
 
 	@Lob
 	@Column(name="imagen", nullable=true)
-	private byte[] imagen;
+	private String imagen;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
@@ -145,11 +143,11 @@ public class Productos implements Serializable {
 		return serialVersionUID;
 	}
 	
-	public byte[] getImagen() {
+	public String getImagen() {
 		return imagen;
 	}
 
-	public void setImagen(byte[] imagen) {
+	public void setImagen(String imagen) {
 		this.imagen = imagen;
 	}
 
@@ -203,7 +201,7 @@ public class Productos implements Serializable {
 	public String toString() {
 		return "Productos [idProducto=" + idProducto + ", titulo=" + titulo + ", descripcion=" + descripcion
 				+ ", codProducto=" + codProducto + ", precio=" + precio + ", descuento=" + descuento + ", stock="
-				+ stock + ", imagen=" + Arrays.toString(imagen) + ", categoria=" + categoria + "]";
+				+ stock + ", imagen=" + imagen + ", categoria=" + categoria + "]";
 	}
 
 	

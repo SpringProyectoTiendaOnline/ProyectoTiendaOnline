@@ -65,12 +65,13 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 		List<Productos> listaProducto = new ArrayList<Productos>();
 
 		try {
-			listaProducto = this.em.createQuery("Select p From Productos p").getResultList();
+			listaProducto = this.em.createQuery("From Productos").getResultList();
 			if (listaProducto != null) {
 				return listaProducto;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}

@@ -1,9 +1,8 @@
 package tiendaOnline.Controller;
 
-
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,6 +35,7 @@ import tiendaOnline.Server.LineaDeCompraServer;
 import tiendaOnline.Server.PreguntaServer;
 import tiendaOnline.Server.ProductoServer;
 import tiendaOnline.Server.RespuestaServer;
+import tiendaOnline.Utilidades.Utilidades;
 
 /**
  * @author six
@@ -44,9 +44,8 @@ import tiendaOnline.Server.RespuestaServer;
 @Controller
 @RequestMapping("/Producto")
 public class ProductoController {
-	
-    private static final Logger logger = LoggerFactory.getLogger("ProductoController.class");
 
+	private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
 
 	@Autowired
 	private ProductoServer productoServer;
@@ -63,77 +62,98 @@ public class ProductoController {
 	public String productsForm(Model model) {
 		Productos producto = new Productos();
 		model.addAttribute("products", producto);
-		return "add-producto";
+		return "producto/add-producto";
 	}
 
 	@PostMapping("/create-producto")
-	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult, @RequestParam("imagen") MultipartFile imagenFile) {
+	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult,
+			@RequestParam("imagenFile") MultipartFile imagenFile, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
-		List<Productos> list = productoServer.getAll();
-		boolean existe = false;
 		String mensaje = "";
-		for (int i = 0; i < list.size() && !existe; i++) {
-			if (list.get(i).getCodProducto() == producto.getCodProducto()) {
-				existe = true;
-			}
-		}
+
+		Productos find = productoServer.findById(producto.getIdProducto());
 
 		if (bindingResult.hasFieldErrors()) {
 			mav.addObject("products", producto);
 			mav.setViewName("add-producto");
 		} else {
-			if (!existe) {
-				Productos productoSave = productoServer.save(producto);
-				if (productoSave != null) {
-					List<Productos> listaProducto = productoServer.getAll();
-					mav.addObject("listaProductos", listaProducto);
-					mav.setViewName("list-producto");
-				}
-			} else {
+			if (find != null) {
 				mensaje = "Existe el codigo";
-				mav.addObject("products", producto);
-				mav.setViewName("add-producto");
+				mav.setViewName("producto/add-producto");
+			} else {
+				if (imagenFile != null) {
+					try {
+						System.err.println("Byte : " + imagenFile.getBytes());
+						String imagen = Utilidades.convertImage(imagenFile);
+						producto.setImagen(imagen);
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					Productos productoSave = productoServer.save(producto);
+
+					if (productoSave != null) {
+						List<Productos> listaProducto = productoServer.getAll();
+						mav.addObject("listaProductos", listaProducto);
+						mav.setViewName("/producto/list-producto");
+					}
+
+				}
+
 			}
 
-			mav.addObject("msg", mensaje);
-
 		}
+
+		mav.addObject("msg", mensaje);
+
 		return mav;
 	}
 
 	@GetMapping("/editar-producto/{idProducto}")
 	public String update_producto(@PathVariable("idProducto") long id, Model model) {
 		model.addAttribute("products", productoServer.findById(id));
-		return "update-producto";
+		return "producto/update-producto";
 	}
 
 	@PostMapping("editar-producto/{idProducto}")
-	public ModelAndView update_producto_post(@PathVariable("idProducto") long id,
-			@ModelAttribute @Valid Productos producto, BindingResult bindingResult) {
+	public String update_producto_post(@PathVariable("idProducto") long id, @ModelAttribute @Valid Productos producto,
+			BindingResult bindingResult, @RequestParam("imagenFile") MultipartFile imagenFile,
+			HttpServletRequest request) {
+
 		ModelAndView mav = new ModelAndView();
-		producto.setIdProducto(id);
+
 		if (bindingResult.hasFieldErrors()) {
 			mav.addObject("products", producto);
 			mav.setViewName("update-producto");
+			return "redirect:/Producto/editar-producto/" + id;
 		} else {
-			Productos productoSave = productoServer.update(producto);
-			if (productoSave != null) {
-				List<Productos> listaProducto = productoServer.getAll();
-				mav.addObject("listaProductos", listaProducto);
-				mav.setViewName("list-producto");
+
+			if (imagenFile != null) {
+				String imagen;
+				try {
+
+					imagen = Utilidades.convertImage(imagenFile);
+					producto.setImagen(imagen);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
+
+			producto.setIdProducto(id);
+			Productos productoSave = productoServer.update(producto);
+
 		}
-		return mav;
+		return "redirect:/Producto/list-producto";
 	}
 
-	@GetMapping("/list-producto/{idCliente}")
-	public ModelAndView listAllProductos(HttpServletRequest request, @PathVariable long idCliente) {
+	@GetMapping("/list-producto")
+	public ModelAndView listAllProductos(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
-		HttpSession session = request.getSession(true);
-		session.setAttribute("idCliente", idCliente);
-		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("list-producto");
+		mav.addObject("contextPath", request.getSession().getServletContext().getContextPath());
+		mav.setViewName("producto/list-producto");
 		return mav;
 	}
 
@@ -151,7 +171,6 @@ public class ProductoController {
 					if (linea.get(i).getProductos().getIdProducto() == producto.getIdProducto()) {
 						linea.get(i).setProductos(null);
 						LineaCompra lineaComp = lineaServer.update(linea.get(i));
-
 						if (lineaComp != null) {
 							System.out.println(lineaComp + " : Edidtar");
 						}
@@ -167,7 +186,7 @@ public class ProductoController {
 		}
 
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("list-producto");
+		mav.setViewName("producto/list-producto");
 		return mav;
 
 	}
@@ -177,7 +196,7 @@ public class ProductoController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("list-product-user");
+		mav.setViewName("producto/list-product-user");
 		return mav;
 	}
 
@@ -190,7 +209,7 @@ public class ProductoController {
 		mav.addObject("listaPreguntas", lPreguntas);
 
 		mav.addObject("Producto", productoServer.findById(idProducto));
-		mav.setViewName("perfil-producto");
+		mav.setViewName("producto/perfil-producto");
 
 		return mav;
 
@@ -208,16 +227,15 @@ public class ProductoController {
 				productoServer.findById(idProducto));
 		Preguntas preg = preguntasServer.save(preguntas);
 		if (preg != null) {
-			
+
 		}
-			
 
 		List<Preguntas> lPreguntas = preguntasServer.findByProductos(productoServer.findById(idProducto));
 
 		mav.addObject("listaPreguntas", lPreguntas);
 
 		mav.addObject("Producto", productoServer.findById(idProducto));
-		mav.setViewName("perfil-producto");
+		mav.setViewName("producto/perfil-producto");
 
 		return mav;
 	}
@@ -261,55 +279,41 @@ public class ProductoController {
 		return mav;
 
 	}
-	
-	//Buscar el producto por titulo
+
+	// Buscar el producto por titulo
 	@RequestMapping(method = RequestMethod.GET, value = "/searchProducto/{titulo}")
-	public @ResponseBody List<ProductosDto> buscarProductos(@PathVariable("titulo") String nombreProducto){
-		System.out.println(nombreProducto);
+	public @ResponseBody List<ProductosDto> buscarProductos(@PathVariable("titulo") String nombreProducto) {
 		List<ProductosDto> listaProducto = productoServer.findByNombreAndCodProducto(nombreProducto);
 		return listaProducto;
 	}
-	
-	
-	
 
-	/*@GetMapping("/searchProducto/{idCliente}")
-	public ModelAndView buscarProducto(@PathVariable("idCliente") long idCliente, HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		String valor = (String) request.getParameter("valorProducto");
-		List<Productos> listaProducto = productoServer.getAll();
-		List<Productos> listaProductoEncontrado = new ArrayList<>();
-
-		Clientes cliente = clienteServer.findById(idCliente);
-
-		if (!valor.isEmpty()) {
-			if (Utilidades.isNumeric(valor)) {
-				for (int i = 0; i < listaProducto.size(); i++) {
-					String codProducto = String.valueOf(listaProducto.get(i).getCodProducto());
-					if (codProducto.contains(valor)) {
-						listaProductoEncontrado.add(listaProducto.get(i));
-					}
-				}
-				mav.addObject("listaProductos", listaProductoEncontrado);
-			} else {
-				for (int i = 0; i < listaProducto.size(); i++) {
-					String titulo = listaProducto.get(i).getTitulo();
-					titulo = titulo.toLowerCase();
-					valor = valor.toLowerCase();
-					if (titulo.contains(valor)) {
-						listaProductoEncontrado.add(listaProducto.get(i));
-					}
-				}
-				mav.addObject("listaProductos", listaProductoEncontrado);
-			}
-		} else {
-			mav.addObject("listaProductos", productoServer.getAll());
-		}
-		mav.addObject("Cliente", cliente);
-		mav.setViewName("list-product-user");
-
-		return mav;
-
-	}*/
+	/*
+	 * @GetMapping("/searchProducto/{idCliente}") public ModelAndView
+	 * buscarProducto(@PathVariable("idCliente") long idCliente, HttpServletRequest
+	 * request) { ModelAndView mav = new ModelAndView(); String valor = (String)
+	 * request.getParameter("valorProducto"); List<Productos> listaProducto =
+	 * productoServer.getAll(); List<Productos> listaProductoEncontrado = new
+	 * ArrayList<>();
+	 * 
+	 * Clientes cliente = clienteServer.findById(idCliente);
+	 * 
+	 * if (!valor.isEmpty()) { if (Utilidades.isNumeric(valor)) { for (int i = 0; i
+	 * < listaProducto.size(); i++) { String codProducto =
+	 * String.valueOf(listaProducto.get(i).getCodProducto()); if
+	 * (codProducto.contains(valor)) {
+	 * listaProductoEncontrado.add(listaProducto.get(i)); } }
+	 * mav.addObject("listaProductos", listaProductoEncontrado); } else { for (int i
+	 * = 0; i < listaProducto.size(); i++) { String titulo =
+	 * listaProducto.get(i).getTitulo(); titulo = titulo.toLowerCase(); valor =
+	 * valor.toLowerCase(); if (titulo.contains(valor)) {
+	 * listaProductoEncontrado.add(listaProducto.get(i)); } }
+	 * mav.addObject("listaProductos", listaProductoEncontrado); } } else {
+	 * mav.addObject("listaProductos", productoServer.getAll()); }
+	 * mav.addObject("Cliente", cliente); mav.setViewName("list-product-user");
+	 * 
+	 * return mav;
+	 * 
+	 * }
+	 */
 
 }

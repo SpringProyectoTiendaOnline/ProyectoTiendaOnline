@@ -1,5 +1,6 @@
 package tiendaOnline.Server;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class ProductoServerImpl implements ProductoServer {
 	@Override
 	@Transactional
 	public void delete(Productos producto) {
+		File file = new File(System.getProperty("user.home") + producto.getImagen());
+		if (file.exists()) {
+			file.delete();
+		}
 		productoDAO.delete(producto.getIdProducto());
 	}
 
