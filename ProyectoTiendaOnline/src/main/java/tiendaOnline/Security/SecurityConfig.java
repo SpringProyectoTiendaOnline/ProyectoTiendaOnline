@@ -38,8 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout")
 				.permitAll();
 		
-        http.cors().and().csrf().disable();
-        http.headers().frameOptions().disable();
+       // http.cors().and().csrf().disable();
+       // http.headers().frameOptions().disable();
 
 
 	}
