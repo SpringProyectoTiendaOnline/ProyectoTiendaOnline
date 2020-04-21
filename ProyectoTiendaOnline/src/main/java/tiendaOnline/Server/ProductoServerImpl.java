@@ -38,6 +38,7 @@ public class ProductoServerImpl implements ProductoServer {
 		if (file.exists()) {
 			file.delete();
 		}
+		//Delete
 		productoDAO.delete(producto.getIdProducto());
 	}
 
