@@ -1,6 +1,5 @@
 package tiendaOnline.Controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
@@ -31,11 +28,11 @@ import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
 import tiendaOnline.Entity.Respuestas;
 import tiendaOnline.Server.ClienteServer;
+import tiendaOnline.Server.ImagenProductoServer;
 import tiendaOnline.Server.LineaDeCompraServer;
 import tiendaOnline.Server.PreguntaServer;
 import tiendaOnline.Server.ProductoServer;
 import tiendaOnline.Server.RespuestaServer;
-import tiendaOnline.Utilidades.Utilidades;
 
 /**
  * @author six
@@ -57,6 +54,8 @@ public class ProductoController {
 	private PreguntaServer preguntasServer;
 	@Autowired
 	private RespuestaServer respuestaServer;
+	@Autowired
+	private ImagenProductoServer imagenServer;
 
 	@GetMapping("/create-producto")
 	public String productsForm(Model model) {
@@ -66,41 +65,30 @@ public class ProductoController {
 	}
 
 	@PostMapping("/create-producto")
-	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult,
-			@RequestParam("imagenFile") MultipartFile imagenFile, HttpSession session) {
+	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult, HttpSession session) throws IOException {
 		ModelAndView mav = new ModelAndView();
 		String mensaje = "";
 
 		Productos find = productoServer.findById(producto.getIdProducto());
 
+		// Comprobar si hay error
 		if (bindingResult.hasFieldErrors()) {
 			mav.addObject("products", producto);
 			mav.setViewName("add-producto");
 		} else {
+			// Comprobar si existe el codigo de Producto
 			if (find != null) {
 				mensaje = "Existe el codigo";
 				mav.setViewName("producto/add-producto");
 			} else {
-				if (imagenFile != null) {
-					try {
-						System.err.println("Byte : " + imagenFile.getBytes());
-						String imagen = Utilidades.convertImage(imagenFile);
-						producto.setImagen(imagen);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-
-					Productos productoSave = productoServer.save(producto);
-
-					if (productoSave != null) {
-						List<Productos> listaProducto = productoServer.getAll();
-						mav.addObject("listaProductos", listaProducto);
-						mav.setViewName("/producto/list-producto");
-					}
-
+				// Guardar
+				Productos productoSave = productoServer.save(producto);
+				// Si ha guardado, guarda el imagen
+				if (productoSave != null) {
 				}
-
+				List<Productos> listaProducto = productoServer.getAll();
+				mav.addObject("listaProductos", listaProducto);
+				mav.setViewName("/producto/list-producto");
 			}
 
 		}
@@ -118,32 +106,15 @@ public class ProductoController {
 
 	@PostMapping("editar-producto/{idProducto}")
 	public String update_producto_post(@PathVariable("idProducto") long id, @ModelAttribute @Valid Productos producto,
-			BindingResult bindingResult, @RequestParam("imagenFile") MultipartFile imagenFile,
-			HttpServletRequest request) {
+			BindingResult bindingResult, HttpServletRequest request) {
 
-		ModelAndView mav = new ModelAndView();
 
 		if (bindingResult.hasFieldErrors()) {
-			mav.addObject("products", producto);
-			mav.setViewName("update-producto");
+			request.setAttribute("products", producto);
 			return "redirect:/Producto/editar-producto/" + id;
 		} else {
-
-			if (imagenFile != null) {
-				String imagen;
-				try {
-
-					imagen = Utilidades.convertImage(imagenFile);
-					producto.setImagen(imagen);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
 			producto.setIdProducto(id);
-			Productos productoSave = productoServer.update(producto);
-
+			productoServer.update(producto);
 		}
 		return "redirect:/Producto/list-producto";
 	}
@@ -152,7 +123,6 @@ public class ProductoController {
 	public ModelAndView listAllProductos(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.addObject("contextPath", request.getSession().getServletContext().getContextPath());
 		mav.setViewName("producto/list-producto");
 		return mav;
 	}
@@ -200,6 +170,7 @@ public class ProductoController {
 		return mav;
 	}
 
+	
 	@GetMapping("/perfil-producto/{idProducto}")
 	public ModelAndView perfil_producto(@PathVariable("idProducto") long idProducto) {
 		ModelAndView mav = new ModelAndView();
@@ -207,8 +178,9 @@ public class ProductoController {
 		List<Preguntas> lPreguntas = preguntasServer.findByProductos(productoServer.findById(idProducto));
 
 		mav.addObject("listaPreguntas", lPreguntas);
-
 		mav.addObject("Producto", productoServer.findById(idProducto));
+		System.out.println(imagenServer.findByProducto(productoServer.findById(idProducto)).size());
+		mav.addObject("ListaImagen", imagenServer.findByProducto(productoServer.findById(idProducto)));
 		mav.setViewName("producto/perfil-producto");
 
 		return mav;

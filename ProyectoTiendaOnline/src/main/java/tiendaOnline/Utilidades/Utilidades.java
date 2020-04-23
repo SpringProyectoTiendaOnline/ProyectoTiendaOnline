@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
+import tiendaOnline.Entity.ImagenProducto;
+
 /**
  * Responsable de crear un objeto sesi髇 (gestiona la conexión a BD de forma
  * transparente
@@ -19,8 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class Utilidades {
 
 	// Guardar los fichero subido en este lugar.
-	private static final String rutaImage = System.getProperty("user.home")
-			+ "/images/";
+	private static final String rutaImage = System.getProperty("user.home") + "/images/";
 
 	public static boolean isNumeric(String cadena) {
 		try {
@@ -44,10 +45,14 @@ public class Utilidades {
 		return set;
 	}
 
-	public static String convertImage(MultipartFile imagenFile) throws IOException {
-
+	public static ImagenProducto convertImage(MultipartFile imagenFile) throws IOException {
+		
+		ImagenProducto imagenProducto = new ImagenProducto();
 		// Nombre original del imagen
 		String ofn = imagenFile.getOriginalFilename();
+		byte[] imagen = imagenFile.getBytes();
+        byte[] encode = java.util.Base64.getEncoder().encode(imagen);
+
 		// Ejermplo: imagen.png
 		// --> png
 		String suffix = ofn.substring(ofn.lastIndexOf("."));
@@ -62,16 +67,18 @@ public class Utilidades {
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
-		System.out.println(rutaImage);
 
 		try {
 			imagenFile.transferTo(file);
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
-
 		}
+		String urlImagen = "/images/" + filename;
+		
+		imagenProducto.setImagen(encode);
+		imagenProducto.setUrlImagen(urlImagen);
 
-		return "/images/"+filename;
+		return imagenProducto;
 
 	}
 

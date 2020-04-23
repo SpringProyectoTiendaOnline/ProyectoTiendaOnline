@@ -79,26 +79,27 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
+		viewResolver.setCache(false);
 		return viewResolver;
 
 	}
 
 	// Mensaje..
-	@Bean
-	public MessageSource messageSource() {
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-
-		messageSource.setBasename("classpath:messages");
-		messageSource.setDefaultEncoding("UTF-8");
-		return messageSource;
-	}
-
-	@Bean
-	public LocalValidatorFactoryBean getValidator() {
-		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-		bean.setValidationMessageSource(messageSource());
-		return bean;
-	}
+//	@Bean
+//	public MessageSource messageSource() {
+//		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+//
+//		messageSource.setBasename("classpath:messages");
+//		messageSource.setDefaultEncoding("UTF-8");
+//		return messageSource;
+//	}
+//
+//	@Bean
+//	public LocalValidatorFactoryBean getValidator() {
+//		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+//		bean.setValidationMessageSource(messageSource());
+//		return bean;
+//	}
 	
 	//Mapper para Dto
 	@Bean

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -48,10 +51,9 @@ public class Productos implements Serializable {
 	@NotNull(message = "Debes especificar cantidad de stock de producto")
 	private long stock;
 
-	@Lob
-	@Column(name="imagen", nullable=true)
-	private String imagen;
-	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto" , cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ImagenProducto> imagen = new HashSet<>();
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
 	private Set<Categoria> categoria = new HashSet<>();
@@ -142,12 +144,12 @@ public class Productos implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	public String getImagen() {
+
+	public Set<ImagenProducto> getImagen() {
 		return imagen;
 	}
 
-	public void setImagen(String imagen) {
+	public void setImagen(Set<ImagenProducto> imagen) {
 		this.imagen = imagen;
 	}
 
@@ -187,7 +189,7 @@ public class Productos implements Serializable {
 				return false;
 		} else if (codProducto != other.codProducto)
 			return false;
-		
+
 		if (descripcion == null) {
 			if (other.descripcion != null)
 				return false;
@@ -205,5 +207,4 @@ public class Productos implements Serializable {
 	}
 
 	
-
 }

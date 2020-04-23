@@ -21,7 +21,7 @@
 
 		<h1>Lista de productos</h1>
 		<br />
-		
+
 		<div class="alert alert-danger " th:if="${not #strings.isEmpty(msg)}">
 			<div th:each="error : ${msg}">
 				<p th:text="${error}">
@@ -61,6 +61,7 @@
 								<button type="button" class="btn btn-outline-success">
 									Añadir</button>
 						</a></td>
+						
 					</tr>
 				</tbody>
 			</table>
