@@ -13,7 +13,7 @@ public interface ImagenProductoServer {
 
 	public void delete(ImagenProducto imagenProducto);
 	
-	public ImagenProducto findById(ImagenProducto imagenProducto);
+	public ImagenProducto findById(long idImagen);
 
 	public List<ImagenProducto> findByProducto(Productos producto);
 

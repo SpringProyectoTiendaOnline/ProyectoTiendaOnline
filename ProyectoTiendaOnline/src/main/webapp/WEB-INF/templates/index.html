@@ -35,7 +35,15 @@
 					</div>
 
 					<div class="col">
-						<div class="card" style="width: 15rem; height: 15rem;">
+						<div class="card" style="width: 15rem; height: 25rem;">
+							<ul class="list-inline"
+								th:each="lista, iStat : ${imagenServer.findByProducto(producto)}">
+								<li class="list-inline-item"><img
+									th:src="${lista.urlImagen}" style="width: 50px; height: 50px;">
+								</li>
+
+							</ul>
+
 							<div class="card-body">
 								<h5 class="card-title"
 									th:text="'Título : ' + ${producto.titulo}"></h5>
@@ -46,21 +54,29 @@
 									th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
 									class="btn btn-primary text-right">Ver</a>
 								<div class="d-flex flex-row-reverse">
-									<div class="p-2 mb-2 bg-light text-dark"> Precio :
-										<p th:text= "${producto.precio} + '&euro;'"></p>
+									<div class="p-2 mb-2 bg-light text-dark">
+										Precio :
+										<p th:text="${producto.precio} + '&euro;'"></p>
 									</div>
-									
+
 									<div class="p-2 mb-2 bg-danger text-white">
-										<p th:text="${producto.descuento}"></div>	
+										<p th:text="${producto.descuento}">
+									</div>
+									<!-- d-flex -->
 								</div>
+								<!-- card-body -->
 							</div>
+							<!-- card -->
 						</div>
+						<!-- col -->
 					</div>
-
+					<!-- stats -->
 				</div>
+				<!-- each producto -->
 			</div>
+			<!-- row -->
 		</div>
-
+		<!-- container -->
 	</div>
 </body>
 </html>

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
+import tiendaOnline.Entity.ImagenProducto;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
@@ -176,11 +177,13 @@ public class ProductoController {
 		ModelAndView mav = new ModelAndView();
 
 		List<Preguntas> lPreguntas = preguntasServer.findByProductos(productoServer.findById(idProducto));
+		
+		ImagenProducto imagen = new ImagenProducto();
 
 		mav.addObject("listaPreguntas", lPreguntas);
 		mav.addObject("Producto", productoServer.findById(idProducto));
-		System.out.println(imagenServer.findByProducto(productoServer.findById(idProducto)).size());
 		mav.addObject("ListaImagen", imagenServer.findByProducto(productoServer.findById(idProducto)));
+		mav.addObject("ImagenProducto", imagen);
 		mav.setViewName("producto/perfil-producto");
 
 		return mav;

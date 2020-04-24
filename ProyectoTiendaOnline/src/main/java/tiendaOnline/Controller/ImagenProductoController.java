@@ -19,34 +19,79 @@ import tiendaOnline.Server.ProductoServer;
 import tiendaOnline.Utilidades.Utilidades;
 
 @Controller
-@RequestMapping(value="/ImagenProducto")
+@RequestMapping(value = "/ImagenProducto")
 public class ImagenProductoController {
-	
+
 	@Autowired
 	private ImagenProductoServer imagenServer;
-	
+
 	@Autowired
 	private ProductoServer productoServer;
 
-	
-	@RequestMapping(method = RequestMethod.POST, value = "/create-imagenProducto/{idProducto}")
-	public String crearImagen(@RequestParam("imagenFile") MultipartFile imagenFile, @PathVariable("idProducto") long idProducto, HttpServletRequest request) {
+	@RequestMapping(method = RequestMethod.POST, value = "/action-imagenProducto/{idProducto}")
+	public String crearImagen(@RequestParam("imagenFile") MultipartFile imagenFile,
+			@PathVariable("idProducto") long idProducto, @RequestParam(value = "showIdImagenProducto") Long idImagen,
+			@RequestParam(value = "action", required = true) String action, HttpServletRequest request) {
+
 		Productos producto = productoServer.findById(idProducto);
+		String msgError = "", msg = "";
+
 		try {
-			ImagenProducto imagen = Utilidades.convertImage(imagenFile);
-			if (imagen != null) {
-				imagen.setProducto(producto);
-				imagenServer.save(imagen);
-				
-				request.setAttribute("imagenProducto", imagen); 
+			if (action.equalsIgnoreCase("save")) {
+
+				if (imagenFile != null) {
+					ImagenProducto imagen = Utilidades.convertImage(imagenFile);
+
+					imagen.setProducto(producto);
+					imagenServer.save(imagen);
+					msg = "La imagen ha sido añadido correctamente";
+
+					request.setAttribute("imagenProducto", imagen);
+				} else {
+					msgError = "No ha sido añadido la imagen, porque no has imsertado";
+				}
+			}
+
+			if (action.equalsIgnoreCase("delete")) {
+				if (idImagen != null) {
+					ImagenProducto imagenProducto = imagenServer.findById(idImagen);
+					imagenProducto.setProducto(null);
+					imagenProducto = imagenServer.update(imagenProducto);
+					imagenServer.delete(imagenProducto);
+					msg = "La imagen ha sido eliminado correctamente.";
+				}else {
+					msg = "La imagen no ha sido eliminado correctamente.";
+				}
+			}
+
+			if (action.equalsIgnoreCase("update")) {
+
+				if (imagenFile != null && idImagen > 0) {
+					ImagenProducto imagen = Utilidades.convertImage(imagenFile);
+
+					imagen.setIdImagen(idImagen);
+					imagen.setProducto(producto);
+					imagenServer.update(imagen);
+					msg = "La Imagen ha sido modificado correctamente.";
+
+					request.setAttribute("imagenProducto", imagen);
+				} else {
+					if (idImagen <= 0) {
+						msgError = "La imagen no ha sido modificado, No has seleccionado el imagen";
+					} else {
+						msgError = "La imagen no ha sido modificado, No has insertado la imagen que quiere cambiar";
+					}
+				}	
 			}
 			
+			request.setAttribute("msgError", msgError);
+			request.setAttribute("msg", msg);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return "redirect:/Producto/perfil-producto/"+idProducto;
-	}
 	
+		return "redirect:/Producto/perfil-producto/" + idProducto;
+	}
 
 }

@@ -7,18 +7,23 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <title>Perfil de Producto</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
-<script th:src="@{/js/jquery-3.5.0.js}"></script>
-<script th:src="@{/js/jquery-ui.min.js}"></script>
-<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
 
 <style>
 /* Make the image fully responsive */
 .carousel-inner img {
 	width: 100px;
-	height: 300px;
+	height: 250px;
 }
 </style>
 </head>
@@ -31,10 +36,10 @@
 	<br />
 	<br />
 
-	<div class="container my-2">
+	<div class="container">
 		<div class="row">
 
-			<div class="col-sm-6">
+			<div class="col-4">
 				<div class="card">
 					<div class="card-body">
 						<div id="carouselExampleControls" class="carousel slide"
@@ -46,12 +51,12 @@
 								<div th:switch="${istat.index}">
 									<div th:case="'0'" class="carousel-item active">
 										<img class="d-block w-100" th:src="${imagen.urlImagen}"
-											th:attr="alt=${imagen.idImagen}" />
+											th:alt="${imagen.idImagen}" />
 									</div>
 
-									<div th:case="*" class="carousel-item">
+									<div th:case="*" class="carousel-item ">
 										<img class="d-block w-100" th:src="${imagen.urlImagen}"
-											th:attr="alt=${imagen.idImagen}" />
+											th:alt="${imagen.idImagen}" />
 									</div>
 								</div>
 							</div>
@@ -68,131 +73,190 @@
 							</a>
 							<!-- carousel slide -->
 						</div>
+						<br /> <br />
+
+
+						<!-- Details añadir,modificar, eliminar imagen de Producto -->
+						<div sec:authorize="hasAuthority('ROL_ADMIN')">
+							<!-- Añadir imagen -->
+							<button type="button" class="btn btn-primary" data-toggle="modal"
+								data-target="#addImagenes">Modificación Imágenes</button>
+
+							<form action="#"
+								th:action="@{/ImagenProducto/action-imagenProducto/{idProducto}(idProducto=${Producto.idProducto})}"
+								th:object="${ImagenProducto}" method="post"
+								enctype="multipart/form-data">
+								<!-- Modal -->
+								<div class="modal fade" id="addImagenes" tabindex="-1"
+									role="dialog" aria-labelledby="addImagenesLabel"
+									aria-hidden="true">
+
+
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+
+											<div class="modal-header">
+												<h5 class="modal-title" id="addImagenesLabel">Imágenes</h5>
+
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+
+
+
+											<div class="modal-body">
+												<!-- Añadir imagenes -->
+
+
+												<label for="imagenFile" class="col-form-label">Selecciona
+													Imagen : </label> <input type="file" class="form-control"
+													id="imagenFile" name="imagenFile"
+													placeholder="Nombre de Categoría">
+
+												<!-- / form de añadir la categoria -->
+
+												<br />
+												<!-- Selecciona Imagen -->
+
+												<input id="showIdImagenProducto" name="showIdImagenProducto"
+													type="hidden">
+
+												<div class="form-check form-check-inline">
+													<div th:each="lista : ${ListaImagen}"
+														th:object="${ImagenProducto}">
+
+														<input class="form-check-input" th:field="*{idImagen}"
+															type="radio" name="inlineRadioOptions"
+															th:id="'imagen_'+${lista.idImagen}"
+															th:value="${lista.idImagen}"
+															onclick="obtenerIdImagen(this.value)"> <label
+															class="form-check-label"
+															th:for="'imagen_'+${lista.idImagen}"> <img
+															th:src="${lista.urlImagen}"
+															style="width: 100px; height: 100px" />
+														</label>
+
+														<!-- each -->
+													</div>
+													<script>
+														function obtenerIdImagen(
+																idImagen) {
+															document
+																	.getElementById("showIdImagenProducto").value = idImagen;
+														}
+													</script>
+
+													<!-- modal-body -->
+												</div>
+												<!-- modalbody -->
+											</div>
+
+
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-dismiss="modal">Close</button>
+
+												<input type="submit" class="btn btn-primary" name="action"
+													value="save">
+												<button type="submit" name="action" value="delete">Eliminar</button>
+												<button type="submit" name="action" value="update">Editar</button>
+												<!-- / modal footer -->
+											</div>
+
+											<!-- modal content -->
+										</div>
+										<!-- /modal dialog -->
+									</div>
+									<!-- modal fade -->
+								</div>
+								<!-- actionImagen -->
+							</form>
+							<!-- / has authori -->
+						</div>
 						<!-- card-body -->
 					</div>
 					<!-- card -->
 				</div>
-				<!-- colsm-6 -->
+				<!-- col-4 -->
 			</div>
 
 
-			<div class="col-sm-6">
-				<div class="card-body">
-					<h5 class="card-title" th:text="${Producto.titulo}"></h5>
-					<p class="card-text">
-						Precio : <span th:text="${Producto.precio}"></span>
-					</p>
-					<p class="card-text">
-						Descuento : <span th:text="${Producto.descuento}"></span>
-					</p>
-
-					<div sec:authorize="hasAuthority('ROL_ADMIN')">
-						<!-- Añadir imagen -->
-						<button type="button" class="btn btn-primary" data-toggle="modal"
-							data-target="#addImagenes">Añadir Imágenes</button>
-						<br />
-
-						<form action="#"
-							th:action="@{/ImagenProducto/create-imagenProducto/{idProducto}(idProducto=${Producto.idProducto})}"
-							th:object="${imagenProducto}" method="post"
-							enctype="multipart/form-data">
-							<!-- Modal -->
-							<div class="modal fade" id="addImagenes" tabindex="-1"
-								role="dialog" aria-labelledby="addImagenesLabel"
-								aria-hidden="true">
-
-
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-
-										<div class="modal-header">
-											<h5 class="modal-title" id="addImagenesLabel">Añadir
-												Imágenes</h5>
-
-											<button type="button" class="close" data-dismiss="modal"
-												aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-
-
-
-										<div class="modal-body">
-
-											<div class="form-group col-md-8">
-												<label for="imagenFile" class="col-form-label">Nombre
-													Categoría : </label> <input type="file" class="form-control"
-													id="imagenFile" name="imagenFile"
-													placeholder="Nombre de Categoría">
-											</div>
-
-										</div>
-
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary"
-												data-dismiss="modal">Close</button>
-											<input type="submit" class="btn btn-primary" value="Save">
-											<!-- / modal footer -->
-										</div>
-										<!-- modal content -->
-									</div>
-									<!-- /modal dialog -->
-								</div>
-								<!-- modal fade -->
-							</div>
-							<!-- / form de añadir la categoria -->
-						</form>
-						<!-- / has authori -->
-					</div>
-					<!-- cardbody -->
-				</div>
-				<!-- col sm -6 -->
-			</div>
-			<br /> <br />
-
-			<div class="row">
-
+			<!-- Details producto -->
+			<div class="col-6">
+				<br /> <br />
 				<div class="card">
+					<div class="card-body lead">
+						<h1 class="card-title" th:text="${Producto.titulo}"></h1>
 
-					<h4>¿Tienes Algunas preguntas?</h4>
-					<br />
-					<form method="post"
-						th:action="@{/Producto/enviar-pregunta/{idProducto}(idProducto=${Producto.idProducto})}">
-						<div class="form-group">
-							<label for="textoPregunta">Preguntas</label>
-							<textarea class="form-control" id="textoPregunta"
-								name="textoPregunta" rows="3"></textarea>
-						</div>
-						<button type="submit" class="btn btn-primary mb-2">Enviar</button>
-					</form>
+						<p class="card-text">
+							<span class="font-weight-bold">Descripción : </span><span
+								th:text="${Producto.descripcion}"></span>
+						</p>
 
+						<p class="card-text">
+							<span class="font-weight-bold">Precio : </span><span
+								th:text="${Producto.precio} + ' &euro;'"></span>
+						</p>
+						<p class="card-text">
+							<span class="font-weight-bold">Descuento : </span><span
+								class="text-danger" th:text="${Producto.descuento} + ' %'"></span>
+						</p>
 
-
-					<div th:if="${listaPreguntas != null}">
-						<div th:each="pregunta : ${listaPreguntas}">
-							<p>
-								Pregunta : <span th:text="${pregunta.texto}"></span>
-							</p>
-							<p>
-								By : <span th:text="${pregunta.clientes.nombre}"></span>
-							</p>
-							<a class="btn btn-outline-info" href="#"
-								th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}">Ver
-								la respuesta</a>
-							<hr />
-
-						</div>
-						<!-- listaPreguntas -->
+						<p class="card-text" th:switch="${Producto.stock}">
+							<span class="font-weight-bold">Stock : </span><span th:case="'0'">No
+								Stock</span> <span th:case="*" class="text-success">Stock</span>
+						</p>
+						<!-- cardbody -->
 					</div>
-					<!-- card w75 -->
+					<!-- card -->
 				</div>
-				<!-- row -->
+				<!-- col-6 -->
 			</div>
 			<!-- row -->
 		</div>
-		<!-- container -->
-	</div>
 
+
+		<br /> <br />
+
+		<div class="card">
+			<br /> <br />
+			<h3>¿Tienes Algunas preguntas?</h3>
+			<br /> <br />
+			<form method="post"
+				th:action="@{/Producto/enviar-pregunta/{idProducto}(idProducto=${Producto.idProducto})}">
+				<div class="form-group">
+					<label for="textoPregunta">Preguntas</label>
+					<textarea class="form-control" id="textoPregunta"
+						name="textoPregunta" rows="3"></textarea>
+				</div>
+				<button type="submit" class="btn btn-primary mb-2">Enviar</button>
+			</form>
+
+
+
+			<div th:if="${listaPreguntas != null}">
+				<div class="lead" th:each="pregunta : ${listaPreguntas}">
+					<p>
+						Pregunta : <span th:text="${pregunta.texto}"></span>
+					</p>
+					<p>
+						By : <span th:text="${pregunta.clientes.nombre}"></span>
+					</p>
+					<a class="btn btn-outline-info" href="#"
+						th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}">Ver
+						la respuesta</a>
+					<hr />
+
+				</div>
+				<!-- listaPreguntas -->
+			</div>
+			<!-- card -->
+		</div>
+		<!-- container -->
+		
+	</div>
 </body>
 
 </html>

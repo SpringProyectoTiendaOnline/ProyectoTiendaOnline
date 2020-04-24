@@ -23,11 +23,15 @@ public class IndexController {
 	private BancoServer BancoServer;
 	@Autowired
 	private ProductoServer productoServer;
+	
+	@Autowired
+	private ImagenProductoServer imagenServer;
 
 	@GetMapping("/indice")
 	public ModelAndView indice() {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("listaProductos", productoServer.getAll());
+		mav.addObject("imagenServer", imagenServer);
 		mav.setViewName("index");
 		return mav;
 	}

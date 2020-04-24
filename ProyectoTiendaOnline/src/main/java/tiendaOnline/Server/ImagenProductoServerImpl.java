@@ -32,7 +32,7 @@ public class ImagenProductoServerImpl implements ImagenProductoServer {
 	@Override
 	@Transactional
 	public void delete(ImagenProducto imagenProducto) {
-		imagenProductoDao.delete(imagenProducto);
+		imagenProductoDao.delete(imagenProducto.getIdImagen());
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class ImagenProductoServerImpl implements ImagenProductoServer {
 
 	@Override
 	@Transactional
-	public ImagenProducto findById(ImagenProducto imagenProducto) {
-		return imagenProductoDao.find(imagenProducto);
+	public ImagenProducto findById(long idImagen) {
+		return imagenProductoDao.find(idImagen);
 	}
 
 }
