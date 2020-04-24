@@ -35,24 +35,32 @@
 					</div>
 
 					<div class="col">
-						<div class="card" style="width: 15rem; height: 25rem;">
-							<ul class="list-inline"
-								th:each="lista, iStat : ${imagenServer.findByProducto(producto)}">
-								<li class="list-inline-item"><img
-									th:src="${lista.urlImagen}" style="width: 50px; height: 50px;">
-								</li>
+						<div class="card" style="width: 20rem; height: 20rem;">
+							<div class="form-check form-check-inline">
+								<div th:each="lista : ${imagenServer.findByProducto(producto)}">
 
-							</ul>
+									 <label
+										class="form-check-label" th:for="'imagen_'+${lista.idImagen}" >
+										
+										<img th:src="${lista.urlImagen}"
+										style="width: 100px; height: 100px" />
+									</label>
+
+									<!-- each -->
+								</div>
+								
+								<!-- modal-body -->
+							</div>
+							<hr />
 
 							<div class="card-body">
-								<h5 class="card-title"
-									th:text="'Título : ' + ${producto.titulo}"></h5>
-								<p class="card-text"
-									th:text="'Descripción : ' +${producto.descripcion}"></p>
+								<h5 class="card-title">
+									<a
+										th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+										class="text-right"><span
+										th:text="'Título : ' + ${producto.titulo}"></span> </a>
+								</h5>
 
-								<a
-									th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
-									class="btn btn-primary text-right">Ver</a>
 								<div class="d-flex flex-row-reverse">
 									<div class="p-2 mb-2 bg-light text-dark">
 										Precio :
@@ -60,23 +68,24 @@
 									</div>
 
 									<div class="p-2 mb-2 bg-danger text-white">
-										<p th:text="${producto.descuento}">
+										<p th:text="${producto.descuento} + '%'">
 									</div>
-									<!-- d-flex -->
 								</div>
-								<!-- card-body -->
+								<!-- d-flex -->
 							</div>
-							<!-- card -->
+							<!-- card-body -->
 						</div>
-						<!-- col -->
+						<!-- card -->
 					</div>
-					<!-- stats -->
+					<!-- col -->
 				</div>
-				<!-- each producto -->
+				<!-- stats -->
 			</div>
-			<!-- row -->
+			<!-- each producto -->
 		</div>
-		<!-- container -->
+		<!-- row -->
+	</div>
+	<!-- container -->
 	</div>
 </body>
 </html>
