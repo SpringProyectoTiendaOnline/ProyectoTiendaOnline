@@ -31,11 +31,21 @@
 				th:value="${categoria.idCategoria}">
 
 			<div class="card-body">
-				<h5 class="card-header"
-					th:text="'Categoría de ' + ${categoria.nombreCategoria}"></h5>
+				<div class="card-header">
+					<div class="form-inline mx-sm-3 mb-2" id="funcionEditarCategoria">
+						<span>Categoría : </span> <span id="nombreCategoria" 
+							th:text="${categoria.nombreCategoria}"></span> &nbsp;
+						<button class="btn btn-primary changeInputButton" id = "changeInputButton">
+							<i class="fas fa-edit"></i>
+						</button>
+					</div>
+				</div>
 
-				<br /> <input class="typeahead tt-input"
-					sec:authorize="hasAuthority('ROL_ADMIN')" type="text"
+				<script>
+					
+				</script>
+
+				<br /> <input class="typeahead tt-input" sec:authorize="hasAuthority('ROL_ADMIN')" type="text"
 					id="buscarProducto" name="buscarProducto"
 					placeholder="Busca el Producto" autocomplete="off"
 					spellcheck="false"
@@ -70,6 +80,7 @@
 					</tbody>
 					<!-- /tabla -->
 				</table>
+
 				<script th:src="@{/js/accionCategoria.js}"></script>
 
 				<!-- /card body -->
