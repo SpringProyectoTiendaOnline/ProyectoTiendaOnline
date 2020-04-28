@@ -1,7 +1,7 @@
 package tiendaOnline.Entity;
 
 import java.io.Serializable;
-import java.util.Arrays;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -27,10 +26,6 @@ public class ImagenProducto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idImagen")
 	private Long idImagen;
-
-	@Lob
-	@Column(name = "imagen")
-	private byte[] imagen;
 
 	@Column(name = "urlImagen")
 	private String urlImagen;
@@ -51,13 +46,6 @@ public class ImagenProducto implements Serializable {
 		this.idImagen = idImagen;
 	}
 
-	public byte[] getImagen() {
-		return imagen;
-	}
-
-	public void setImagen(byte[] imagen) {
-		this.imagen = imagen;
-	}
 
 	public String getUrlImagen() {
 		return urlImagen;
@@ -77,7 +65,7 @@ public class ImagenProducto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ImagenProducto [idImagen=" + idImagen + ", imagen=" + Arrays.toString(imagen) + ", urlImagen="
+		return "ImagenProducto [idImagen=" + idImagen + ", urlImagen="
 				+ urlImagen + ", producto=" + producto + "]";
 	}
 

@@ -3,20 +3,30 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head>
-<meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <title>Perfil de Producto</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<!-- Required meta tags -->
+<meta http-equiv=”Content-Type” content="text/html;" charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-
+<link rel="stylesheet" th:href="@{/css/starRating.css}">
+<link rel="stylesheet"
+	href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
 
 <style>
@@ -38,6 +48,10 @@
 
 	<div class="container">
 		<div class="row">
+			<input type="hidden" id="idProducto" name="idProducto"
+				th:value="${Producto.idProducto}"> <input type="hidden"
+				id="idUsuario" name="idUsuario" th:value="${session.idUsuario}">
+
 
 			<div class="col-4">
 				<div class="card">
@@ -84,8 +98,7 @@
 
 							<form action="#"
 								th:action="@{/ImagenProducto/action-imagenProducto/{idProducto}(idProducto=${Producto.idProducto})}"
-								th:object="${ImagenProducto}" method="post"
-								enctype="multipart/form-data">
+								method="post" enctype="multipart/form-data">
 								<!-- Modal -->
 								<div class="modal fade" id="addImagenes" tabindex="-1"
 									role="dialog" aria-labelledby="addImagenesLabel"
@@ -124,11 +137,10 @@
 													type="hidden">
 
 												<div class="form-check form-check-inline">
-													<div th:each="lista : ${ListaImagen}"
-														th:object="${ImagenProducto}">
+													<div th:each="lista : ${ListaImagen}">
 
-														<input class="form-check-input" th:field="*{idImagen}"
-															type="radio" name="inlineRadioOptions"
+														<input class="form-check-input" type="radio"
+															name="inlineRadioOptions"
 															th:id="'imagen_'+${lista.idImagen}"
 															th:value="${lista.idImagen}"
 															onclick="obtenerIdImagen(this.value)"> <label
@@ -208,54 +220,69 @@
 							<span class="font-weight-bold">Stock : </span><span th:case="'0'">No
 								Stock</span> <span th:case="*" class="text-success">Stock</span>
 						</p>
-						<!-- cardbody -->
+
+						<!--  accion de valoracion de Estrellas. -->
+						<div id="aviso2"></div>
+						<div id="aviso"></div>
+
+						<p>Valora nuestro producto</p>
+
+						<x-star-rating value="3" number="5"></x-star-rating>
+						<script th:src="@{/js/accionValoracionEstrella.js}"></script>
 					</div>
-					<!-- card -->
+					<!-- cardbody -->
 				</div>
-				<!-- col-6 -->
+				<!-- card -->
 			</div>
-			<!-- row -->
+			<!-- col-6 -->
 		</div>
+		<!-- row -->
+	</div>
 
 
+	<br />
+	<br />
+
+	<div class="card">
+		<br /> <br />
+		<h3>¿Tienes Algunas preguntas?</h3>
 		<br /> <br />
 
-		<div class="card">
-			<br /> <br />
-			<h3>¿Tienes Algunas preguntas?</h3>
-			<br /> <br />
-			<form method="post"
-				th:action="@{/Producto/enviar-pregunta/{idProducto}(idProducto=${Producto.idProducto})}">
-				<div class="form-group">
-					<label for="textoPregunta">Preguntas</label>
-					<textarea class="form-control" id="textoPregunta"
-						name="textoPregunta" rows="3"></textarea>
-				</div>
-				<button type="submit" class="btn btn-primary mb-2">Enviar</button>
-			</form>
+		<div class="form-group">
+			<label for="textoPregunta">Preguntas</label>
 
+			<textarea class="form-control" id="textoPregunta"
+				name="textoPregunta" rows="4"></textarea>
 
-
-			<div th:if="${listaPreguntas != null}">
-				<div class="lead" th:each="pregunta : ${listaPreguntas}">
-					<p>
-						Pregunta : <span th:text="${pregunta.texto}"></span>
-					</p>
-					<p>
-						By : <span th:text="${pregunta.clientes.nombre}"></span>
-					</p>
-					<a class="btn btn-outline-info" href="#"
-						th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}">Ver
-						la respuesta</a>
-					<hr />
-
-				</div>
-				<!-- listaPreguntas -->
-			</div>
-			<!-- card -->
+			<button class="btn btn-primary mb-2 enviarPregunta"
+				id="enviarPregunta">Enviar</button>
+			
+			<script th:src="@{/js/respuestaPreguntas.js}"></script>
 		</div>
-		<!-- container -->
-		
+
+
+
+
+
+		<div id="listaPregunta" th:if="${listaPreguntas != null}">
+			<div class="lead" th:each="pregunta : ${listaPreguntas}">
+				<p>
+					Pregunta : <span th:text="${pregunta.texto}"></span>
+				</p>
+				<p>
+					By : <span th:text="${pregunta.clientes.nombre}"></span>
+				</p>
+				<!-- th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}" -->
+				<button class="btn btn-outline-info">Ver la respuesta</button>
+				<hr />
+
+			</div>
+			<!-- listaPreguntas -->
+		</div>
+		<!-- card -->
+	</div>
+	<!-- container -->
+
 	</div>
 </body>
 

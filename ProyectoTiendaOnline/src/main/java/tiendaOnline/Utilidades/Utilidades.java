@@ -56,30 +56,42 @@ public class Utilidades {
 		// Ejermplo: imagen.png
 		// --> png
 		String suffix = ofn.substring(ofn.lastIndexOf("."));
-
-		// el nombre de fichero en formato = uuid
-		// 43dsfd.png
-		String filename = UUID.randomUUID().toString() + suffix;
-		// Obtener la ruta del imagen -->
-		String filePath = rutaImage + filename;
-
-		File file = new File(filePath);
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
-		}
-
-		try {
-			imagenFile.transferTo(file);
-		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
-		}
-		String urlImagen = "/images/" + filename;
 		
-		imagenProducto.setImagen(encode);
-		imagenProducto.setUrlImagen(urlImagen);
+		if (validarImagen(suffix) == true) {
 
-		return imagenProducto;
+			// el nombre de fichero en formato = uuid
+			// 43dsfd.png
+			String filename = UUID.randomUUID().toString() + suffix;
+			// Obtener la ruta del imagen -->
+			String filePath = rutaImage + filename;
 
+			File file = new File(filePath);
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
+
+			try {
+				imagenFile.transferTo(file);
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+			String urlImagen = "/images/" + filename;
+			
+			imagenProducto.setUrlImagen(urlImagen);
+			return imagenProducto;
+		}else {
+			return null;
+		}
+
+
+	}
+	
+	public static boolean validarImagen(String suffix) {
+		if (suffix.equalsIgnoreCase("png") || suffix.equalsIgnoreCase("jpg") || suffix.equalsIgnoreCase("jpeg") || suffix.equalsIgnoreCase("git")) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 }

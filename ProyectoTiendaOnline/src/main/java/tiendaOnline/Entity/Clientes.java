@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -71,6 +73,9 @@ public class Clientes implements Serializable {
 	joinColumns = @JoinColumn(name = "idCliente"),
 	inverseJoinColumns = @JoinColumn(name = "idRol"))
 	private Set<Rol> roles = new HashSet<>();
+	
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Valoracion> valoraciones = new HashSet<>();
 
 	public Clientes() {
 

@@ -29,8 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.antMatchers("/", "/index", "/signup", "/Cliente/**", "/images/**", "/Producto/**")
+		http.authorizeRequests().antMatchers("/", "/index", "/signup", "/images/**", "create-user", "/js/**", "/css/**")
 				.permitAll().antMatchers("/admin/**").hasAuthority("admin").anyRequest().authenticated().and()
 				.formLogin().loginPage("/login").usernameParameter("email").loginProcessingUrl("/login")
 				.successHandler(myAuthenticationSuccessHandler()).permitAll().and().logout().invalidateHttpSession(true)
@@ -38,8 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout")
 				.permitAll();
 
-
-		http.cors().and().csrf().ignoringAntMatchers("/ImagenProducto/**").disable();
+		http.cors().and().csrf().ignoringAntMatchers("/ImagenProducto/action-imagenProducto/{idProducto}");
 		// http.headers().frameOptions().disable();
 
 	}
@@ -60,15 +58,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new MySimpleUrlAuthenticationSuccessHandler();
 	}
 
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("*"));
-		configuration.setAllowedMethods(Arrays.asList("*"));
-		configuration.setAllowedHeaders(Arrays.asList("*"));
-		configuration.setAllowCredentials(true);
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
+	
 }

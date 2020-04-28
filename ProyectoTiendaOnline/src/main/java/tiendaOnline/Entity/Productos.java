@@ -57,6 +57,9 @@ public class Productos implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
 	private Set<Categoria> categoria = new HashSet<>();
+	
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Valoracion> valoraciones = new HashSet<>();
 
 	public Productos() {
 
@@ -203,8 +206,10 @@ public class Productos implements Serializable {
 	public String toString() {
 		return "Productos [idProducto=" + idProducto + ", titulo=" + titulo + ", descripcion=" + descripcion
 				+ ", codProducto=" + codProducto + ", precio=" + precio + ", descuento=" + descuento + ", stock="
-				+ stock + ", imagen=" + imagen + ", categoria=" + categoria + "]";
+				+ stock + ", categoria=" + categoria + "]";
 	}
+
+	
 
 	
 }
