@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -186,8 +187,6 @@ public class ProductoController {
 
 		List<Preguntas> lPreguntas = preguntasServer.findByProductos(productoServer.findById(idProducto));
 
-		ImagenProducto imagen = new ImagenProducto();
-
 		mav.addObject("listaPreguntas", lPreguntas);
 		mav.addObject("Producto", productoServer.findById(idProducto));
 		mav.addObject("ListaImagen", imagenServer.findByProducto(productoServer.findById(idProducto)));
@@ -224,31 +223,29 @@ public class ProductoController {
 			valoracion = valoracionServer.save(valoracion);
 		}
 		if (valoracion == null && producto == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/enviarPregunta/{idProducto}", method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity enviar_pregunta(@PathVariable("idProducto") long idProducto,
-			@PathVariable("textoPregunta") String texto, HttpServletRequest request) {
-
+			HttpServletRequest request, @RequestBody String texto) {
 
 		long idCliente = (long) request.getSession().getAttribute("idUsuario");
 
 		Preguntas preguntas = new Preguntas(texto, clienteServer.findById(idCliente),
 				productoServer.findById(idProducto));
-		Preguntas preg = preguntasServer.save(preguntas);
 
+		Preguntas preg = preguntasServer.save(preguntas);
+		
 		if (preg == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity(HttpStatus.OK);
-
 		}
-
+		
+		System.err.println("<!------ -- Texto de Pregunta " + texto + " " + preg.toString());
+		return new ResponseEntity(HttpStatus.OK);
 	}
 	/*
 	 * @PostMapping("/enviar-pregunta/{idProducto}") public ModelAndView
@@ -319,6 +316,5 @@ public class ProductoController {
 		List<ProductosDto> listaProducto = productoServer.findByNombreAndCodProducto(nombreProducto);
 		return listaProducto;
 	}
-
 
 }

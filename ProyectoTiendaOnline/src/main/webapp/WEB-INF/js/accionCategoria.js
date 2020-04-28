@@ -136,15 +136,22 @@ function eliminarProductoCategoria() {
 
 function changeTextoToInput() {
 	var nombreCategoria = $('#nombreCategoria').text();
+	
 	var input = "<input type='text' id='nombreCategoria' class='form-control col-md-8' value= "+nombreCategoria+ "> &nbsp;"
 			+ " <button type='submit' class='btn btn-primary mb-2 modificarNombreCategoria' id='modificarNombreCategoria'><i class='fas fa-edit'></i></button> &nbsp; &nbsp;"
 			+ " <button class='btn btn-primary mb-2 buttonCancelarModifNomCategoria' id='buttonCancelarModifNomCategoria'>Cancelar</button>";
-	$('#funcionEditarCategoria').html(input);
 	
+	
+	$('#modificarNombreCategoria').click(function() {
+		modificarNombreCategoria();
+	});
 
 	$("#buttonCancelarModifNomCategoria").click(function() {
 		cancelarChangeNombreCategoria();
 	});
+	
+	$('#funcionEditarCategoria').html(input);
+
 
 
 }
@@ -160,4 +167,11 @@ function cancelarChangeNombreCategoria() {
 		changeTextoToInput();
 	});
 
+}
+
+function modificarNombreCategoria(){
+	
+	var nombreCategoria = $('#nombreCategoria').val();
+	console.log(nombreCategoria);
+	
 }

@@ -71,8 +71,11 @@
 									<div th:case="*" class="carousel-item ">
 										<img class="d-block w-100" th:src="${imagen.urlImagen}"
 											th:alt="${imagen.idImagen}" />
+										<!-- case *  -->
 									</div>
+									<!-- case 0 -->
 								</div>
+								<!-- switch -->
 							</div>
 
 							<a class="carousel-control-prev" href="#carouselExampleControls"
@@ -88,7 +91,6 @@
 							<!-- carousel slide -->
 						</div>
 						<br /> <br />
-
 
 						<!-- Details añadir,modificar, eliminar imagen de Producto -->
 						<div sec:authorize="hasAuthority('ROL_ADMIN')">
@@ -115,8 +117,8 @@
 													aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 												</button>
+												<!-- modal-content -->
 											</div>
-
 
 
 											<div class="modal-body">
@@ -150,7 +152,7 @@
 															style="width: 100px; height: 100px" />
 														</label>
 
-														<!-- each -->
+														<!-- each lista imagen-->
 													</div>
 													<script>
 														function obtenerIdImagen(
@@ -159,8 +161,7 @@
 																	.getElementById("showIdImagenProducto").value = idImagen;
 														}
 													</script>
-
-													<!-- modal-body -->
+													<!-- form-check -->
 												</div>
 												<!-- modalbody -->
 											</div>
@@ -176,7 +177,6 @@
 												<button type="submit" name="action" value="update">Editar</button>
 												<!-- / modal footer -->
 											</div>
-
 											<!-- modal content -->
 										</div>
 										<!-- /modal dialog -->
@@ -229,60 +229,66 @@
 
 						<x-star-rating value="3" number="5"></x-star-rating>
 						<script th:src="@{/js/accionValoracionEstrella.js}"></script>
+						<!-- cardbody de producto -->
 					</div>
-					<!-- cardbody -->
+					<!-- card -->
 				</div>
-				<!-- card -->
+				<!-- col-6 -->
 			</div>
-			<!-- col-6 -->
+			<!-- row -->
 		</div>
-		<!-- row -->
-	</div>
 
 
-	<br />
-	<br />
 
-	<div class="card">
-		<br /> <br />
-		<h3>¿Tienes Algunas preguntas?</h3>
 		<br /> <br />
 
-		<div class="form-group">
-			<label for="textoPregunta">Preguntas</label>
+		<div class="card my-5">
+			<br /> <br />
+			<h3>¿Tienes Algunas preguntas?</h3>
+			<br /> <br />
 
-			<textarea class="form-control" id="textoPregunta"
-				name="textoPregunta" rows="4"></textarea>
+			<div class="card-body">
+				<div class="col-md-10">
+					<div class="form-group">
+						<label for="textoPregunta">Preguntas</label>
 
-			<button class="btn btn-primary mb-2 enviarPregunta"
-				id="enviarPregunta">Enviar</button>
-			
-			<script th:src="@{/js/respuestaPreguntas.js}"></script>
-		</div>
+						<textarea class="form-control" id="textoPregunta"
+							name="textoPregunta" rows="4"></textarea>
+
+						<button class="btn btn-primary mb-2 enviarPregunta"
+							id="enviarPregunta">Enviar</button>
+
+						<script th:src="@{/js/accionPreguntas.js}"></script>
+						<!-- form-group -->
+					</div>
 
 
+					<div id="listaPregunta" th:switch="${listaPreguntas}">
+						<div class="lead" th:case="*">
+							<div th:each="pregunta : ${listaPreguntas}">
+								<p>
+									Pregunta : <span th:text="${pregunta.texto}"></span>
+								</p>
 
-
-
-		<div id="listaPregunta" th:if="${listaPreguntas != null}">
-			<div class="lead" th:each="pregunta : ${listaPreguntas}">
-				<p>
-					Pregunta : <span th:text="${pregunta.texto}"></span>
-				</p>
-				<p>
-					By : <span th:text="${pregunta.clientes.nombre}"></span>
-				</p>
-				<!-- th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}" -->
-				<button class="btn btn-outline-info">Ver la respuesta</button>
-				<hr />
-
+								<!-- th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}" -->
+								<button class="btn btn-outline-info">Ver la respuesta</button>
+								<hr />
+								<!-- each pregunta -->
+							</div>
+							<!-- th:case *  -->
+						</div>
+						<!-- listaPreguntas -->
+						<div class="lead" th:case="'null'">
+							<p>No hay preguntas.</p>
+						</div>
+					</div>
+					<!-- co-md-10 -->
+				</div>
+				<!-- card- body -->
 			</div>
-			<!-- listaPreguntas -->
+			<!-- card pregunta -->
 		</div>
-		<!-- card -->
-	</div>
-	<!-- container -->
-
+		<!-- container -->
 	</div>
 </body>
 
