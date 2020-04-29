@@ -1,5 +1,6 @@
 package tiendaOnline.Entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,8 +16,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "estadoPedido")
-public class EstadoPedido {
+public class EstadoPedido implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6151136374268310107L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idEstado")

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -230,83 +231,53 @@ public class ProductoController {
 
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/enviarPregunta/{idProducto}", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity enviar_pregunta(@PathVariable("idProducto") long idProducto,
-			HttpServletRequest request, @RequestBody String texto) {
+	public @ResponseBody Preguntas enviar_pregunta(@PathVariable("idProducto") long idProducto,
+			HttpServletRequest request, @RequestBody Preguntas pregun) {
 
 		long idCliente = (long) request.getSession().getAttribute("idUsuario");
 
-		Preguntas preguntas = new Preguntas(texto, clienteServer.findById(idCliente),
+		Preguntas preguntas = new Preguntas(pregun.getTexto(), clienteServer.findById(idCliente),
 				productoServer.findById(idProducto));
 
 		Preguntas preg = preguntasServer.save(preguntas);
-		
-		if (preg == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
-		
-		System.err.println("<!------ -- Texto de Pregunta " + texto + " " + preg.toString());
-		return new ResponseEntity(HttpStatus.OK);
-	}
-	/*
-	 * @PostMapping("/enviar-pregunta/{idProducto}") public ModelAndView
-	 * enviar_pregunta(@PathVariable("idProducto") long idProducto,
-	 * HttpServletRequest request) { ModelAndView mav = new ModelAndView();
-	 * 
-	 * HttpSession session = request.getSession(); long idCliente = (long)
-	 * session.getAttribute("idUsuario"); String texto =
-	 * request.getParameter("textoPregunta");
-	 * 
-	 * Preguntas preguntas = new Preguntas(texto, clienteServer.findById(idCliente),
-	 * productoServer.findById(idProducto)); Preguntas preg =
-	 * preguntasServer.save(preguntas); if (preg != null) {
-	 * 
-	 * }
-	 * 
-	 * List<Preguntas> lPreguntas =
-	 * preguntasServer.findByProductos(productoServer.findById(idProducto));
-	 * 
-	 * mav.addObject("listaPreguntas", lPreguntas);
-	 * 
-	 * mav.addObject("Producto", productoServer.findById(idProducto));
-	 * mav.setViewName("producto/perfil-producto");
-	 * 
-	 * return mav; }
-	 */
 
-	@GetMapping("/respuesta-producto/{idPregunta}")
-	public ModelAndView respuesta(@PathVariable("idPregunta") long idPregunta) {
+		if (preg == null) {
+			return null;
+		}
+		return preg;
+	}
+
+	@RequestMapping(value = "/respuestaProducto/{idPregunta}", method = RequestMethod.GET)
+	public  ModelAndView respuesta(@PathVariable("idPregunta") long idPregunta) {
 		ModelAndView mav = new ModelAndView();
 
 		Preguntas preguntas = preguntasServer.findById(idPregunta);
 		List<Respuestas> listRespuesta = respuestaServer.findByPreguntas(preguntas);
-
+		System.err.println(".........");
 		mav.addObject("listaRespuestas", listRespuesta);
 		mav.addObject("Pregunta", preguntas);
 		mav.setViewName("respuesta-producto");
-
 		return mav;
-
+		
 	}
 
-	@PostMapping("/enviar-respuesta/{idPregunta}")
-	public @ResponseBody ResponseEntity<Respuestas> recibir_respuesta(@PathVariable("idPregunta") long idPregunta,
-			@PathVariable("idUsuario") long idCliente, @PathVariable("textoRespuesta") String textoRespuesta,
-			@RequestBody Respuestas respuesta) {
+	@RequestMapping(value = "/enviar-respuesta/{idPregunta}", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity recibir_respuesta(@PathVariable("idPregunta") long idPregunta,
+			HttpServletRequest request, @RequestBody Respuestas respuesta, HttpServletResponse response) {
 
-		System.err.println(respuesta);
+		long idCliente = (long) request.getSession().getAttribute("idUsuario");
 
-		Respuestas respuestas = new Respuestas(textoRespuesta, clienteServer.findById(idCliente),
+		Respuestas respuestas = new Respuestas(respuesta.getTexto(), clienteServer.findById(idCliente),
 				preguntasServer.findById(idPregunta));
 
 		Respuestas resp = respuestaServer.save(respuestas);
-
+		
 		if (resp == null) {
-			return new ResponseEntity<Respuestas>(resp, HttpStatus.NOT_FOUND);
-
-		} else {
-			return new ResponseEntity<Respuestas>(resp, HttpStatus.OK);
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 
 		}
+		return new ResponseEntity(HttpStatus.OK);
+	
 
 	}
 

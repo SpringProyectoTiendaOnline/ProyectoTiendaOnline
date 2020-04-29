@@ -28,8 +28,13 @@ import javax.persistence.GenerationType;
 @Table(name = "Cliente", uniqueConstraints = @UniqueConstraint(columnNames = { "idCliente" }))
 public class Clientes implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3315598321290853046L;
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idCliente", nullable = false, unique = true)

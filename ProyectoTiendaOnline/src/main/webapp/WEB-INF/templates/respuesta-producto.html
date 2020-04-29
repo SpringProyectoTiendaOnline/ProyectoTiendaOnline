@@ -52,26 +52,25 @@
 						name="textoRespuesta" rows="3"></textarea>
 				</div>
 				<button type="submit"
-					class="btn btn-primary mb-2 buttonEnviarRespuesta" id="buttonEnviarRespuesta" name="buttonEnviarRespuesta">Enviar</button>
+					class="btn btn-primary mb-2 buttonEnviarRespuesta"
+					id="buttonEnviarRespuesta" name="buttonEnviarRespuesta">Enviar</button>
 
 				<hr />
-				<script th:src="@{/js/respuestaPreguntas.js}"></script>
+				<script th:src="@{/js/accionRespuestas.js}"></script>
 				<h4>Respuestas :</h4>
 
-				<div th:if="${listaRespuestas != null} ">
-					<div th:each="respuesta : ${listaRespuestas}">
-						<p th:text="${respuesta.texto}"></p>
-						<p>
-							By Cliente : <span th:text="${respuesta.clientes.nombre}"></span>
-						</p>
-						<hr />
+				<div id="listaRespuesta" th:switch="${listaRespuestas}">
+					<div class="lead" th:case="*">
+						<div th:each="respuesta : ${listaRespuestas}">
+							<p th:text="${respuesta.texto}"></p>
+							<hr />
+						</div>
+					</div>
+
+					<div th:case="'null'">
+						<p>No hay respuestas!</p>
 					</div>
 				</div>
-
-				<div th:unless="${listaRespuestas == null}">
-					<p>No hay respuestas!</p>
-				</div>
-
 			</div>
 		</div>
 	</div>

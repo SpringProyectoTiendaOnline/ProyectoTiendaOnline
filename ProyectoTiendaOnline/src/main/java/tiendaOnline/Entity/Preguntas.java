@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +24,10 @@ public class Preguntas implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1628363364763521008L;
+	/**
+	 * 
+	 */
 	@Id
 	@GeneratedValue
 	@Column(name = "idPregunta", nullable = false)
@@ -30,10 +36,12 @@ public class Preguntas implements Serializable {
 	@NotNull(message = "Debes especificar el texto")
 	private String texto;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idCliente", nullable = true)
 	private Clientes clientes;
-
+	
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idProducto", nullable = true)
 	private Productos productos;

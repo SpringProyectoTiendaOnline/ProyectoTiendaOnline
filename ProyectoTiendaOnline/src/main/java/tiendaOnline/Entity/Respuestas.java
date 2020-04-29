@@ -21,7 +21,10 @@ public class Respuestas implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7052076385812026463L;
+	/**
+	 * 
+	 */
 	@Id
 	@GeneratedValue
 	@Column(name = "idRespuesta", nullable = false)

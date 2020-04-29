@@ -20,7 +20,10 @@ public class Valoracion implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6337203157334932315L;
+	/**
+	 * 
+	 */
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

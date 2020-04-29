@@ -28,7 +28,10 @@ public class Productos implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6667711637025232024L;
+	/**
+	 * 
+	 */
 	@Id
 	@GeneratedValue
 	@Column(name = "idProducto", nullable = false)

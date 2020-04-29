@@ -7,6 +7,14 @@ $(document).ready(function() {
 	$("#changeInputButton").click(function() {
 		changeTextoToInput();
 	});
+	
+	$('#buttonCancelarModifNomCategoria').click(function() {
+		cancelarChangeNombreCategoria();
+	});
+	
+	$('#modificarNombreCategoria').click(function() {
+		modificarNombreCategoria();
+	});
 		
 	
 });
@@ -134,6 +142,7 @@ function eliminarProductoCategoria() {
 
 };
 
+
 function changeTextoToInput() {
 	var nombreCategoria = $('#nombreCategoria').text();
 	
@@ -159,9 +168,8 @@ function changeTextoToInput() {
 function cancelarChangeNombreCategoria() {
 	var nombreCategoria = $('#nombreCategoria').val();
 	var input = "<span>Categoría : </span> <span id='nombreCategoria' name='nombreCategoria'>" + nombreCategoria +  "</span> &nbsp; <button class='btn btn-primary changeInputButton' id = 'changeInputButton'> <i class='fas fa-edit'></i></button>";
-
+	console.log(nombreCategoria);
 	$('#funcionEditarCategoria').html(input);
-	
 
 	$("#changeInputButton").click(function() {
 		changeTextoToInput();
@@ -173,5 +181,9 @@ function modificarNombreCategoria(){
 	
 	var nombreCategoria = $('#nombreCategoria').val();
 	console.log(nombreCategoria);
+	
+	$("#buttonCancelarModifNomCategoria").click(function() {
+		cancelarChangeNombreCategoria();
+	});
 	
 }

@@ -3,67 +3,21 @@ $(document).ready(function() {
 		addPreguntas();
 	});
 
-	$("#buttonEnviarRespuesta").click(function() {
-		addRespuestas();
+	$("#showRespuesta").click(function() {
+		var idPregunta = document.getElementById('idPregunta').value;
+		openRespuesta(idPregunta);
 	});
 
 });
 
 function addPreguntas() {
 	var idProducto = document.getElementById('idProducto').value;
+
 	var textoPregunta = document.getElementById('textoPregunta').value;
 
 	var pregunta = {
-		'texto' : $(':input[name=textoPregunta]').val()
-	};
-	// 'idProducto':$(':input[name=idProducto]').val(),
-	// 'idCliente':$(':input[name=idUsuario]').val()
-
-	var preguntaData = JSON.stringify(pregunta);
-
-	var preg = JSON.parse(preguntaData);
-
-	console.log(textoPregunta + " " + pregunta + " " + preguntaData + " "
-			+ preg);
-
-	// token de html
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-
-	$(document).ajaxSend(function(e, xhr, options) {
-		// hace la petición AJAX y establece los datos en la cabecera
-		xhr.setRequestHeader(header, token);
-	});// ajaxSend
-
-	$.ajax({
-				url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviarPregunta/"
-						+ idProducto,
-				type : 'post',
-				contentType : "application/json; charset=utf-8",
-				data : textoPregunta,
-				cache : false,
-				dataType : "text",
-				success : function(response) {
-					var lista = "<p>Pregunta : <span>" + textoPregunta
-							+ "</span>" + "</p>" + "<p> By : <span>"
-							+ "</span></p>"+"<button class='btn btn-outline-info'> Ver la respuesta </button>" + "<hr />";
-					$("#listaPregunta").append(lista);
-				},//success
-
-				error : function(xhr, status, error) {
-					console.log("error de enviar la pregunta");
-				}
-
-			});
-
-};
-
-function addRespuestas() {
-	var idPregunta = document.getElementById('idPregunta').value;
-
-	var respuesta = {
-		'textoRespuesta' : $(':input[name=textoRespuesta]').val(),
-		'idPregunta' : $(':input[name=idPregunta]').val(),
+		'texto' : $(':input[name=textoPregunta]').val(),
+		'idProducto' : $(':input[name=idProducto]').val(),
 		'idCliente' : $(':input[name=idUsuario]').val()
 	};
 
@@ -76,29 +30,40 @@ function addRespuestas() {
 		xhr.setRequestHeader(header, token);
 	});// ajaxSend
 
-	var respuestaData = JSON.stringify(respuesta);
-
-	console.log(idPregunta + " " + respuestaData);
+	var preguntaData = JSON.stringify(pregunta);
 
 	$
 			.ajax({
-				url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviar-respuesta/"
-						+ idPregunta,
-				type : "POST",
-				cache : false,
-				dataType : "json",
-				data : respuestaData,
+				url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviarPregunta/"
+						+ idProducto,
+				type : 'POST',
 				contentType : "application/json; charset=utf-8",
+				data : preguntaData,
+				cache : false,
 
-				success : function(response) {
-					console.log(response);
-				},
+				success : function(data) {
+					console.log(data.idPregunta);
 
+					var lista = "<p id='idPregunta' style='display: none;'>"
+							+ data.idPregunta
+							+ "</p>"
+							+ "<p>Pregunta : <span>"
+							+ textoPregunta
+							+ "</span>"
+							+ "</p>"
+							+ "<a class='btn btn-outline-info showRespuesta' id='showRespuesta' href='http://localhost:8080/ProyectoTiendaOnline/Producto/respuestaProducto/"
+							+ data.idPregunta + "'>Ver la respuesta</a>"
+							+ "<hr />";
+
+					$("#listaPregunta").append(lista);
+					$('#textoPregunta').val("");
+
+				},// success
+ 
 				error : function(xhr, status, error) {
-					console.log(xhr + " , " + status + ", " + error);
-				},
+					console.log("error de enviar la pregunta");
+				}
 
 			});
 
 };
-

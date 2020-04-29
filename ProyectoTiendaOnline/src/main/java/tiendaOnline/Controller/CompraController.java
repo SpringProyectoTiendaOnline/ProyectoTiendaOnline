@@ -116,7 +116,7 @@ public class CompraController {
 		mav.addObject("msg", mensaje);
 		mav.addObject("Cliente", cliente);
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("list-product-user");
+		mav.setViewName("producto/list-product-user");
 
 		return mav;
 	}

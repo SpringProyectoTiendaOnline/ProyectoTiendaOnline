@@ -48,6 +48,7 @@
 
 	<div class="container">
 		<div class="row">
+
 			<input type="hidden" id="idProducto" name="idProducto"
 				th:value="${Producto.idProducto}"> <input type="hidden"
 				id="idUsuario" name="idUsuario" th:value="${session.idUsuario}">
@@ -258,20 +259,24 @@
 						<button class="btn btn-primary mb-2 enviarPregunta"
 							id="enviarPregunta">Enviar</button>
 
-						<script th:src="@{/js/accionPreguntas.js}"></script>
-						<!-- form-group -->
+
 					</div>
 
 
 					<div id="listaPregunta" th:switch="${listaPreguntas}">
 						<div class="lead" th:case="*">
 							<div th:each="pregunta : ${listaPreguntas}">
+								<p id="idPregunta" style="display: none;"
+									th:text="${pregunta.idPregunta}"></p>
+
 								<p>
 									Pregunta : <span th:text="${pregunta.texto}"></span>
 								</p>
 
 								<!-- th:href="@{/Producto/respuesta-producto/{idPregunta}(idPregunta=${pregunta.idPregunta})}" -->
-								<button class="btn btn-outline-info">Ver la respuesta</button>
+								<a class="btn btn-outline-info showRespuesta" id="showRespuesta"
+									th:href="@{/Producto/respuestaProducto/{idPregunta}(idPregunta = ${pregunta.idPregunta})}">Ver
+									la respuesta</a>
 								<hr />
 								<!-- each pregunta -->
 							</div>
@@ -281,6 +286,10 @@
 						<div class="lead" th:case="'null'">
 							<p>No hay preguntas.</p>
 						</div>
+
+						<script th:src="@{/js/accionPreguntas.js}"></script>
+						<!-- form-group -->
+
 					</div>
 					<!-- co-md-10 -->
 				</div>
