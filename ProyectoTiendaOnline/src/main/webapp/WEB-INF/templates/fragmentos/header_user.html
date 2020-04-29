@@ -28,6 +28,9 @@
 
 				<li><a class="nav-link"
 					th:href="@{/ListaPedido/list-pedido-user/{idCliente}(idCliente=${session.idUsuario})}">Pedidos</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+					th:href="@{/Categoria/lista-categoriaUser/{idCliente}(idCliente=${session.idUsuario})}">Productos por categoría</a></li>
 
 				<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Log
 						Out</a></li>

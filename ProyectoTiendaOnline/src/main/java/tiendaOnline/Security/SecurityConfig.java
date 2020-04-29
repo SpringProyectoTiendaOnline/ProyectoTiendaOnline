@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/index", "/signup", "/images/**", "create-user", "/js/**", "/css/**")
+		http.authorizeRequests().antMatchers("/", "/index", "/Cliente/signup", "/images/**", "/Cliente/create-cliente", "/js/**", "/css/**")
 				.permitAll().antMatchers("/admin/**").hasAuthority("admin").anyRequest().authenticated().and()
 				.formLogin().loginPage("/login").usernameParameter("email").loginProcessingUrl("/login")
 				.successHandler(myAuthenticationSuccessHandler()).permitAll().and().logout().invalidateHttpSession(true)

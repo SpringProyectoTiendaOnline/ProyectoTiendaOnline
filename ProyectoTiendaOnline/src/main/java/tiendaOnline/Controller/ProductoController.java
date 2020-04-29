@@ -231,17 +231,18 @@ public class ProductoController {
 
 
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/enviarPregunta/{idProducto}", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity enviar_pregunta(@PathVariable("idProducto") long idProducto,
+	@RequestMapping(method= RequestMethod.GET, value = "/enviarPregunta/{idProducto}")
+	public @ResponseBody ResponseEntity enviarPregunta(@PathVariable("idProducto") long idProducto,
 			@PathVariable("textoPregunta") String texto, HttpServletRequest request) {
 
 
-		long idCliente = (long) request.getSession().getAttribute("idUsuario");
-
+		 long idCliente = (long) request.getSession().getAttribute("idUsuario");
+		
+		System.out.println("ANTES DE ENVIARLA");
 		Preguntas preguntas = new Preguntas(texto, clienteServer.findById(idCliente),
 				productoServer.findById(idProducto));
 		Preguntas preg = preguntasServer.save(preguntas);
-
+		System.out.println("ENVIA PREGUNTA");
 		if (preg == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {

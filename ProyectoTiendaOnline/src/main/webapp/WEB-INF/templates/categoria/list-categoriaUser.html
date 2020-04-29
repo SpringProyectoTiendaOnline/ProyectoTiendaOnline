@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>Listado de Categorias</title>
+</head>
+<body>
+	<nav th:replace="fragmentos/header_loader"></nav>
+
+	<br />
+	<br />
+	<div class="container">
+		<div class="card">
+			<h5 class="card-header">Lista de categorias</h5>
+			<div class="card-body">
+				<div class="alert alert-danger" role="alert"
+					th:if="${Mensaje != null}">
+					<div th:each="error : ${Mensaje}">
+						<p th:text="${error.defaultMessage}">
+					</div>
+				</div>
+				<br /> 
+				
+								<div class="modal-body" th:object="${categoria}">
+								</div>
+								<div class="modal-footer">
+									<table class="table table-hover">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Listado de categorias</th>
+							<th scope="col">Nombre Categoria</th>
+							<th scope="col">Visualizar productos</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="categoria, iter : ${listaCategoria}">
+							<th scope="row" th:text="${iter.index + 1}"></th>
+							<td th:text="${categoria.nombreCategoria}"></td>
+							<td sec:authorize="hasAuthority('ROL_Usuario')">       <a
+								class="btn btn-primary"
+								th:href="@{/Categoria/list-4product-user/{idCategoria}(idCategoria=${categoria.idCategoria})}"><i
+									class="fas fa-glasses"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				<br /> <br />
+</body>
+</html>

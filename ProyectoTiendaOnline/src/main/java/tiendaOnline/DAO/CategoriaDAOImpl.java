@@ -92,4 +92,17 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 		return null;
 	}
 
+	@Override
+	public List<Productos> findCateg4Productos(long idCategoria) {
+		@SuppressWarnings("unchecked")
+		List<Productos> lProducto = this.em
+				.createQuery("Select p From Productos p join fetch p.categoria c Where c.idCategoria = :id")
+				.setParameter("id", idCategoria).setFirstResult(0).setMaxResults(4).getResultList();
+
+		if (lProducto != null) {
+			return lProducto;
+		}
+		return null;
+	}
+
 }

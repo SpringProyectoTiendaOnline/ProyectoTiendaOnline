@@ -20,7 +20,7 @@
 	<div class="container">
 
 		<h1>Lista de productos</h1>
-		<br />
+	<br/>	<br/>
 
 		<div class="alert alert-danger " th:if="${not #strings.isEmpty(msg)}">
 			<div th:each="error : ${msg}">
@@ -57,7 +57,7 @@
 							th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
 							class="btn btn-primary text-right">Ver</a></td>
 						<td><a href=#
-							th:href="@{/Compra/comprarProducto/{idCliente}/{idProducto}{idCliente}(idCliente=${session.idUsuario}, idProducto = ${producto.idProducto})}">
+							th:href="@{/Compra/comprarProductoCategoria/{idCliente}/{idProducto}{idCliente}(idCliente=${session.idUsuario}, idProducto = ${producto.idProducto})}">
 								<button type="button" class="btn btn-outline-success">
 									Añadir</button>
 						</a></td>

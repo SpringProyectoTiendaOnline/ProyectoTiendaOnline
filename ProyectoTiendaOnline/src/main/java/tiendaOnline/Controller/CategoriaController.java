@@ -2,6 +2,8 @@ package tiendaOnline.Controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Categoria;
+import tiendaOnline.Entity.Clientes;
+import tiendaOnline.Entity.Productos;
 import tiendaOnline.Server.CategoriaServer;
+import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.ProductoServer;
 
 @Controller
@@ -32,6 +38,11 @@ public class CategoriaController {
 	@Autowired
 	private ProductoServer productoServer;
 
+	@Autowired
+	private ClienteServer clienteServer;
+
+	private List<Productos> lista4Productos;
+
 	// Listar las categorias
 	@RequestMapping(method = RequestMethod.GET, value = "/lista-categoria")
 	public ModelAndView listaCategoria() {
@@ -43,6 +54,43 @@ public class CategoriaController {
 		mav.setViewName("categoria/list-categoria");
 		return mav;
 
+	}
+
+	// muestra la lista de categorias al usuario
+	@RequestMapping(method = RequestMethod.GET, value = "/lista-categoriaUser/{idCliente}")
+	public ModelAndView listaCategoriaUser(@PathVariable("idCliente") long idCliente) {
+		ModelAndView mav = new ModelAndView();
+		Categoria categoria = new Categoria();
+		mav.addObject("Cliente", clienteServer.findById(idCliente));
+		List<Categoria> listaCategoria = categoriaServer.getAll();
+		mav.addObject("categoria", categoria);
+		mav.addObject("listaCategoria", listaCategoria);
+		mav.setViewName("categoria/list-categoriaUser");
+		return mav;
+
+	}
+
+	// muestra los productos al usuario por categoria
+	@GetMapping("/list-product-user/{idCategoria}")
+	public ModelAndView listAllProductosForClients(@PathVariable("idCategoria") long idCategoria,
+			HttpServletRequest request) {
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("listaProductos", categoriaServer.findByCategoria(idCategoria));
+		mav.setViewName("categoria/list-product-user");
+		return mav;
+	}
+
+	// muestra los cuatro primeros productos dentro de cada categoria
+	@GetMapping("/list-4product-user/{idCategoria}")
+	public ModelAndView list4ProductosForClients(@PathVariable("idCategoria") long idCategoria,
+			HttpServletRequest request) {
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("listaProductos", categoriaServer.findByCategoria4(idCategoria));
+		mav.addObject("categoria", categoriaServer.findById(idCategoria));
+		mav.setViewName("categoria/list-4product-user");
+		return mav;
 	}
 
 	// Crear la categoria
@@ -96,7 +144,7 @@ public class CategoriaController {
 			@PathVariable("idProducto") long idProducto) {
 
 		Categoria categoria = categoriaServer.eliminarProductoCateg(idCategoria, idProducto);
-		
+
 		if (categoria == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

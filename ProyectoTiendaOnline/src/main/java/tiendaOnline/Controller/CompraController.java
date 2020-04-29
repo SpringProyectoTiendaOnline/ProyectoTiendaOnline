@@ -23,12 +23,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.DAO.EstadoRepository;
 import tiendaOnline.Entity.Banco;
+import tiendaOnline.Entity.Categoria;
 import tiendaOnline.Entity.Clientes;
 import tiendaOnline.Entity.Compra;
 import tiendaOnline.Entity.EstadoPedido;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Productos;
 import tiendaOnline.Server.BancoServer;
+import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
 import tiendaOnline.Server.LineaDeCompraServer;
@@ -50,6 +52,8 @@ public class CompraController {
 	private BancoServer bancoServer;
 	@Autowired
 	private EstadoRepository estado;
+	@Autowired
+	private CategoriaServer categoriaServer;
 
 	@GetMapping("/show-carrito/{idCliente}")
 	public ModelAndView showCarrito(@PathVariable("idCliente") long idCliente, Model model) {
@@ -80,6 +84,8 @@ public class CompraController {
 				if (carrito == null) {
 					carrito = new HashMap<Productos, Long>();
 					carrito.put(producto, (long) 1);
+					mensaje.put("msg", "hola!");
+
 
 				} else {
 					// Imprimimos el Map con un Iterador
@@ -116,7 +122,85 @@ public class CompraController {
 		mav.addObject("msg", mensaje);
 		mav.addObject("Cliente", cliente);
 		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("list-product-user");
+		mav.setViewName("producto/list-product-user");
+		
+		
+		
+
+		return mav;
+	}
+	
+	
+	/*
+	 * Duplico el metodo para que al realizarlo desde categoria me devuelva la vista de las categorias 
+	 */
+	
+	
+	@GetMapping("/comprarProductoCategoria/{idCliente}/{idProducto}")
+	public ModelAndView comprarProductoCategoria(HttpServletRequest request, @PathVariable("idCliente") long idCliente,
+			@PathVariable("idProducto") long idProducto) {
+		ModelAndView mav = new ModelAndView();
+		HttpSession sesion = request.getSession(true);
+
+		Productos producto = productoServer.findById(idProducto);
+		Clientes cliente = clienteServer.findById(idCliente);
+		@SuppressWarnings("unchecked")
+		HashMap<Productos, Long> carrito = (HashMap<Productos, Long>) sesion.getAttribute("sessionCarrito");
+		Map<String, Object> mensaje = new HashMap<>();
+		String msg = "msg";
+		boolean existe = false;
+
+		if (producto != null) {
+			if (producto.getStock() == 0) {
+				mensaje.put("msg", "Ya no queda el producto !");
+			} else {
+				if (carrito == null) {
+					carrito = new HashMap<Productos, Long>();
+					carrito.put(producto, (long) 1);
+					mensaje.put("msg", "hola!");
+
+
+				} else {
+					// Imprimimos el Map con un Iterador
+					Iterator<Productos> it = carrito.keySet().iterator();
+					while (it.hasNext() && !existe) {
+						Productos key = it.next();
+						if (key.getIdProducto() == producto.getIdProducto()) {
+							producto = key;
+							existe = true;
+						} else {
+							existe = false;
+						}
+					}
+
+					if (existe) {
+						if (producto.getStock() > carrito.get(producto)) {
+							carrito.put(producto, (long) carrito.get(producto) + 1);
+							System.err.println("Carrito " + carrito.keySet().iterator().next().getCodProducto()
+									+ " --->" + carrito.get(producto));
+						} else {
+							mensaje.put("msg", "El producto sólo queda : " + producto.getStock());
+						}
+					} else {
+						carrito.put(producto, (long) 1);
+						System.err.println("Carrito " + carrito.keySet().iterator().next().getCodProducto() + " --->"
+								+ carrito.get(producto));
+
+					}
+				}
+			}
+			sesion.setAttribute("sessionCarrito", carrito);
+
+		}
+		mav.addObject("msg", mensaje);
+		mav.addObject("Cliente", cliente);
+		
+		Categoria categoria = new Categoria();
+		List<Categoria> listaCategoria = categoriaServer.getAll();
+		mav.addObject("categoria", categoria);
+		mav.addObject("listaCategoria", listaCategoria);
+		mav.setViewName("categoria/list-categoriaUser");
+
 
 		return mav;
 	}

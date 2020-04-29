@@ -93,4 +93,17 @@ public class CategoriaServerImpl implements CategoriaServer {
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public List<Productos> findByCategoria(long idcategoria) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findCategProductos(idcategoria);
+	}
+
+	@Override
+	public List<Productos> findByCategoria4(long idcategoria) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findCateg4Productos(idcategoria);
+	}
+
 }

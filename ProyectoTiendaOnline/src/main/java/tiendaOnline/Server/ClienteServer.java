@@ -21,5 +21,6 @@ public interface ClienteServer {
 	public Clientes update(Clientes cliente);
 
 	public void delete(Clientes cliente);
+	
 
 }

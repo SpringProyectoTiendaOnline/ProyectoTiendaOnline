@@ -22,5 +22,11 @@ public interface CategoriaServer {
 	public Categoria saveProductoCateg(long idCategoria, Productos producto);
 
 	public Categoria eliminarProductoCateg(long idCategoria, long idProducto);
+	
+	public List <Productos> findByCategoria(long idcategoria);
+	
+	public List <Productos> findByCategoria4(long idcategoria);
+
+
 
 }

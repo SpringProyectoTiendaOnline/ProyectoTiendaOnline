@@ -19,7 +19,10 @@
 
 	<div class="container">
 
-		<h1>Lista de productos</h1>
+		<br /> <br />
+
+
+		<h1>Listado de los 4 primeros productos</h1>
 		<br />
 
 		<div class="alert alert-danger " th:if="${not #strings.isEmpty(msg)}">
@@ -27,6 +30,8 @@
 				<p th:text="${error}">
 			</div>
 		</div>
+		
+		
 
 		<div class="panel panel-default">
 			<h4 class="panel-heading">Productos:</h4>
@@ -57,14 +62,21 @@
 							th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
 							class="btn btn-primary text-right">Ver</a></td>
 						<td><a href=#
-							th:href="@{/Compra/comprarProducto/{idCliente}/{idProducto}{idCliente}(idCliente=${session.idUsuario}, idProducto = ${producto.idProducto})}">
+							th:href="@{/Compra/comprarProductoCategoria/{idCliente}/{idProducto}{idCliente}(idCliente=${session.idUsuario}, idProducto = ${producto.idProducto})}">
 								<button type="button" class="btn btn-outline-success">
 									Añadir</button>
 						</a></td>
-						
+
 					</tr>
 				</tbody>
 			</table>
+			<a href="#" th:href="@{/Categoria/list-product-user/{idCategoria}(idCategoria=${categoria.idCategoria})}">
+
+				<button class="btn btn-lg btn-success btn-block" type="submit">
+					<span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Ver
+					más productos
+				</button>
+			</a>
 		</div>
 	</div>
 </body>

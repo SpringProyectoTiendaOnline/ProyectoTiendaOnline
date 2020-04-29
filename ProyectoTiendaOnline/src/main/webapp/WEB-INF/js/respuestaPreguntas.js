@@ -1,6 +1,6 @@
-$(document).ready(function() {
+ $(document).ready(function() {
 	$( "#enviarPregunta" ).click(function() {
-		addPreguntas();
+		enviarPregunta();
 	});
 	
 	$( "#buttonEnviarRespuesta" ).click(function() {
@@ -8,52 +8,48 @@ $(document).ready(function() {
 	});
 
 });
-
-function addPreguntas(){
+ 
+function enviarPregunta(){
 	var idProducto = document.getElementById('idProducto').value;
 	var textoPregunta = document.getElementById('textoPregunta').value;
 	
-	var pregunta = {'textoPregunta':$(':input[name=textoPregunta]').val(),
+	// token de html
+	
+	var token = $("meta[name='_csrf']").attr("content");
+	  var header = $("meta[name='_csrf_header']").attr("content");
+	  $(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	  });
+	
+	 var pregunta = {'textoPregunta':$(':input[name=textoPregunta]').val(),
 				'idProducto':$(':input[name=idProducto]').val(),
 				'idCliente':$(':input[name=idUsuario]').val()
 	};
-	
-	console.log(textoPregunta + " " + pregunta);
-	
-	
-	// token de html
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-
-	$(document).ajaxSend(function(e, xhr, options) {
-		// hace la petición AJAX y establece los datos en la cabecera
-		xhr.setRequestHeader(header, token);
-	});//ajaxSend
-
-	
+	//console.log(textoPregunta + " " + pregunta);
 	$.ajax({
 		url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviarPregunta/"+idProducto,
-		type : 'post',
+		type : 'GET',
 		contentType : "application/json; charset=utf-8",
-		data : 'texto=' + $("#textoPregunta").val()+ "&idProducto;=" + $("#idProducto").val() + "&idCliente;=" + $("idCliente").val(),
+		data : "&textoPregunta;=" + $("#textoPregunta").val()+ "&idProducto;=" + $("#idProducto").val() + "&idCliente;=" + $("idCliente").val(),
 		cache : false,
 		success : function(response){
 	         var obj = JSON.parse(response);
-
-	         var lista = "<p>Pregunta : <span>"+textoPregunta+"</span>"+"</p>"+
+	        var lista = "<p>Pregunta : <span>"+textoPregunta+"</span>"+"</p>"+
 						  "<p> By : <span>" +idCliente + "</span></p>"
 						  "<button class='btn btn-outline-info'>"+ "Ver la respuesta "+"</button>"+
 						  "<hr />";
 	         $("#listaPregunta").append(lista);
+	        
 		},
-		
 		error : function(xhr, status, error) {
 			console.log("error de enviar la pregunta");
 		}
-		
 	});
-	
 };
+
+
+
+
 
 
 
