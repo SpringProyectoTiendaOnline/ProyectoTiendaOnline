@@ -15,7 +15,10 @@ public interface CategoriaDAO extends GenericDao<Categoria> {
 	
 	public List<Productos> findCategProductos(long idCategoria);
 	
-	public List<Productos> findCateg4Productos(long idCategoria);
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit);
+
+	
+	
 
 	
 	public Categoria eliminarProductoCateg(long idCategoria, Productos producto);

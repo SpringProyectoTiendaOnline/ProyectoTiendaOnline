@@ -25,7 +25,9 @@ public interface CategoriaServer {
 	
 	public List <Productos> findByCategoria(long idcategoria);
 	
-	public List <Productos> findByCategoria4(long idcategoria);
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit);
+
+	
 
 
 

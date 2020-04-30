@@ -1,5 +1,6 @@
 package tiendaOnline.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,8 @@ public class CategoriaController {
 	@Autowired
 	private ClienteServer clienteServer;
 
-	private List<Productos> lista4Productos;
+//para la busqueda paginada
+	private int result = 0;
 
 	// Listar las categorias
 	@RequestMapping(method = RequestMethod.GET, value = "/lista-categoria")
@@ -66,30 +68,22 @@ public class CategoriaController {
 		mav.addObject("categoria", categoria);
 		mav.addObject("listaCategoria", listaCategoria);
 		mav.setViewName("categoria/list-categoriaUser");
+		result = 0;
 		return mav;
 
 	}
 
-	// muestra los productos al usuario por categoria
-	@GetMapping("/list-product-user/{idCategoria}")
-	public ModelAndView listAllProductosForClients(@PathVariable("idCategoria") long idCategoria,
-			HttpServletRequest request) {
-
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("listaProductos", categoriaServer.findByCategoria(idCategoria));
-		mav.setViewName("categoria/list-product-user");
-		return mav;
-	}
-
-	// muestra los cuatro primeros productos dentro de cada categoria
+	// muestra de cuatro en cuatro los productos por categoria
 	@GetMapping("/list-4product-user/{idCategoria}")
 	public ModelAndView list4ProductosForClients(@PathVariable("idCategoria") long idCategoria,
 			HttpServletRequest request) {
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("listaProductos", categoriaServer.findByCategoria4(idCategoria));
 		mav.addObject("categoria", categoriaServer.findById(idCategoria));
+
+		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
 		mav.setViewName("categoria/list-4product-user");
+		result = result + 4;
 		return mav;
 	}
 

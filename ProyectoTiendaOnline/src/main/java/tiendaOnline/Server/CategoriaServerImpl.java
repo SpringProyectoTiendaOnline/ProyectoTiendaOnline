@@ -101,9 +101,12 @@ public class CategoriaServerImpl implements CategoriaServer {
 	}
 
 	@Override
-	public List<Productos> findByCategoria4(long idcategoria) {
+	@Transactional
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit) {
 		// TODO Auto-generated method stub
-		return categoriaDao.findCateg4Productos(idcategoria);
+		return categoriaDao.findCategProductosPaginada(idCategoria, index, limit);
 	}
+
+	
 
 }

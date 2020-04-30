@@ -22,7 +22,7 @@
 		<br /> <br />
 
 
-		<h1>Listado de los 4 primeros productos</h1>
+		<h1>Productos</h1>
 		<br />
 
 		<div class="alert alert-danger " th:if="${not #strings.isEmpty(msg)}">
@@ -70,11 +70,10 @@
 					</tr>
 				</tbody>
 			</table>
-			<a href="#" th:href="@{/Categoria/list-product-user/{idCategoria}(idCategoria=${categoria.idCategoria})}">
+			<a href="#" th:href="@{/Categoria/list-4product-user/{idCategoria}(idCategoria=${categoria.idCategoria})}">
 
 				<button class="btn btn-lg btn-success btn-block" type="submit">
-					<span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Ver
-					más productos
+					<span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Ver siguientes productos
 				</button>
 			</a>
 		</div>
