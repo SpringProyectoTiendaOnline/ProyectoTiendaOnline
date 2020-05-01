@@ -48,7 +48,7 @@ public class CategoriaController {
 
 	// Listar las categorias
 	@RequestMapping(method = RequestMethod.GET, value = "/lista-categoria")
-	public String listaCategoria(HttpServletRequest request, @RequestParam("page") Optional<Integer> page,
+	public ModelAndView listaCategoria(HttpServletRequest request, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
 		ModelAndView mav = new ModelAndView();
 		long idCliente = (long) request.getSession().getAttribute("idUsuario");
@@ -59,8 +59,7 @@ public class CategoriaController {
 		mav.addObject("listaCategoria", listaCategoria);
 		mav.setViewName("categoria/list-categoria");
 
-		return "redirect:/Producto/list-product-user/" + idCliente;
-
+		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/lista_producto_nombreCategoria/{idCategoria}/{nombreCategoria}")
@@ -73,7 +72,7 @@ public class CategoriaController {
 		int pageSize = size.orElse(5);
 
 		Page<Productos> productosPage = categoriaServer
-				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize),idCategoria);
+				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria);
 		mav.addObject("productoPage", productosPage);
 		int totalPages = productosPage.getTotalPages();
 		if (totalPages > 0) {
