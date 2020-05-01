@@ -1,23 +1,36 @@
-$(document).ready(function() {
-	var boton = document.getElementsByClassName('borrarProductoCategoria');
-	for (var i = 0; i < boton.length; i++) {
-		boton[i].addEventListener('click', eliminarProductoCategoria, false);
-	}
+$(document).ready(
+		function() {
+			var boton = document
+					.getElementsByClassName('borrarProductoCategoria');
+			for (var i = 0; i < boton.length; i++) {
+				boton[i].addEventListener('click', eliminarProductoCategoria,
+						false);
+			}
 
-	$("#changeInputButton").click(function() {
-		changeTextoToInput();
-	});
-	
-	$('#buttonCancelarModifNomCategoria').click(function() {
-		cancelarChangeNombreCategoria();
-	});
-	
-	$('#modificarNombreCategoria').click(function() {
-		modificarNombreCategoria();
-	});
-		
-	
-});
+			var botonEliminar = document
+					.getElementsByClassName('borrarCategoria');
+			for (var i = 0; i < botonEliminar.length; i++) {
+				botonEliminar[i].addEventListener('click',
+						accionEliminarCategoria, false);
+			}
+
+			$("#changeInputButton").click(function() {
+				changeTextoToInput();
+			});
+
+			$('#buttonCancelarModifNomCategoria').click(function() {
+				cancelarChangeNombreCategoria();
+			});
+
+			$('#modificarNombreCategoria').click(function() {
+				modificarNombreCategoria();
+			});
+
+			$('#borrarCategoria').click(function() {
+				accionEliminarCategoria();
+			});
+
+		});
 
 // Crear typeahead
 var producto = new Bloodhound(
@@ -83,6 +96,7 @@ function addProductoCategoria(productoDto) {
 								eliminarProductoCategoria, false);
 					}
 
+					$('#buscarProducto').val("");
 					$('#aviso').html("");
 
 				},// success
@@ -93,7 +107,7 @@ function addProductoCategoria(productoDto) {
 					var aviso = "<div class='alert alert-danger' role='alert'>"
 							+ "El producto ya imparte en esta categoria"
 							+ "</div>";
-
+					$('#buscarProducto').val("");
 					$('#aviso').html(aviso);
 				}// error
 			});// ajax
@@ -126,6 +140,7 @@ function eliminarProductoCategoria() {
 				contentType : "application/json; charset=utf-8",
 				method : "DELETE",
 				success : function(response) {
+
 					$(obj).closest("tr").remove(); // eliminar el elemento de
 					// obj dentro del tr de
 					// producyo
@@ -142,48 +157,137 @@ function eliminarProductoCategoria() {
 
 };
 
-
 function changeTextoToInput() {
 	var nombreCategoria = $('#nombreCategoria').text();
-	
-	var input = "<input type='text' id='nombreCategoria' class='form-control col-md-8' value= "+nombreCategoria+ "> &nbsp;"
+
+	var input = "<input type='text' id='nombreCategoria' name='nombreCategoria' class='form-control col-md-8' value= "
+			+ nombreCategoria
+			+ "> &nbsp;"
 			+ " <button type='submit' class='btn btn-primary mb-2 modificarNombreCategoria' id='modificarNombreCategoria'><i class='fas fa-edit'></i></button> &nbsp; &nbsp;"
 			+ " <button class='btn btn-primary mb-2 buttonCancelarModifNomCategoria' id='buttonCancelarModifNomCategoria'>Cancelar</button>";
-	
-	
-	$('#modificarNombreCategoria').click(function() {
-		modificarNombreCategoria();
+
+	$(document).ready(function() {
+
+		$('#modificarNombreCategoria').click(function() {
+			modificarNombreCategoria();
+		});
+
+		$("#buttonCancelarModifNomCategoria").click(function() {
+			cancelarChangeNombreCategoria();
+		});
 	});
 
-	$("#buttonCancelarModifNomCategoria").click(function() {
-		cancelarChangeNombreCategoria();
-	});
-	
 	$('#funcionEditarCategoria').html(input);
-
-
 
 }
 
 function cancelarChangeNombreCategoria() {
 	var nombreCategoria = $('#nombreCategoria').val();
-	var input = "<span>Categoría : </span> <span id='nombreCategoria' name='nombreCategoria'>" + nombreCategoria +  "</span> &nbsp; <button class='btn btn-primary changeInputButton' id = 'changeInputButton'> <i class='fas fa-edit'></i></button>";
-	console.log(nombreCategoria);
+	var input = "<span>Categoría : </span> <span id='nombreCategoria' name='nombreCategoria'>"
+			+ nombreCategoria
+			+ "</span> &nbsp; <button class='btn btn-primary changeInputButton' id = 'changeInputButton'> <i class='fas fa-edit'></i></button>";
 	$('#funcionEditarCategoria').html(input);
 
-	$("#changeInputButton").click(function() {
-		changeTextoToInput();
+	$(document).ready(function() {
+		$("#changeInputButton").click(function() {
+			changeTextoToInput();
+		});
 	});
 
 }
 
-function modificarNombreCategoria(){
-	
+function modificarNombreCategoria() {
+
 	var nombreCategoria = $('#nombreCategoria').val();
-	console.log(nombreCategoria);
-	
-	$("#buttonCancelarModifNomCategoria").click(function() {
-		cancelarChangeNombreCategoria();
-	});
-	
+	var idCategoria = document.getElementById('idCategoria').value;
+
+	// token de html
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+
+	$(document).ajaxSend(function(e, xhr, options) {
+		// hace la petición AJAX y establece los datos en la cabecera
+		xhr.setRequestHeader(header, token);
+	});// ajaxSend
+
+	$
+			.ajax({
+				url : "http://localhost:8080/ProyectoTiendaOnline/Categoria/update-nombreCategoria/"
+						+ idCategoria,
+				contentType : "application/json; charset=utf-8",
+				method : "POST",
+				data : nombreCategoria,
+				dataType : 'text',
+				cache : false,
+				success : function(response) {
+					var aviso = "<div class='alert alert-success' role='alert'>"
+							+ "El nombre de Categoria  ha sido modificado !"
+							+ "</div>" + "";
+					$('#aviso').html(aviso);
+
+					var input = "<span>Categoría : </span> <span id='nombreCategoria' name='nombreCategoria'>"
+							+ nombreCategoria
+							+ "</span> &nbsp; <button class='btn btn-primary changeInputButton' id = 'changeInputButton'> <i class='fas fa-edit'></i></button>";
+					$('#funcionEditarCategoria').html(input);
+
+					$(document).ready(function() {
+						$("#changeInputButton").click(function() {
+							changeTextoToInput();
+						});
+					});
+
+				},
+
+				error : function(xhr, status, error) {
+					var aviso = "<div class='alert alert-danger' role='alert'>"
+							+ "El nombre de Categoria no ha sido modificado por causa del servidor"
+							+ "</div>" + "";
+					$('#aviso').html(aviso);
+				}
+			});
+
+}
+
+function accionEliminarCategoria() {
+	var obj = $(this);
+	var idCategoria = $(this).closest("tr").find("#idCategoria").text();// si
+																		// encuentra,
+																		// se
+																		// cierra
+																		// "tr"
+
+	// token de html
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+
+	$(document).ajaxSend(function(e, xhr, options) {
+		// hace la petición AJAX y establece los datos en la cabecera
+		xhr.setRequestHeader(header, token);
+	});// ajaxSend
+
+	$
+			.ajax({
+				url : "http://localhost:8080/ProyectoTiendaOnline/Categoria/eliminarCategoria/"
+						+ idCategoria,
+				contentType : "application/json; charset=utf-8",
+				method : "DELETE",
+				success : function(response) {
+					$(obj).closest("tr").remove(); // eliminar el elemento de
+					// obj dentro del tr de
+					// producyo
+
+					var aviso = "<div class='alert alert-success' role='alert'>"
+							+ "La categoria ha sido eliminado" + "</div>" + "";
+					$('#aviso').html(aviso);
+
+				},
+
+				error : function(xhr, status, error) {
+					var aviso = "<div class='alert alert-danger' role='alert'>"
+							+ "La categoria no ha sido eliminado" + "</div>"
+							+ "";
+					$('#aviso').html(aviso);
+				}
+			});
+
 }

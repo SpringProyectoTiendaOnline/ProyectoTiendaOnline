@@ -2,6 +2,7 @@ package tiendaOnline.DAO;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Component;
@@ -59,15 +60,17 @@ public class ClienteDAOImpl extends GenericDaoImpl<Clientes> implements ClienteD
 
 	@Override
 	public Clientes findById(long id) {
-		Query query = this.em.createQuery("From Clientes c Where c.idCliente =:id");
-		query.setParameter("id", id);
-		Clientes cliente = (Clientes) query.getSingleResult();
-		if (cliente != null) {
-			return cliente;
+		try {
+			Query query = this.em.createQuery("From Clientes c Where c.idCliente =:id");
+			query.setParameter("id", id);
+			Clientes cliente = (Clientes) query.getSingleResult();
+			if (cliente != null) {
+				return cliente;
+			}
+		} catch (NoResultException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
-
-
 
 }

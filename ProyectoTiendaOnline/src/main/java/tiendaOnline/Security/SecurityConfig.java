@@ -1,7 +1,5 @@
 package tiendaOnline.Security;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
@@ -15,9 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -29,7 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/index", "/Cliente/signup", "/images/**", "/Cliente/create-user", "/js/**", "/css/**")
+		http.authorizeRequests()
+				.antMatchers("/", "/index", "/Cliente/signup", "/imagen/**", "/Cliente/create-cliente", "/js/**",
+						"/css/**", "/Producto/searchProducto/{titulo}")
 				.permitAll().antMatchers("/admin/**").hasAuthority("admin").anyRequest().authenticated().and()
 				.formLogin().loginPage("/login").usernameParameter("email").loginProcessingUrl("/login")
 				.successHandler(myAuthenticationSuccessHandler()).permitAll().and().logout().invalidateHttpSession(true)
@@ -58,5 +55,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new MySimpleUrlAuthenticationSuccessHandler();
 	}
 
-	
 }

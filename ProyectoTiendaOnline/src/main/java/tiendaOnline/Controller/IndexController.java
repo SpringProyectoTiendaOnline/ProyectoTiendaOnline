@@ -1,6 +1,5 @@
 package tiendaOnline.Controller;
 
-
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,21 +18,21 @@ import tiendaOnline.Server.*;
 public class IndexController {
 
 	@Autowired
-	private ClienteServer ClienteServer;
-	@Autowired
-	private BancoServer BancoServer;
-	@Autowired
 	private ProductoServer productoServer;
-	
+
 	@Autowired
 	private ImagenProductoServer imagenServer;
 
-	@GetMapping("/indice")
+	@Autowired
+	private CategoriaServer categoriaServer;
+
+	@GetMapping({ "/", "index" })
 	public ModelAndView indice() {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.addObject("imagenServer", imagenServer);
-		mav.setViewName("index");
+		mav.setViewName("indice");
 		return mav;
 	}
 
@@ -41,8 +41,9 @@ public class IndexController {
 	 * 
 	 * @return
 	 */
-	@GetMapping({ "/", "/login" })
-	public String login() {
+	@GetMapping("/login")
+	public String login(Model theModel) {
+		theModel.addAttribute("listaCategoria", categoriaServer.getAll());
 		return "login";
 	}
 

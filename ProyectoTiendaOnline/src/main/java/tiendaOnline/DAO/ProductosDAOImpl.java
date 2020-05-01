@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import tiendaOnline.Dto.ProductosDto;
+import tiendaOnline.Entity.Categoria;
 import tiendaOnline.Entity.Productos;
 
 @Repository
@@ -38,18 +39,13 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 	}
 
 	@Override
-	public List<Productos> findByCodProducto(long codProducto) {
+	public Productos findByCodProducto(long codProducto) {
 		try {
-			Query query = this.em.createQuery("Select p From Productos p Where p.codProducto like %" + ":codigo" + "%");
-			// Query query = sess().createQuery("from UserProfile where firstName LIKE
-			// :name")
-			// .setParameter("name", "%"+name+"%");
-
+			Query query = this.em.createQuery("Select p From Productos p Where p.codProducto = :codigo");
 			query.setParameter("codigo", codProducto);
-			@SuppressWarnings("unchecked")
-			List<Productos> producto = query.getResultList();
+			Productos producto = (Productos) query.getSingleResult();
 
-			if (!producto.isEmpty()) {
+			if (producto != null) {
 				return producto;
 			}
 
@@ -98,10 +94,9 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 	@Override
 	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto) {
 
-		Query query = this.em
-				.createQuery("From Productos p where concat(p.codProducto,' ',p.titulo) like :nc");
+		Query query = this.em.createQuery("From Productos p where concat(p.codProducto,' ',p.titulo) like :nc");
 		query.setParameter("nc", "%" + nombreCodProducto + "%");
-		
+
 		List<Productos> lProducto = query.getResultList();
 
 		if (lProducto != null) {
@@ -114,6 +109,21 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 	private ProductosDto convertToProductoDto(Productos producto) {
 		ProductosDto productoDto = modelMapper.map(producto, ProductosDto.class);
 		return productoDto;
+	}
+
+	@Override
+	public List<Productos> findByCategoria(Categoria categoria) {
+		@SuppressWarnings("unchecked")
+		List<Productos> productos = this.em
+				.createQuery("From Productos p join fetch p.categoria c where c.idCategoria = :id")
+				.setParameter("id", categoria.getIdCategoria()).getResultList();
+
+		if (productos != null) {
+			return productos;
+		}
+
+		return null;
+
 	}
 
 }

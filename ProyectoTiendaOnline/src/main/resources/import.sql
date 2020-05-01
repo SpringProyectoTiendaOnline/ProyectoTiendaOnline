@@ -10,12 +10,12 @@ INSERT INTO Cliente (nombre,apellido,fnacimiento,direccion,email,password) VALUE
 INSERT INTO Clientes_rol VALUES  (1,2);
 
 
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(123,'x1','o1',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1223,'x2','o2',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1243,'x3','o3',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1253,'x4','o4',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1263,'x5','o5',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1273,'x6','o6',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1283,'x7','o7',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(1293,'x8','o8',123,0,100);
-INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock) VALUES(12123,'x9','o9',123,0,100);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(123,'x1','o1',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1223,'x2','o2',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1243,'x3','o3',123,0,100.null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1253,'x4','o4',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1263,'x5','o5',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1273,'x6','o6',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1283,'x7','o7',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(1293,'x8','o8',123,0,100,null);
+INSERT INTO Productos (codProducto,titulo,descripcion,precio,descuento,stock,valoracionMedia) VALUES(12123,'x9','o9',123,0,100,null);

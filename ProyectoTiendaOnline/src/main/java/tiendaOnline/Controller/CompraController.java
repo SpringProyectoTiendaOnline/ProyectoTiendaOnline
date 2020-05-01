@@ -1,4 +1,5 @@
 package tiendaOnline.Controller;
+
 import java.util.Date;
 
 import java.util.HashMap;
@@ -29,8 +30,10 @@ import tiendaOnline.Entity.EstadoPedido;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Productos;
 import tiendaOnline.Server.BancoServer;
+import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
+import tiendaOnline.Server.ImagenProductoServer;
 import tiendaOnline.Server.LineaDeCompraServer;
 import tiendaOnline.Server.ProductoServer;
 
@@ -50,11 +53,16 @@ public class CompraController {
 	private BancoServer bancoServer;
 	@Autowired
 	private EstadoRepository estado;
+	@Autowired
+	private ImagenProductoServer imagenServer;
+	@Autowired
+	private CategoriaServer categoriaServer;
 
 	@GetMapping("/show-carrito/{idCliente}")
 	public ModelAndView showCarrito(@PathVariable("idCliente") long idCliente, Model model) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("Cliente", clienteServer.findById(idCliente));
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("carrito");
 		return mav;
 	}
@@ -67,16 +75,19 @@ public class CompraController {
 
 		Productos producto = productoServer.findById(idProducto);
 		Clientes cliente = clienteServer.findById(idCliente);
+
 		@SuppressWarnings("unchecked")
 		HashMap<Productos, Long> carrito = (HashMap<Productos, Long>) sesion.getAttribute("sessionCarrito");
 		Map<String, Object> mensaje = new HashMap<>();
-		String msg = "msg";
 		boolean existe = false;
 
 		if (producto != null) {
+			// si no queda el stock de producto
 			if (producto.getStock() == 0) {
 				mensaje.put("msg", "Ya no queda el producto !");
+
 			} else {
+
 				if (carrito == null) {
 					carrito = new HashMap<Productos, Long>();
 					carrito.put(producto, (long) 1);
@@ -97,15 +108,11 @@ public class CompraController {
 					if (existe) {
 						if (producto.getStock() > carrito.get(producto)) {
 							carrito.put(producto, (long) carrito.get(producto) + 1);
-							System.err.println("Carrito " + carrito.keySet().iterator().next().getCodProducto()
-									+ " --->" + carrito.get(producto));
 						} else {
 							mensaje.put("msg", "El producto sólo queda : " + producto.getStock());
 						}
 					} else {
 						carrito.put(producto, (long) 1);
-						System.err.println("Carrito " + carrito.keySet().iterator().next().getCodProducto() + " --->"
-								+ carrito.get(producto));
 
 					}
 				}
@@ -113,15 +120,16 @@ public class CompraController {
 			sesion.setAttribute("sessionCarrito", carrito);
 
 		}
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+		mav.addObject("Producto", producto);
 		mav.addObject("msg", mensaje);
-		mav.addObject("Cliente", cliente);
-		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("producto/list-product-user");
+		mav.addObject("ListaImagen", imagenServer.findByProducto(producto));
+		mav.setViewName("producto/perfil-producto");
 
 		return mav;
 	}
 
-	//Eliminar el producto desde el carrito
+	// Eliminar el producto desde el carrito
 	@SuppressWarnings("unchecked")
 	@GetMapping("/eliminar-producto-carrito/{idCliente}/{idProducto}")
 	public ModelAndView eliminar_producto_carrito(HttpServletRequest request, @PathVariable("idCliente") long idCliente,
@@ -135,10 +143,10 @@ public class CompraController {
 		Clientes cliente = clienteServer.findById(idCliente);
 
 		Iterator<Entry<Productos, Long>> it = carrito.entrySet().iterator();
-		
+
 		if (carrito.keySet().size() == 0) {
 			System.out.println("0");
-		}else {
+		} else {
 			while (it.hasNext()) {
 				Entry<Productos, Long> key = it.next();
 				System.out.println(key);
@@ -147,10 +155,10 @@ public class CompraController {
 				}
 			}
 		}
-	
 
 		session.setAttribute("sessionCarrito", carrito);
 		mav.addObject("Cliente", cliente);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.setViewName("carrito");
 		return mav;
@@ -169,6 +177,7 @@ public class CompraController {
 		session.setAttribute("sessionCarrito", carrito);
 		mav.addObject("Cliente", cliente);
 		mav.addObject("listaProductos", productoServer.getAll());
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("carrito");
 
 		return mav;
@@ -233,6 +242,7 @@ public class CompraController {
 
 		session.setAttribute("sessionCarrito", carrito);
 		mav.addObject("Cliente", cliente);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.setViewName("carrito");
 

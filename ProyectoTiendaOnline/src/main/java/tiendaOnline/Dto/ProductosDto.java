@@ -2,15 +2,28 @@ package tiendaOnline.Dto;
 
 public class ProductosDto {
 
-	private Long idProducto;
+	private long idProducto;
 	private String titulo;
-	private Long codProducto;
+	private String descripcion;
+	private long codProducto;
+	private float precio;
+	private float descuento;
+	private long stock;
+	private double valoracionMedia;
 
-	public Long getIdProducto() {
+	public double getValoracionMedia() {
+		return valoracionMedia;
+	}
+
+	public void setValoracionMedia(double valoracionMedia) {
+		this.valoracionMedia = valoracionMedia;
+	}
+
+	public long getIdProducto() {
 		return idProducto;
 	}
 
-	public void setIdProducto(Long idProducto) {
+	public void setIdProducto(long idProducto) {
 		this.idProducto = idProducto;
 	}
 
@@ -22,12 +35,44 @@ public class ProductosDto {
 		this.titulo = titulo;
 	}
 
-	public Long getCodProducto() {
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public long getCodProducto() {
 		return codProducto;
 	}
 
-	public void setCodProducto(Long codProducto) {
+	public void setCodProducto(long codProducto) {
 		this.codProducto = codProducto;
+	}
+
+	public float getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(float precio) {
+		this.precio = precio;
+	}
+
+	public float getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(float descuento) {
+		this.descuento = descuento;
+	}
+
+	public long getStock() {
+		return stock;
+	}
+
+	public void setStock(long stock) {
+		this.stock = stock;
 	}
 
 }

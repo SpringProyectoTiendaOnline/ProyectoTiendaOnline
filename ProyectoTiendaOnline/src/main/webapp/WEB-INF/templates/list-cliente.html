@@ -13,9 +13,13 @@
 
 <body>
 	<nav th:replace="fragmentos/header_loader"></nav>
-
+	<br />
+	<br />
 	<div class="container my-2">
 		<div class="card">
+			<div class="card-header">
+				<h1>Gestión de Usuarios</h1>
+			</div>
 			<div class="card-body">
 				<div th:switch="${listaCliente}" class="container my-5">
 					<p class="my-5">
@@ -34,7 +38,6 @@
 										<th>Fecha de Nacimiento:</th>
 										<th>Email:</th>
 										<th>Dirección No:</th>
-										<th>Tipo de Cliente:</th>
 										<th>Editar</th>
 										<th>Eliminar</th>
 									</tr>
@@ -48,12 +51,12 @@
 										<td th:text="${Cliente.email}"></td>
 										<td th:text="${Cliente.direccion}"></td>
 
-										<td th:if="${Cliente.roles.iterator().next().idRol == 1} "><a
+										<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
 											th:href="@{/Cliente/editar-cliente/{idCliente}(idCliente=${Cliente.idCliente})}"
 											class="btn btn-primary"><i class="fas fa-user-edit ml-2">Editar</i></a></td>
 										<!-- th:href="@{/user/delete/{id}(id=${user.idUsuario})}" -->
-										<td th:if="${Cliente.roles.iterator().next().idRol == 1}"><a
-											th:href="@{/Cliente/delete-cliente/{id}/{idCliente}(id=${1},idCliente=${Cliente.idCliente})}"
+										<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
+											th:href="@{/Cliente/delete-cliente/{idCliente}(idCliente=${Cliente.idCliente})}"
 											class="btn btn-primary"><i class="fas fa-user-times ml-2">Eliminar</i></a></td>
 									</tr>
 								</tbody>

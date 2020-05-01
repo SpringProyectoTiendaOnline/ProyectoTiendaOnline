@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/buscar.css}">
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -17,32 +27,30 @@
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link"
-					th:href="@{/indice}">Home <span class="sr-only">(current)</span>
+					th:href="@{/index}">Home <span class="sr-only">(current)</span>
 				</a></li>
 
 				<li class="nav-item"><a class="nav-link"
-					th:href="@{/Cliente/list/{idCliente}(idCliente=${session.idUsuario})}">Gestión  
+					th:href="@{/Cliente/list/{idCliente}(idCliente=${session.idUsuario})}">Gestión
 						de Usuario</a></li>
 
 				<li class="nav-item"><a class="nav-link"
-					th:href="@{/Producto/list-producto}">Gestión
-						de Productos</a></li>
-						
+					th:href="@{/Producto/list-producto}">Gestión de Productos</a></li>
+
 				<li class="nav-item"><a class="nav-link"
 					th:href="@{/Categoria/lista-categoria}">Gestión de Categoría</a></li>
-
-				<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Log
-						Out</a></li>
-
 			</ul>
-			<form class="form-inline my-2 my-lg-0"
-				th:action="@{/Producto//searchProducto/{nombreProducto}}">
-				<input class="form-control mr-sm-2" type="text"
-					name="nombreProducto" id="valorProducto" placeholder="Search">
-				<button class="btn btn-secondary my-2 my-sm-0" type="submit"
-					id="buttonBuscar">Search</button>
-			</form>
 		</div>
+
+
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/Compra/show-carrito/{idCliente}(idCliente=${session.idUsuario})}">Carrito</a>
+			<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Log
+					Out</a></li>
+		</ul>
+
+
 	</nav>
 </body>
 </html>

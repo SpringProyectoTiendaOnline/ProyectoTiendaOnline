@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.JoinColumn;
 
@@ -38,9 +39,9 @@ public class Categoria implements Serializable {
 
 	@Column(name = "nombre_Categoria", unique = true, nullable = false)
 	@NotNull(message = "Debes especificar el nombre de Categoria")
-	@NotEmpty(message = "Debes especificar el nombre de Categoria")
 	private String nombreCategoria;
-
+	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "id_Categoria"), inverseJoinColumns = @JoinColumn(name = "idProducto"))
 	private Set<Productos> producto = new HashSet<>();

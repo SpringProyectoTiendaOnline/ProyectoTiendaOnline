@@ -17,79 +17,79 @@
 <script th:src="@{/js/jquery-ui.min.js}"></script>
 <script th:src="@{/js/typeahead.bundle.min.js}"></script>
 
-<title>Lista de productos</title>
+<title>Gestión de productos</title>
 </head>
 <body>
 	<nav th:replace="fragmentos/header_loader"></nav>
+	<br>
+	<br>
 
-	<div class="container">
-		<h1>Lista de productos</h1>
-		<br> <br>
+	<div class="container my-2">
+		<div class="card">
 
-		<div class="panel panel-default">
-
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Código Producto</th>
-						<th>Título</th>
-						<th>Descripción</th>
-						<th>Precio</th>
-						<th>Descuento</th>
-						<th>Stock</th>
-						<th>Editar</th>
-						<th>Eliminar</th>
-				</thead>
-
-				<tbody th:if="${listaProductos != null}">
-					<tr th:each="producto : ${listaProductos}">
-						<td><a href=#
-							th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
-							type="button" class="btn btn-primary"><span
-								th:text="${producto.codProducto}"></span></a></td>
-						<!--   Comprobar si imagen tiene foto o no  -->
-						
-						
-						<td th:text=" ${producto.titulo}"></td>
-						<td th:text=" ${producto.descripcion}"></td>
-						<td th:text=" ${producto.precio}"></td>
-						<td th:text=" ${producto.descuento}"></td>
-						<td th:text=" ${producto.stock}"></td>
-						<td><a href=#
-							th:href="@{/Producto/editar-producto/{idProducto}(idProducto=${producto.idProducto})}">
-								<button type="button" class="btn btn-info">
-									<span class="glyphicon glyphicon-pencil" aria-hidden="true">Editar</span>
-								</button>
-						</a></td>
-						<td><a href=#
-							th:href="@{/Producto/removeproducto/{idProducto}(idProducto=${producto.idProducto})}">
-								<button type="button" class="btn btn-danger">
-									<span class="glyphicon glyphicon-trash" aria-hidden="true">Eliminar</span>
-								</button>
-						</a></td>
-
-					</tr>
-				</tbody>
-
-				<tbody th:unless="${listaProductos == null}">
-					<tr>
-						<td>No hay más productos</td>
-					</tr>
-				</tbody>
-			</table>
-			<div>
+			<div class="card-header">
+				<h1>Gestión de Producto</h1>
+			</div>
+			<div class="card-body">
 				<a href="#" th:href="@{/Producto/create-producto}">
 					<button class="btn btn-lg btn-primary btn-block" type="submit">
 						<span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Agregar
 						Producto
 					</button>
 				</a>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Código Producto</th>
+							<th>Título</th>
+							<th>Descripción</th>
+							<th>Precio</th>
+							<th>Descuento</th>
+							<th>Stock</th>
+							<th>Editar</th>
+							<th>Eliminar</th>
+					</thead>
+
+					<tbody th:if="${listaProductos != null}">
+						<tr th:each="producto : ${listaProductos}">
+							<td><a href=#
+								th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+								type="button" class="btn btn-primary"><span
+									th:text="${producto.codProducto}"></span></a></td>
+							<!--   Comprobar si imagen tiene foto o no  -->
+
+
+							<td th:text=" ${producto.titulo}"></td>
+							<td th:text=" ${producto.descripcion}"></td>
+							<td th:text=" ${producto.precio}"></td>
+							<td th:text=" ${producto.descuento}"></td>
+							<td th:text=" ${producto.stock}"></td>
+							<td><a href=#
+								th:href="@{/Producto/editar-producto/{idProducto}(idProducto=${producto.idProducto})}">
+									<button type="button" class="btn btn-info">
+										<span class="glyphicon glyphicon-pencil" aria-hidden="true">Editar</span>
+									</button>
+							</a></td>
+							<td><a href=#
+								th:href="@{/Producto/removeproducto/{idProducto}(idProducto=${producto.idProducto})}">
+									<button type="button" class="btn btn-danger">
+										<span class="glyphicon glyphicon-trash" aria-hidden="true">Eliminar</span>
+									</button>
+							</a></td>
+						</tr>
+
+						<tr th:if="${listaProductos == null}">
+							<td>No hay más productos</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+				<!-- card-body -->
 			</div>
-
-
-
-
+			<!--  card -->
 		</div>
+		<!-- container -->
 	</div>
 </body>
 </html>

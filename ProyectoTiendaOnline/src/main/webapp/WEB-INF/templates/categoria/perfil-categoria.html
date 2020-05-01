@@ -31,6 +31,8 @@
 				th:value="${categoria.idCategoria}">
 
 			<div class="card-body">
+				<div id="aviso"></div>
+			
 				<div class="card-header">
 					
 					<div class="form-inline mx-sm-3 mb-2" id="funcionEditarCategoria">
@@ -45,12 +47,8 @@
 				<!-- card-header -->
 				</div>
 
-				<script>
-					
-				</script>
-
 				<br /> <input class="typeahead tt-input" sec:authorize="hasAuthority('ROL_ADMIN')" type="text"
-					id="buscarProducto" name="buscarProducto"
+					id="buscarProductos" name="buscarProductos"
 					placeholder="Busca el Producto" autocomplete="off"
 					spellcheck="false"
 					style="position: relative; vertical-align: top; background-color: transparent;">

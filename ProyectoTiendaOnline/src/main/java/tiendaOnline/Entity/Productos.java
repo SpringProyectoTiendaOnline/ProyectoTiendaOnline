@@ -42,8 +42,10 @@ public class Productos implements Serializable {
 	@Column(name = "descripcion")
 	@NotNull(message = "Debes especificar la descripción del producto")
 	private String descripcion;
+	
 	@Column(name = "codProducto", unique = true)
 	private long codProducto;
+	
 	@Column(name = "precio")
 	@NotNull(message = "Debes especificar el precio del producto")
 	private float precio;
@@ -53,15 +55,18 @@ public class Productos implements Serializable {
 	@Column(name = "stock")
 	@NotNull(message = "Debes especificar cantidad de stock de producto")
 	private long stock;
+	
+	@Column(name = "valoracionMedia")
+	private double valoracionMedia;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto" , cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ImagenProducto> imagen = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Producto_Categoria", joinColumns = @JoinColumn(name = "idProducto"), inverseJoinColumns = @JoinColumn(name = "id_Categoria"))
 	private Set<Categoria> categoria = new HashSet<>();
-	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Valoracion> valoraciones = new HashSet<>();
 
 	public Productos() {
@@ -159,6 +164,23 @@ public class Productos implements Serializable {
 		this.imagen = imagen;
 	}
 
+	public Set<Valoracion> getValoraciones() {
+		return valoraciones;
+	}
+
+	public void setValoraciones(Set<Valoracion> valoraciones) {
+		this.valoraciones = valoraciones;
+	}
+	
+	
+	public double getValoracionMedia() {
+		return valoracionMedia;
+	}
+
+	public void setValoracionMedia(double valoracionMedia) {
+		this.valoracionMedia = valoracionMedia;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -209,10 +231,9 @@ public class Productos implements Serializable {
 	public String toString() {
 		return "Productos [idProducto=" + idProducto + ", titulo=" + titulo + ", descripcion=" + descripcion
 				+ ", codProducto=" + codProducto + ", precio=" + precio + ", descuento=" + descuento + ", stock="
-				+ stock + "]";
+				+ stock + ", valoracionMedia=" + valoracionMedia +"]";
 	}
 
 	
 
-	
 }

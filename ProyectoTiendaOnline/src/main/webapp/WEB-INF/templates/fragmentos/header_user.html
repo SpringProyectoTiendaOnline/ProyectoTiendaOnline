@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/buscar.css}">
 <!-- Bootstrap CSS -->
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 </head>
 <body>
 
@@ -21,7 +31,7 @@
 
 		<div class="collapse navbar-collapse" id="navbarColor02">
 			<ul class="navbar-nav mr-auto">
-				<li><a class="nav-link" th:href="@{/indice}">Home</a></li>
+				<li><a class="nav-link" th:href="@{/index}">Home</a></li>
 
 				<li><a class="nav-link"
 					th:href="@{/Producto/list-product-user/{idCliente}(idCliente=${session.idUsuario})}">Producto</a></li>
@@ -29,10 +39,43 @@
 				<li><a class="nav-link"
 					th:href="@{/ListaPedido/list-pedido-user/{idCliente}(idCliente=${session.idUsuario})}">Pedidos</a></li>
 
-				<li class="nav-item"><a class="nav-link" th:href="@{/logout}">Log
-						Out</a></li>
+				<li class="nav-item"></li>
 
 			</ul>
+			<form class="form-inline my-2 my-lg-0">
+
+				<label class="sr-only" for="buscarProducto">Buscar el
+					producto</label>
+				<div class="input-group form-inline">
+					<div class="input-group-btn">
+						<button class="btn btn-secondary dropdown-toggle" type="button"
+							id="dropdownMenuButton" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">Categoria</button>
+
+						<div class="dropdown-menu"
+							aria-labelledby="dropdownMenuButton">
+							<div th:each="categoria : ${listaCategoria}">
+								<a class="dropdown-item nombreCategoriaItem"
+									id="nombreCategoriaItem"
+									th:href="@{/Categoria/lista_producto_nombreCategoria/{idCategoria}/{nombreCategoria}(idCategoria=${categoria.idCategoria}, nombreCategoria=${categoria.nombreCategoria})}">
+									<span id="nombreCategoria"
+									th:text="${categoria.nombreCategoria}"></span> <span
+									style="display: none" id="idCategoria"
+									th:text="${categoria.idCategoria}"></span>
+								</a>
+							</div>
+						</div>
+						<!-- dropdown-menu -->
+						<input class="typeahead tt-input" type="text" id="buscarProducto"
+							name="buscarProducto" placeholder="Busca el Producto"
+							autocomplete="off" spellcheck="false"
+							style="width: 350px; height: 40px" />
+
+						<!-- /input-group-btn -->
+					</div>
+					<!-- /input-group -->
+				</div>
+			</form>
 
 			<form class="form-inline my-2 my-lg-0"
 				th:action="@{/Compra/show-carrito/{idCliente}(idCliente=${session.idUsuario})}">
@@ -43,12 +86,13 @@
 				</button>
 			</form>
 
-			<form class="form-inline my-2 my-lg-0"
-				th:action="@{/Producto/searchProducto/{idCliente}(idCliente=${session.idUsuario})}">
-				<input class="form-control mr-sm-2" type="text" name="valorProducto"
-					id="valorProducto" placeholder="Search">
-				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-			</form>
+			<ul class="navbar-nav mr-auto">
+				<li><a class="nav-link" th:href="@{/logout}">Log Out</a></li>
+			</ul>
+
+
+
+			<script th:src="@{/js/accionBuscarProducto.js}"></script>
 		</div>
 	</nav>
 

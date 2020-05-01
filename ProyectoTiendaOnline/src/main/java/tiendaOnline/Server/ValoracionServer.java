@@ -18,6 +18,7 @@ public interface ValoracionServer {
 	
 	public List<Valoracion> findByProductoAndCliente(Productos producto, Clientes cliente);
 
-	
+	public double obtenerValoracionMediaPorProducto(Productos producto);
+
 
 }

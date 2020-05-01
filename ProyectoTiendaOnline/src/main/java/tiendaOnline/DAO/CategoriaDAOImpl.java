@@ -92,4 +92,21 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 		return null;
 	}
 
+	@Override
+	public Categoria findByNombre(String nombreCategoria) {
+		try {
+			Categoria categoria = (Categoria) this.em
+					.createQuery("From Categoria  where nombreCategoria = :nombre")
+					.setParameter("nombre", nombreCategoria).getSingleResult();
+
+			if (categoria != null) {
+				return categoria;
+			}
+		} catch (NoResultException n) {
+			return null;
+		}
+		
+		return null;
+	}
+
 }

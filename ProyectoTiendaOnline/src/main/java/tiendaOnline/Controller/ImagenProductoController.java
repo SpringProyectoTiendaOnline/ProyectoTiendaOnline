@@ -33,12 +33,10 @@ public class ImagenProductoController {
 			@PathVariable("idProducto") long idProducto, @RequestParam(value = "showIdImagenProducto") Long idImagen,
 			@RequestParam(value = "action", required = true) String action, HttpServletRequest request) {
 
-		Productos producto = productoServer.findById(idProducto);
-		String msgError = "", msg = "";
-
 		try {
+			Productos producto = productoServer.findById(idProducto);
+			String msgError = "", msg = "";
 			if (action.equalsIgnoreCase("save")) {
-
 				if (imagenFile != null) {
 					ImagenProducto imagen = Utilidades.convertImage(imagenFile);
 
@@ -59,7 +57,7 @@ public class ImagenProductoController {
 					imagenProducto = imagenServer.update(imagenProducto);
 					imagenServer.delete(imagenProducto);
 					msg = "La imagen ha sido eliminado correctamente.";
-				}else {
+				} else {
 					msg = "La imagen no ha sido eliminado correctamente.";
 				}
 			}
@@ -81,17 +79,22 @@ public class ImagenProductoController {
 					} else {
 						msgError = "La imagen no ha sido modificado, No has insertado la imagen que quiere cambiar";
 					}
-				}	
+				}
 			}
-			
+
 			request.setAttribute("msgError", msgError);
 			request.setAttribute("msg", msg);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 		return "redirect:/Producto/perfil-producto/" + idProducto;
 	}
+	
+	
+	//action upload images .
+	
+	
 
 }

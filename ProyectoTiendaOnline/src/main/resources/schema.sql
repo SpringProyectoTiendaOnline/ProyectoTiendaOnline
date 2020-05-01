@@ -57,6 +57,7 @@ create table Productos (
 	precio float not null, 
 	descuento float not null, 
 	stock bigint not null,
+	valoracionMedia double null, 
 	primary key (idProducto)
 );
 
@@ -128,7 +129,7 @@ CREATE TABLE Preguntas (
 	foreign key (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
 );
 
-Drop table if exists respuestas;
+Drop table if exists Respuestas;
 Create table respuestas (
 	idRespuesta bigint not null auto_increment,
 	texto varchar(225) not null,
@@ -137,5 +138,14 @@ Create table respuestas (
 	primary key (idRespuesta),
 	foreign key (idCliente) REFERENCES Cliente (idCliente) On delete cascade,
 	foreign key (idPregunta) REFERENCES Preguntas(idPregunta) ON DELETE NO ACTION
+);
+	
+Drop table if exists Valoraciones;
+Create table valoraciones (
+	idValoracion bigint not null auto_increment,
+	idProducto bigint,
+	puntuacion  bigint,
+	primary key (idValoracion),
+	foreign key (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
 );
 	

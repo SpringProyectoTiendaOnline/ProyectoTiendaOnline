@@ -16,7 +16,6 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "ImagenProducto", uniqueConstraints = @UniqueConstraint(columnNames = { "idImagen" }))
 public class ImagenProducto implements Serializable {
-
 	/**
 	 * 
 	 */

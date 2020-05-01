@@ -87,15 +87,11 @@ function agregarValoracion (puntuacion){
       type: "POST",
       success: function (response) {
     	  
-        	$('#aviso2').html("");
+        $('#aviso').html("");
 
-    	  var aviso2 ="" +
-  		"<div class='alert alert-primary' role='alert'>"+
-  		"Gracias por agregarlo!!"+
-  			"</div>" +
-  			"";
+    	 var aviso2 ="<div class='alert alert-primary' role='alert'>"+ "Gracias por valorarlo!!"+ "</div>" + 	"";
       	
-      	$('#aviso2').html(aviso2);
+      	$('#aviso').html(aviso2);
       	$('#aviso').html("");
 
     	  
@@ -103,7 +99,7 @@ function agregarValoracion (puntuacion){
 		},
 		error: function(xhr, status, error) {
 			
-	      	$('#aviso2').html("");
+	      	$('#aviso').html("");
 
 			 var aviso ="" +
 		  		"<div class='alert alert-danger' role='alert'>"+

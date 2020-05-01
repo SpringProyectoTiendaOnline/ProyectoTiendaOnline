@@ -17,7 +17,10 @@ public interface ValoracionDAO extends GenericDao<Valoracion>{
 	public List<Valoracion> getAll();
 	
 	public List<Valoracion> findByClienteAndProducto(Productos producto, Clientes cliente);
+	
+	public double obtenerValoracionMediaPorProducto (Productos producto);
 
 	
+
 
 }

@@ -16,12 +16,16 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Rol")
-public class Rol implements Serializable{
+public class Rol implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2086256903789241667L;
+
+	/**
+	 * 
+	 */
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

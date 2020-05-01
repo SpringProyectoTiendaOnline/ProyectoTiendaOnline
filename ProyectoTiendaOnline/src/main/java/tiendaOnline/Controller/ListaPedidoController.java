@@ -21,6 +21,7 @@ import tiendaOnline.Entity.Compra;
 import tiendaOnline.Entity.EstadoPedido;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Server.BancoServer;
+import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
 import tiendaOnline.Server.LineaDeCompraServer;
@@ -42,6 +43,8 @@ public class ListaPedidoController {
 	private BancoServer bancoServer;
 	@Autowired
 	private EstadoRepository estadoServer;
+	@Autowired
+	private CategoriaServer categoriaServer;
 
 	@GetMapping("/list-pedido-user/{idCliente}")
 	public ModelAndView showCarrito(@PathVariable("idCliente") long idCliente, Model model) {
@@ -52,6 +55,8 @@ public class ListaPedidoController {
 		mav.addObject("LineaDeCompraServer", lineaServer);
 		mav.addObject("Compra", compra);
 		mav.addObject("Cliente", cliente);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+
 		mav.setViewName("lista-pedido");
 		return mav;
 	}
@@ -65,6 +70,7 @@ public class ListaPedidoController {
 
 		mav.addObject("Cliente", cliente);
 		mav.addObject("LineaCompra", lineaCompra);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("devolver-producto");
 
 		return mav;
@@ -115,6 +121,7 @@ public class ListaPedidoController {
 		mav.addObject("LineaCompra", lineaCompra);
 		mav.addObject("Compra", compra);
 		mav.addObject("LineaDeCompraServer", lineaServer);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("lista-pedido");
 		return mav;
 

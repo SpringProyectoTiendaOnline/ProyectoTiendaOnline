@@ -19,38 +19,17 @@ a:hover {
   color: #999;
 }
 
-p + p {
-  margin: 30px 0 0 0;
-}
+
 
 /* site theme */
 /* ---------- */
 
-.title {
-  margin: 20px 0 0 0;
-  font-size: 64px;
-}
-
-.example {
-  padding: 30px 0;
-}
-
-.example-name {
-  margin: 20px 0;
-  font-size: 32px;
-}
-
-.demo {
-  position: relative;
-  *z-index: 1;
-  margin: 50px 0;
-}
 
 .typeahead,
 .tt-query,
 .tt-hint {
-  width: 396px;
-  height: 30px;
+  width: 350px;
+  height: 50px;
   padding: 8px 12px;
   font-size: 24px;
   line-height: 30px;

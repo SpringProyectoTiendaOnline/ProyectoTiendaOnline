@@ -24,12 +24,13 @@ import tiendaOnline.Entity.Clientes;
 import tiendaOnline.Entity.Compra;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Server.BancoServer;
+import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
 import tiendaOnline.Server.LineaDeCompraServer;
 
 @Controller
-@RequestMapping("/Cliente")
+@RequestMapping(value = "/Cliente")
 public class ClienteController {
 
 	@Autowired
@@ -42,33 +43,40 @@ public class ClienteController {
 	private CompraServer compraServer;
 	@Autowired
 	private RolRepository rol;
+	@Autowired
+	private CategoriaServer categoriaServer;
 
 	// Registrar Cliente
 	@GetMapping("/signup")
 	public String showForm(Model theModel) {
 		Clientes cliente = new Clientes();
+		theModel.addAttribute("listaCategoria", categoriaServer.getAll());
 		theModel.addAttribute("Cliente", cliente);
 		return "signup";
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/create-cliente")
 	public ModelAndView create_cliente(@ModelAttribute Clientes cliente, BindingResult bindingResult) {
 		ModelAndView mav = new ModelAndView();
 		List<String> mensaje = new ArrayList<String>();
 
-		if (bindingResult.hasFieldErrors()) {
+		if (bindingResult.hasErrors()) {
 			for (int i = 0; i < bindingResult.getAllErrors().size(); i++) {
 				mensaje.add(bindingResult.getAllErrors().get(i).getDefaultMessage());
 			}
 			mav.addObject("Error", mensaje);
 			mav.addObject("Cliente", cliente);
+			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.setViewName("signup");
-		} else {
-			Clientes clienteSave = ClienteServer.save(cliente);
-			if (clienteSave != null) {
-				mav.addObject("Cliente", clienteSave);
-				mav.setViewName("perfil-cliente");
-			}
+			return mav;
+		}
+
+		System.err.println("save cliente..");
+
+		Clientes clienteSave = ClienteServer.save(cliente);
+		if (clienteSave != null) {
+			mav.addObject("Cliente", clienteSave);
+			mav.setViewName("/login");
 		}
 		return mav;
 	}
@@ -81,6 +89,7 @@ public class ClienteController {
 		if (session != null && session.getAttribute("idUsuario") != null) {
 			mav.addObject("Cliente", ClienteServer.findById(idCliente));
 			mav.addObject("listaBanco", bancoServer.findByCliente(ClienteServer.findById(idCliente)));
+			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.setViewName("perfil-cliente");
 		} else {
 			mav.setViewName("index");
@@ -103,11 +112,12 @@ public class ClienteController {
 	public String get_update_cliente(@PathVariable("idCliente") long id, Model model) {
 		Clientes cliente = ClienteServer.findById(id);
 		model.addAttribute("Cliente", cliente);
+		model.addAttribute("listaCategoria", categoriaServer.getAll());
 		return "update-cliente";
 
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "editar-cliente/{idCliente}")
+	@RequestMapping(method = RequestMethod.POST, value = "/editarCliente/{idCliente}")
 	public ModelAndView post_update_cliente(@PathVariable("idCliente") long id, @ModelAttribute @Valid Clientes cliente,
 			BindingResult result, Model themodel) {
 		ModelAndView mav = new ModelAndView();
@@ -115,6 +125,7 @@ public class ClienteController {
 		Clientes clienteOrig = ClienteServer.findById(id);
 		if (result.hasFieldErrors()) {
 			mav.addObject("Cliente", cliente);
+			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.setViewName("update-cliente");
 		} else {
 			cliente.setRoles(clienteOrig.getRoles());
@@ -124,6 +135,7 @@ public class ClienteController {
 				List<Banco> listBanco = bancoServer.findByCliente(clienteMod);
 				mav.addObject("listaBanco", listBanco);
 				mav.addObject("Cliente", clienteMod);
+				mav.addObject("listaCategoria", categoriaServer.getAll());
 				mav.setViewName("perfil-cliente");
 			}
 
@@ -132,11 +144,11 @@ public class ClienteController {
 		return mav;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/delete-cliente/{id}/{idCliente}")
-	public ModelAndView delete_cliente(@PathVariable("id") long id, @PathVariable("idCliente") long idCliente) {
+	@RequestMapping(method = RequestMethod.GET, value = "/delete-cliente/{idCliente}")
+	public ModelAndView delete_cliente(@PathVariable("idCliente") long idCliente) {
 		ModelAndView mav = new ModelAndView();
+
 		Clientes cliente = ClienteServer.findById(idCliente);
-		Clientes clienteAdmin = ClienteServer.findById(id);
 
 		if (cliente != null) {
 			List<Banco> listaBanco = bancoServer.findByCliente(cliente);
@@ -150,10 +162,8 @@ public class ClienteController {
 
 			if (compra != null) {
 				for (int i = 0; i < compra.size(); i++) {
-					System.err.println(compra);
 					List<LineaCompra> linea = lineaServer.findByCompra(compra.get(i));
 					if (linea != null) {
-						System.err.println(linea.toString());
 						for (int j = 0; j < linea.size(); j++) {
 							linea.get(i).setProductos(null);
 							LineaCompra comp = lineaServer.update(linea.get(i));
@@ -177,8 +187,7 @@ public class ClienteController {
 			}
 
 			List<Clientes> listaCliente = ClienteServer.getAll();
-			mav.addObject("Cliente", clienteAdmin);
-
+			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.addObject("listaCliente", listaCliente);
 			mav.setViewName("list-cliente");
 

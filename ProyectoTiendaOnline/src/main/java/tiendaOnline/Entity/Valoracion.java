@@ -12,11 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-
 @Entity
 @Table(name = "Valoraciones", uniqueConstraints = @UniqueConstraint(columnNames = { "idValoracion" }))
 public class Valoracion implements Serializable {
-		
+
 	/**
 	 * 
 	 */
@@ -24,7 +23,7 @@ public class Valoracion implements Serializable {
 	/**
 	 * 
 	 */
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idValoracion", nullable = false, unique = true)
@@ -32,16 +31,23 @@ public class Valoracion implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "idProducto")
 	private Productos producto;
-	
+
 	@Column(name = "puntuacion")
 	private long puntuacion;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "idCliente")
 	private Clientes cliente;
-	
-	
-	
+
+	public Valoracion(long puntuacion, Productos producto, Clientes cliente) {
+		this.producto = producto;
+		this.puntuacion = puntuacion;
+		this.cliente = cliente;
+	}
+
+	public Valoracion() {
+
+	}
 
 	public Clientes getCliente() {
 		return cliente;
@@ -51,38 +57,32 @@ public class Valoracion implements Serializable {
 		this.cliente = cliente;
 	}
 
-	public Valoracion (long puntuacion, Productos producto) {
-		this.producto= producto;
-		this.puntuacion=puntuacion;
-	}
-	
-	public Valoracion () {
-		
-	}
 	public long getIdValoracion() {
 		return idValoracion;
 	}
+
 	public void setIdValoracion(long idValoracion) {
 		this.idValoracion = idValoracion;
 	}
+
 	public Productos getProducto() {
 		return producto;
 	}
+
 	public void setProducto(Productos producto) {
 		this.producto = producto;
 	}
+
 	public long getPuntuacion() {
 		return puntuacion;
 	}
+
 	public void setPuntuacion(long puntuacion) {
 		this.puntuacion = puntuacion;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
-	
-	
 
 }

@@ -15,11 +15,9 @@ import tiendaOnline.Entity.Valoracion;
 @Repository
 @Component("ValoracionDAO")
 public class ValoracionDAOImpl extends GenericDaoImpl<Valoracion> implements ValoracionDAO {
-	
-	
+
 	@Autowired
 	ProductosDAO productoDao;
-	
 
 	@Override
 	public Valoracion findById(long id) {
@@ -48,13 +46,11 @@ public class ValoracionDAOImpl extends GenericDaoImpl<Valoracion> implements Val
 
 		return null;
 	}
-	
 
 	@Override
 	public List<Valoracion> findByPuntuacion(long puntuacion) {
 		@SuppressWarnings("unchecked")
-		List<Valoracion> lista = this.em
-				.createQuery("From Valoraciones v Where puntuacion = :puntuacion")
+		List<Valoracion> lista = this.em.createQuery("From Valoraciones v Where puntuacion = :puntuacion")
 				.setParameter("puntuacion", puntuacion).getResultList();
 		if (lista != null) {
 			return lista;
@@ -76,9 +72,9 @@ public class ValoracionDAOImpl extends GenericDaoImpl<Valoracion> implements Val
 	@Override
 	public List<Valoracion> findByClienteAndProducto(Productos producto, Clientes cliente) {
 		@SuppressWarnings("unchecked")
-		List<Valoracion> lista = this.em
-				.createQuery("From Valoracion v Where idProducto = :id and idCliente = :idCli")
-				.setParameter("id", producto.getIdProducto()).setParameter("idCli", cliente.getIdCliente()).getResultList();
+		List<Valoracion> lista = this.em.createQuery("From Valoracion v Where idProducto = :id and idCliente = :idCli")
+				.setParameter("id", producto.getIdProducto()).setParameter("idCli", cliente.getIdCliente())
+				.getResultList();
 		if (lista != null) {
 			return lista;
 		}
@@ -86,9 +82,29 @@ public class ValoracionDAOImpl extends GenericDaoImpl<Valoracion> implements Val
 		return null;
 	}
 
-	
-	
-	
-	
+	@Override
+	public double obtenerValoracionMediaPorProducto(Productos producto) {
+
+		@SuppressWarnings("unchecked")
+		List<Valoracion> lista = this.em.createQuery("From Valoracion v Where idProducto = :id")
+				.setParameter("id", producto.getIdProducto()).getResultList();
+		long suma = 0;
+		float media = 0;
+
+		try {
+			int totalValoraciones = lista.size();
+
+			for (int i = 0; i < totalValoraciones; i++) {
+				long puntuacion = lista.get(i).getPuntuacion();
+				suma = suma + puntuacion;
+			}
+			media = suma / totalValoraciones;
+
+		} catch (NullPointerException e) {
+			media = 0;
+		}
+
+		return media;
+	}
 
 }

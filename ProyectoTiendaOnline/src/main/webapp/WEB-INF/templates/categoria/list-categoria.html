@@ -11,16 +11,23 @@
 	src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
 <script
 	src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 <title>Categorias</title>
 </head>
 <body>
 	<nav th:replace="fragmentos/header_loader"></nav>
-
 	<br />
 	<br />
-	<div class="container">
+	<div class="container my-2">
 		<div class="card">
-			<h5 class="card-header">Gestión Categoría</h5>
+			<h1 class="card-header">Gestión Categoría</h1>
 			<div class="card-body">
 				<div class="alert alert-danger" role="alert"
 					th:if="${Mensaje != null}">
@@ -28,12 +35,14 @@
 						<p th:text="${error.defaultMessage}">
 					</div>
 				</div>
-				<br /> <br /> <br />
 				<!-- Button trigger modal -->
 				<button type="button" class="btn btn-primary" data-toggle="modal"
 					data-target="#addCategoria">Añadir Categoría</button>
 
 				<br />
+
+				<div id="aviso"></div>
+
 				<form action="#" th:action="@{/Categoria/create-categoria}"
 					th:object="${categoria}" method="post">
 					<!-- Modal -->
@@ -61,7 +70,9 @@
 
 									<div class="form-group col-md-8">
 										<label for="nombreCategoria" class="col-form-label">Nombre
-											Categoría : </label> <input type="text" th:field="*{nombreCategoria}"
+											Categoría : </label> 
+										
+										<input type="text" th:field="*{nombreCategoria}"
 											class="form-control" id="nombreCategoria"
 											name="nombreCategoria" placeholder="Nombre de Categoría">
 									</div>
@@ -71,7 +82,8 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal">Close</button>
-									<input type="submit" class="btn btn-primary" value="Save">
+									
+									<input type="submit" class="btn btn-primary buttonSaveCategoria" id ="buttonSaveCategoria" value="Save">
 									<!-- / modal footer -->
 								</div>
 							</div>
@@ -82,7 +94,7 @@
 					<!-- / form de añadir la categoria -->
 				</form>
 				<br /> <br />
-				<table class="table table-hover">
+				<table id="tablaCategoria" class="table table-hover">
 					<thead class="thead-dark">
 						<tr>
 							<th scope="col">#</th>
@@ -93,17 +105,21 @@
 					</thead>
 					<tbody>
 						<tr th:each="categoria, iter : ${listaCategoria}">
-							<th scope="row" th:text="${iter.index + 1}"></th>
+							<td scope="row" th:text="${iter.index + 1}"></td>
+							<td style="display: none;" id="idCategoria"
+								th:text="${categoria.idCategoria}"></td>
 							<td th:text="${categoria.nombreCategoria}"></td>
 							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
 								class="btn btn-primary"
 								th:href="@{/Categoria/{idCategoria}(idCategoria=${categoria.idCategoria})}"><i
 									class="fas fa-edit"></i></a></td>
 							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
-								class="btn btn-danger borrar"><i class="fas fa-times"></i></a></td>
+								class="btn btn-danger borrarCategoria" id="borrarCategoria"><i
+									class="fas fa-times"></i></a></td>
 						</tr>
 					</tbody>
 				</table>
+				<script th:src="@{/js/accionCategoria.js}"></script>
 
 				<!-- /card body -->
 			</div>

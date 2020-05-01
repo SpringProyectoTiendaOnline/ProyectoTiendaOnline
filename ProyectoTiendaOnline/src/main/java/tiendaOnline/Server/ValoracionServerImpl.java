@@ -46,5 +46,11 @@ public class ValoracionServerImpl implements ValoracionServer {
 	public List<Valoracion> findByProductoAndCliente(Productos producto, Clientes cliente) {
 		return valoracionDAO.findByClienteAndProducto(producto, cliente);
 	}
+	
+	@Override
+	@Transactional
+	public double obtenerValoracionMediaPorProducto(Productos producto) {
+		return valoracionDAO.obtenerValoracionMediaPorProducto(producto);
+	}
 
 }

@@ -50,14 +50,11 @@ public class Utilidades {
 		ImagenProducto imagenProducto = new ImagenProducto();
 		// Nombre original del imagen
 		String ofn = imagenFile.getOriginalFilename();
-		byte[] imagen = imagenFile.getBytes();
-        byte[] encode = java.util.Base64.getEncoder().encode(imagen);
 
 		// Ejermplo: imagen.png
 		// --> png
 		String suffix = ofn.substring(ofn.lastIndexOf("."));
 		
-		if (validarImagen(suffix) == true) {
 
 			// el nombre de fichero en formato = uuid
 			// 43dsfd.png
@@ -78,16 +75,13 @@ public class Utilidades {
 			String urlImagen = "/images/" + filename;
 			
 			imagenProducto.setUrlImagen(urlImagen);
+			
 			return imagenProducto;
-		}else {
-			return null;
-		}
-
 
 	}
 	
 	public static boolean validarImagen(String suffix) {
-		if (suffix.equalsIgnoreCase("png") || suffix.equalsIgnoreCase("jpg") || suffix.equalsIgnoreCase("jpeg") || suffix.equalsIgnoreCase("git")) {
+		if (suffix.equalsIgnoreCase("png") && suffix.equalsIgnoreCase("jpg") && suffix.equalsIgnoreCase("jpeg") && suffix.equalsIgnoreCase("git")) {
 			return true;
 		}else {
 			return false;

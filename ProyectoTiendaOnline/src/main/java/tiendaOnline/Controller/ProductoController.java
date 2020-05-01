@@ -3,6 +3,9 @@ package tiendaOnline.Controller;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +15,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,12 +35,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Clientes;
-import tiendaOnline.Entity.ImagenProducto;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
 import tiendaOnline.Entity.Respuestas;
 import tiendaOnline.Entity.Valoracion;
+import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.ImagenProductoServer;
 import tiendaOnline.Server.LineaDeCompraServer;
@@ -52,8 +57,6 @@ import tiendaOnline.Server.ValoracionServer;
 @RequestMapping(value = "/Producto")
 public class ProductoController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
-
 	@Autowired
 	private ProductoServer productoServer;
 	@Autowired
@@ -68,6 +71,8 @@ public class ProductoController {
 	private ImagenProductoServer imagenServer;
 	@Autowired
 	private ValoracionServer valoracionServer;
+	@Autowired
+	private CategoriaServer categoriaServer;
 
 	@GetMapping("/create-producto")
 	public String productsForm(Model model) {
@@ -82,16 +87,18 @@ public class ProductoController {
 		ModelAndView mav = new ModelAndView();
 		String mensaje = "";
 
-		Productos find = productoServer.findById(producto.getIdProducto());
+		Productos find = productoServer.findByCodProducto(producto.getCodProducto());
 
 		// Comprobar si hay error
 		if (bindingResult.hasFieldErrors()) {
 			mav.addObject("products", producto);
-			mav.setViewName("add-producto");
+			mav.setViewName("producto/add-producto");
 		} else {
 			// Comprobar si existe el codigo de Producto
 			if (find != null) {
-				mensaje = "Existe el codigo";
+				mensaje = "Existe el codigo de Producto";
+				mav.addObject("products", producto);
+
 				mav.setViewName("producto/add-producto");
 			} else {
 				// Guardar
@@ -101,7 +108,7 @@ public class ProductoController {
 				}
 				List<Productos> listaProducto = productoServer.getAll();
 				mav.addObject("listaProductos", listaProducto);
-				mav.setViewName("/producto/list-producto");
+				mav.setViewName("producto/list-producto");
 			}
 
 		}
@@ -174,10 +181,26 @@ public class ProductoController {
 	}
 
 	@GetMapping("/list-product-user/{idCliente}")
-	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente) {
+	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente,
+			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
 		ModelAndView mav = new ModelAndView();
+
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+		Page<Productos> productosPage = productoServer.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+		System.err.println(productosPage.getContent());
+		mav.addObject("productoPage", productosPage);
+		int totalPages = productosPage.getTotalPages();
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+			mav.addObject("pageNumbers", pageNumbers);
+		}
+
 		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		mav.addObject("listaProductos", productoServer.getAll());
+		mav.addObject("imagenServer", imagenServer);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("producto/list-product-user");
 		return mav;
 	}
@@ -202,34 +225,37 @@ public class ProductoController {
 	public @ResponseBody ResponseEntity agregarValoracion(@PathVariable("idProducto") long idProducto,
 			@PathVariable("puntuacion") long puntuacion, HttpServletRequest request) {
 
+		// Obtener id de CLiente
 		HttpSession session = request.getSession();
 		long idCliente = (long) session.getAttribute("idUsuario");
+		// Buscar cliente y producto
 		Clientes cliente = clienteServer.findById(idCliente);
 		Productos producto = productoServer.findById(idProducto);
 		List<Valoracion> lista = null;
-		Valoracion valoracion = new Valoracion();
 
 		try {
+			// Comprobar si existe
 			lista = valoracionServer.findByProductoAndCliente(producto, cliente);
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
+		// Si existe la lista de valoracion para este producto.
 		if (lista.size() > 0) {
-			producto = null;
+			cliente = null;
 		} else {
-			valoracion.setProducto(producto);
-			valoracion.setPuntuacion(puntuacion);
-			valoracion.setCliente(cliente);
+			Valoracion valoracion = new Valoracion(puntuacion, producto, cliente);
 			valoracion = valoracionServer.save(valoracion);
+			producto.setValoracionMedia(valoracionServer.obtenerValoracionMediaPorProducto(producto));
+			productoServer.update(producto);
 		}
-		if (valoracion == null && producto == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		if (producto == null || cliente == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/enviarPregunta/{idProducto}", method = RequestMethod.POST)
 	public @ResponseBody Preguntas enviar_pregunta(@PathVariable("idProducto") long idProducto,
 			HttpServletRequest request, @RequestBody Preguntas pregun) {
@@ -248,7 +274,7 @@ public class ProductoController {
 	}
 
 	@RequestMapping(value = "/respuestaProducto/{idPregunta}", method = RequestMethod.GET)
-	public  ModelAndView respuesta(@PathVariable("idPregunta") long idPregunta) {
+	public ModelAndView respuesta(@PathVariable("idPregunta") long idPregunta) {
 		ModelAndView mav = new ModelAndView();
 
 		Preguntas preguntas = preguntasServer.findById(idPregunta);
@@ -258,9 +284,10 @@ public class ProductoController {
 		mav.addObject("Pregunta", preguntas);
 		mav.setViewName("respuesta-producto");
 		return mav;
-		
+
 	}
 
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/enviar-respuesta/{idPregunta}", method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity recibir_respuesta(@PathVariable("idPregunta") long idPregunta,
 			HttpServletRequest request, @RequestBody Respuestas respuesta, HttpServletResponse response) {
@@ -271,13 +298,12 @@ public class ProductoController {
 				preguntasServer.findById(idPregunta));
 
 		Respuestas resp = respuestaServer.save(respuestas);
-		
+
 		if (resp == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 
 		}
 		return new ResponseEntity(HttpStatus.OK);
-	
 
 	}
 

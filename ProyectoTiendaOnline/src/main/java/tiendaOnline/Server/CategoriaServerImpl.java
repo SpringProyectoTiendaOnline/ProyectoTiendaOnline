@@ -1,8 +1,14 @@
 package tiendaOnline.Server;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +43,7 @@ public class CategoriaServerImpl implements CategoriaServer {
 	@Transactional
 	@Override
 	public void delete(Categoria categoria) {
-		categoriaDao.delete(categoria);
+		categoriaDao.delete(categoria.getIdCategoria());
 	}
 
 	@Override
@@ -93,4 +99,39 @@ public class CategoriaServerImpl implements CategoriaServer {
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public Categoria findByNombre(String nombreCategoria) {
+		return categoriaDao.findByNombre(nombreCategoria);
+	}
+
+	@Override
+	@Transactional
+	public List<Productos> findCategProductos(long idCategoria) {
+		return categoriaDao.findCategProductos(idCategoria);
+	}
+	
+	@Override
+	@Transactional
+	public Page<Productos> findPaginatedCategProductos(Pageable pageable, long idCategoria) {
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+
+		List<Productos> lista = new ArrayList<>();
+		List<Productos> listaProducto = categoriaDao.findCategProductos(idCategoria);
+		if (lista.size() < startItem) {
+			lista = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, listaProducto.size());
+			lista = listaProducto.subList(startItem, toIndex);
+		}
+		
+		Page<Productos> productoPage = new PageImpl<Productos>(lista,PageRequest.of(currentPage, pageSize), listaProducto.size());
+
+		return productoPage;
+	}
+
+	
+	
 }
