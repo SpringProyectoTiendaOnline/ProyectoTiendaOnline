@@ -96,6 +96,7 @@ public class ClienteController {
 		return mav;
 	}
 
+	//lista de Cliente
 	@GetMapping("/list/{idCliente}")
 	public ModelAndView listUsers(@PathVariable("idCliente") long idCliente, Model theModel) {
 		ModelAndView mav = new ModelAndView();
