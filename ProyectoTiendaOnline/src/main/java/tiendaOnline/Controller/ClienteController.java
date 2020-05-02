@@ -114,7 +114,7 @@ public class ClienteController {
 		return "update-cliente";
 
 	}
-
+	//Editar Cliente
 	@RequestMapping(method = RequestMethod.POST, value = "/editarCliente/{idCliente}")
 	public ModelAndView post_update_cliente(@PathVariable("idCliente") long id, @ModelAttribute @Valid Clientes cliente,
 			BindingResult result, HttpServletRequest request) {
