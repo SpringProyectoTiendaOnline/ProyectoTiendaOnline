@@ -54,7 +54,7 @@ public class ClienteController {
 		theModel.addAttribute("Cliente", cliente);
 		return "signup";
 	}
-
+	//crete-cliente
 	@RequestMapping(method = RequestMethod.POST, value = "/create-cliente")
 	public ModelAndView create_cliente(@ModelAttribute Clientes cliente, BindingResult bindingResult) {
 		ModelAndView mav = new ModelAndView();
