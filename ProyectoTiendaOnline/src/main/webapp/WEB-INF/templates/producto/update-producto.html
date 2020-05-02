@@ -18,81 +18,70 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="col-md-10">
-					<form action="#"
-						th:action="@{/Producto/editar-producto/{idProducto}(idProducto=${products.idProducto})}"
-						th:object="${products}" method="post" enctype="multipart/form-data">
+					<div sec:authorize="hasAuthority('ROL_ADMIN')">
+						<form
+							th:action="@{/Producto/editarProducto/{idProducto}(idProducto=${products.idProducto})}"
+							th:object="${products}" method="post">
 
-						<div class="row">
+							<div class="row">
 
 
-							<div class="form-group col-md-8">
-								<label for="imagenFile" class="col-form-label">Título :
-								</label> <input type="file" class="form-control" id="imagenFile"
-									name="imagenFile" placeholder="Selecciona Imagen">
-								<div th:switch="${products.imagen}">
-									<img th:case="''" th:src="@{/images/productoSinFoto.png}"
-										style="width: 100px; height: 100px"> 
-									<img th:case="*"
-										th:src="@{'/images/' + ${products.imagen}}"
-										style="width: 100px; height: 100px">
+								<div class="form-group col-md-8">
+									<label for="titulo" class="col-form-label">Título : </label> <input
+										type="text" th:field="*{titulo}" class="form-control"
+										id="titulo" name="titulo" placeholder="titulo">
 								</div>
+
+
+								<div class="form-group col-md-8">
+									<label for="descripcion" class="col-form-label">
+										Descripción </label> <input type="text" th:field="*{descripcion}"
+										class="form-control" id="descripcion" name="descripcion"
+										placeholder="Escribe la descripción del producto">
+								</div>
+
+
+								<div class="form-group col-md-8">
+									<label for="codProducto" class="col-form-label"> Código
+										de Producto : </label> <input type="text" th:field="*{codProducto}"
+										class="form-control" id="codProducto" name="codProducto"
+										placeholder="Escribe el código de Producto">
+								</div>
+
+								<div class="form-group col-md-8">
+									<label for="precio" class="col-form-label"> Precio : </label> <input
+										type="number" th:field="*{precio}" step="0.01"
+										class="form-control" id="precio" name="precio"
+										placeholder="Escribe el precio del producto">
+								</div>
+
+
+
+								<div class="form-group col-md-8">
+									<label for="descuento" class="col-form-label">
+										Descuento : : </label> <input type="number" step="0.01"
+										th:field="*{descuento}" class="form-control" id="descuento"
+										name="descuento" placeholder="Escribe eñ `recio">
+								</div>
+
+
+
+								<div class="form-group col-md-8">
+									<label for="stock" class="col-form-label"> Stock : </label> <input
+										type="number" th:field="*{stock}" class="form-control"
+										id="stock" name="stock" placeholder=" ">
+								</div>
+
+								<div class="col-md-6">
+									<input type="submit" class="btn btn-lg btn-primary btn-block"
+										value="Modificar">
+								</div>
+
+
 							</div>
+						</form>
 
-
-							<div class="form-group col-md-8">
-								<label for="titulo" class="col-form-label">Título : </label> <input
-									type="text" th:field="*{titulo}" class="form-control"
-									id="titulo" name="titulo" placeholder="titulo">
-							</div>
-
-
-							<div class="form-group col-md-8">
-								<label for="descripcion" class="col-form-label">
-									Descripción </label> <input type="text" th:field="*{descripcion}"
-									class="form-control" id="descripcion" name="descripcion"
-									placeholder="Escribe la descripción del producto">
-							</div>
-
-
-							<div class="form-group col-md-8">
-								<label for="codProducto" class="col-form-label"> Código
-									de Producto : </label> <input type="text" th:field="*{codProducto}"
-									class="form-control" id="codProducto" name="codProducto"
-									placeholder="Escribe el código de Producto">
-							</div>
-
-							<div class="form-group col-md-8">
-								<label for="precio" class="col-form-label"> Precio : </label> <input
-									type="number" th:field="*{precio}" step="0.01"
-									class="form-control" id="precio" name="precio"
-									placeholder="Escribe el precio del producto">
-							</div>
-
-
-
-							<div class="form-group col-md-8">
-								<label for="descuento" class="col-form-label"> Descuento
-									: : </label> <input type="number" step="0.01" th:field="*{descuento}"
-									class="form-control" id="descuento" name="descuento"
-									placeholder="Escribe eñ `recio">
-							</div>
-
-
-
-							<div class="form-group col-md-8">
-								<label for="stock" class="col-form-label"> Stock : </label> <input
-									type="number" th:field="*{stock}" class="form-control"
-									id="stock" name="stock" placeholder=" ">
-							</div>
-
-							<div class="col-md-6">
-								<input type="submit" class="btn btn-lg btn-primary btn-block"
-									value="Modificar">
-							</div>
-
-
-						</div>
-					</form>
+					</div>
 				</div>
 			</div>
 		</div>

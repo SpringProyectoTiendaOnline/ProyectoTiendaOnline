@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="master">
 <head>
 <title>Pedido</title>
 <meta charset="utf-8">
@@ -17,66 +19,94 @@
 	<br />
 	<br />
 	<div class="container">
-		<h2>Pedidos :</h2>
-		<div id="accordion">
-			<div th:each="compra: ${Compra}">
+		<h2 class="card-header">Pedidos :</h2>
+		<div th:switch="${Compra}">
+
+			<div th:case="null">
 				<div class="card">
-					<div class="card-header">
-						<span> Nº Pedido : </span><a class="card-link"
-							data-toggle="collapse" th:href="'#collapse' + ${compra.idCompra}"
-							th:text="${compra.idCompra}"></a> <span id="fecha"
-							style="float: right;"
-							th:text="'Pedido Realizado : ' + ${#dates.format(compra.fechaCompra, 'dd-MM-yyyy')}"></span>
-						<!-- compra.fechaCompra.getYear()+1900} + '-'+ ${compra.fechaCompra.getMonth()+1} + '-' + ${compra.fechaCompra.getDate() -->
-					</div>
-
-					<div th:id="'collapse' + ${compra.idCompra}" class="collapse "
-						data-parent="#accordion">
-						<div th:each="pedido: ${LineaDeCompraServer.findByCompra(compra)}">
-							<div class="card-body">
-								<table class="table table-hover text-center">
-									<thead>
-										<tr>
-											<td>Nombre Producto :</td>
-											<td>Precio Unidad</td>
-											<td>Cantidad</td>
-											<td>Precio Total</td>
-											<td>Estado</td>
-											<td
-												th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
-												th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
-
-												<span th:case="false">Acción</span>
-											</td>
-										</tr>
-									</thead>
-
-									<tbody>
-										<tr>
-											<td th:text="${pedido.productos.titulo}"></td>
-											<td th:text="${pedido.productos.precio}"></td>
-											<td th:text="${pedido.cantidad}"></td>
-											<td th:text="${pedido.precioTotal} + '&euro;'"></td>
-											<td th:text="${pedido.estado.iterator().next().estado}"></td>
-											<td
-												th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
-												th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
-
-												<a th:if="${pedido.estado.iterator().next().idEstado != 2}"
-												th:case="false"
-												th:href="@{/ListaPedido/devolucion-pedido/{idCliente}/{idLineaCompra}(idCliente=${Cliente.idCliente}, idLineaCompra=${pedido.idLineaCompra})}">
-													<button type="button" class="btn btn-outline-warning">Devolución</button>
-											</a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+					<div class="card-body">
+						<h3>No has realizado ningún pedido</h3>
 					</div>
 				</div>
 			</div>
+
+			<div th:case="*">
+				<div id="accordion">
+					<div th:each="compra: ${Compra}">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-header">
+									<span> Nº Pedido : </span> <a class="card-link"
+										data-toggle="collapse"
+										th:href="'#collapse' + ${compra.idCompra}"
+										th:text="${compra.idCompra}"></a> <span id="fecha"
+										style="float: right;"
+										th:text="'Pedido Realizado : ' + ${#dates.format(compra.fechaCompra, 'dd-MM-yyyy')}"></span>
+								</div>
+
+
+								<div th:id="'collapse' + ${compra.idCompra}" class="collapse "
+									data-parent="#accordion">
+									<div
+										th:each="pedido: ${LineaDeCompraServer.findByCompra(compra)}">
+										<div class="card-body">
+											<table class="table table-hover text-center">
+												<thead>
+													<tr>
+														<td>Nombre Producto :</td>
+														<td>Precio Unidad</td>
+														<td>Cantidad</td>
+														<td>Precio Total</td>
+														<td>Estado</td>
+														<td
+															th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
+															th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
+															<span th:case="false">Acción</span>
+														</td>
+													</tr>
+												</thead>
+
+												<tbody>
+													<tr>
+														<td th:text="${pedido.productos.titulo}"></td>
+														<td th:text="${pedido.productos.precio}"></td>
+														<td th:text="${pedido.cantidad}"></td>
+														<td th:text="${pedido.precioTotal} + '&euro;'"></td>
+														<td th:text="${pedido.estado.iterator().next().estado}"></td>
+														<td
+															th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, millis=${T(java.util.concurrent.TimeUnit).MILLISECONDS}"
+															th:switch="${days.convert(#dates.createNow().getTime() - compra.fechaCompra.getTime(), millis) > 15}">
+
+															<a class="btn btn-outline-warning"
+															th:if="${pedido.estado.iterator().next().idEstado != 2}"
+															th:case="false"
+															th:href="@{/ListaPedido/devolucion-pedido/{idCliente}/{idLineaCompra}(idCliente=${Cliente.idCliente}, idLineaCompra=${pedido.idLineaCompra})}">
+														</a>
+
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<!-- card-body -->
+										</div>
+										<!-- each-pedido -->
+									</div>
+									<!-- collapse -->
+								</div>
+								<!-- card-body -->
+							</div>
+							<!-- card -->
+						</div>
+						<!-- each compra -->
+					</div>
+					<!-- accordin -->
+				</div>
+				<!-- case *  -->
+			</div>
+
+			<!-- switch- compra -->
 		</div>
+
 	</div>
 </body>
 </html>

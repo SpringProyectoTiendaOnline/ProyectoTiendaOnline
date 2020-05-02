@@ -18,4 +18,6 @@ public interface CategoriaDAO extends GenericDao<Categoria> {
 	public Categoria findByNombre(String nombreCategoria);
 
 	public Categoria eliminarProductoCateg(long idCategoria, Productos producto);
+
+	List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit);
 }

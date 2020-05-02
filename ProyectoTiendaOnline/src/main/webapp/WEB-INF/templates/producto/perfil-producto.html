@@ -50,53 +50,45 @@
 		<h1 class="card-header">
 			Producto : <span th:text="${Producto.titulo}"></span>
 		</h1>
+
+		<input type="hidden" id="idProducto" name="idProducto"
+			th:value="${Producto.idProducto}"> <input type="hidden"
+			id="idUsuario" name="idUsuario" th:value="${session.idUsuario}">
+
 		<br />
 
-		<div class="row">
-			<input type="hidden" id="idProducto" name="idProducto"
-				th:value="${Producto.idProducto}"> <input type="hidden"
-				id="idUsuario" name="idUsuario" th:value="${session.idUsuario}">
-
-
+		<div class="row text-center text-lg-left">
 			<div class="col-md-4">
 				<div class="card">
 					<div class="card-body">
-						<div id="carouselExampleControls" class="carousel slide"
-							data-ride="carousel">
-
-							<div class="carousel-inner"
-								th:each="imagen, istat :${ListaImagen}">
-
-								<div th:switch="${istat.index}">
-									<div th:case="'0'" class="carousel-item active">
-										<img class="d-block w-100" th:src="${imagen.urlImagen}"
-											th:alt="${imagen.idImagen}" />
-									</div>
-
-									<div th:case="*" class="carousel-item ">
-										<img class="d-block w-100" th:src="${imagen.urlImagen}"
-											th:alt="${imagen.idImagen}" />
-										<!-- case *  -->
-									</div>
-									<!-- case 0 -->
+						<!-- switch * ListaImagen -->
+						<div th:if="${ListaImagen != null}">
+							<!-- case * imagen -->
+							<div class="mdb-lightbox">
+								<div th:each="imagen, istat :${ListaImagen}">
+									<figure class="col-md-4">
+										<a th:href=${imagen.urlImagen} data-size="1600x1067"> <img
+											alt="picture" th:src="${imagen.urlImagen}" class="img-fluid">
+										</a>
+									</figure>
+									<!-- each imagen -->
 								</div>
-								<!-- switch -->
+								<!-- mbd -->
 							</div>
 
-							<a class="carousel-control-prev" href="#carouselExampleControls"
-								role="button" data-slide="prev"> <span
-								class="carousel-control-prev-icon" aria-hidden="true"></span> <span
-								class="sr-only">Previous</span>
-
-							</a> <a class="carousel-control-next" href="#carouselExampleControls"
-								role="button" data-slide="next"> <span
-								class="carousel-control-next-icon" aria-hidden="true"></span> <span
-								class="sr-only">Next</span>
-							</a>
-							<!-- carousel slide -->
+							<!-- switch -->
 						</div>
-						<br /> <br />
 
+						<div th:if="${#lists.isEmpty(ListaImagen)}">
+							<div class="d-block mb-4 w-100">
+								<img class="img-fluid img-thumbnail"
+									th:src="@{/imagen/productoSinFoto.png}"
+									style="width: 400px; height: 400px" />
+							</div>
+							<!-- case if  -->
+						</div>
+
+						<br />
 						<!-- Details añadir,modificar, eliminar imagen de Producto -->
 						<div sec:authorize="hasAuthority('ROL_ADMIN')">
 							<!-- Añadir imagen -->
@@ -163,8 +155,7 @@
 													<script>
 														function obtenerIdImagen(
 																idImagen) {
-															document
-																	.getElementById("showIdImagenProducto").value = idImagen;
+															document.getElementById("showIdImagenProducto").value = idImagen;
 														}
 													</script>
 													<!-- form-check -->

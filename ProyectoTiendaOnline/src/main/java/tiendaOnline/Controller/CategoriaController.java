@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +47,8 @@ public class CategoriaController {
 	@Autowired
 	private ImagenProductoServer imagenServer;
 
+	private int result = 0;
+
 	// Listar las categorias
 	@RequestMapping(method = RequestMethod.GET, value = "/lista-categoria")
 	public ModelAndView listaCategoria(HttpServletRequest request, @RequestParam("page") Optional<Integer> page,
@@ -62,28 +65,75 @@ public class CategoriaController {
 		return mav;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/lista_producto_nombreCategoria/{idCategoria}/{nombreCategoria}")
+	@RequestMapping(method = RequestMethod.GET, value = "/lista_producto_nombreCategoria/{idCategoria}")
 	public ModelAndView listaProductoCategoria(@PathVariable("idCategoria") long idCategoria, Model theModel,
 			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
 		ModelAndView mav = new ModelAndView();
-		List<Productos> listaProducto = categoriaServer.findCategProductos(idCategoria);
-
+		
 		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(4);
+
+		Page<Productos> productosPage = categoriaServer
+				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria, result, 4);
+		mav.addObject("productoPage", productosPage);
+		
+		int totalPages = productosPage.getTotalPages();
+		
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+			mav.addObject("pageNumbers", pageNumbers);
+		}
+
+		/*mav.addObject("categoria", categoriaServer.findById(idCategoria));
+		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
+		mav.addObject("imagenServer", imagenServer);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+		mav.setViewName("producto/list-product-user");*/
+		
+		mav.addObject("categoria", categoriaServer.findById(idCategoria));
+		mav.addObject("imagenServer", imagenServer);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
+		mav.setViewName("producto/list-product-user");
+		result = result + 4;
+
+		return mav;
+
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/lista_4producto_nombreCategoria/{idCategoria}")
+	public ModelAndView listaProductoCategoriaPaginada(@PathVariable("idCategoria") long idCategoria, Model theModel,
+			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+		ModelAndView mav = new ModelAndView();
+
+		
+		/*int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
 
 		Page<Productos> productosPage = categoriaServer
-				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria);
+				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria, result, 4);
 		mav.addObject("productoPage", productosPage);
+		
 		int totalPages = productosPage.getTotalPages();
 		if (totalPages > 0) {
 			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
 			mav.addObject("pageNumbers", pageNumbers);
 		}
-		mav.addObject("listaProductos", listaProducto);
+
+		result = result + 4;
+
+		mav.addObject("categoria", categoriaServer.findById(idCategoria));
+		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
 		mav.addObject("imagenServer", imagenServer);
 		mav.addObject("listaCategoria", categoriaServer.getAll());
-
+		mav.setViewName("producto/list-product-user");*/
+		
+		mav.addObject("categoria", categoriaServer.findById(idCategoria));
+		mav.addObject("imagenServer", imagenServer);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
 		mav.setViewName("producto/list-product-user");
+		result = result + 4;
 
 		return mav;
 

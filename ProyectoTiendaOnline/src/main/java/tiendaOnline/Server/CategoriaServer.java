@@ -30,7 +30,9 @@ public interface CategoriaServer {
 	
 	public List<Productos> findCategProductos(long idCategoria);
 
-	public Page<Productos> findPaginatedCategProductos(Pageable pageable, long idCategoria);
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit);
+
+	public Page<Productos> findPaginatedCategProductos(Pageable pageable, long idCategoria, int index, int limit);
 
 
 }

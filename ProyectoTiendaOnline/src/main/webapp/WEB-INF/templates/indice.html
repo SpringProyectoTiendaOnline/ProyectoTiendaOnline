@@ -31,7 +31,7 @@
 	<br />
 
 	<div class="container col-md-12">
-		<h1 class="card-header">Productos de oferta :</h1>
+		<h1 class="card-header bg-dark text-light">Productos de oferta :</h1>
 		<br />
 		<!--  <script th:src="@{/js/accionHome.js}"></script>-->
 
@@ -45,29 +45,26 @@
 					</div>
 
 					<div class="col">
-						<div class="card" style="width: 20rem; height: 20rem;">
-							<div class="form-check form-check-inline">
-								<div id="funcionListaProducto"
-									th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
-									<div th:each="lista : ${imagenServer.findByProducto(producto)}">
-										<label class="form-check-label"
-											th:for="'imagen_'+${lista.idImagen}"> <img
-											th:src="${lista.urlImagen}"
-											style="width: 100px; height: 100px" />
-										</label>
-										<!-- each -->
+						<div class="card" style="width: 20rem;">
+							<div id="funcionListaProducto"
+								th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
+
+								<div th:each="lista, istat : ${imagenServer.findByProducto(producto)}">
+									<div th:if="${istat.index == 0}">
+										<img class="card-img-top" th:src="${lista.urlImagen}"
+											style="height: 250px" />
 									</div>
-									<!-- is empty -->
+									<!-- each -->
 								</div>
-
-								<div
-									th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
-									<img th:src="@{/imagen/productoSinFoto.png}"
-										style="width: 100px; height: 100px" />
-								</div>
-
-								<!-- form-check -->
+								<!-- is empty -->
 							</div>
+
+							<div
+								th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
+								<img class="card-img-top"
+									th:src="@{/imagen/productoSinFoto.png}" style="height: 250px" />
+							</div>
+
 
 							<hr />
 

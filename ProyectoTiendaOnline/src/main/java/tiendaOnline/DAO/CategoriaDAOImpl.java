@@ -32,6 +32,7 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 	@Override
 	public Categoria findProducto(long idProducto) {
 		try {
+			
 			Categoria categoria = (Categoria) this.em
 					.createQuery("From Categoria c join fetch c.producto p where p.idProducto = :id")
 					.setParameter("id", idProducto).getSingleResult();
@@ -108,5 +109,19 @@ public class CategoriaDAOImpl extends GenericDaoImpl<Categoria> implements Categ
 		
 		return null;
 	}
+	
+	@Override
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit) {
+		@SuppressWarnings("unchecked")
+		List<Productos> lProducto = this.em
+				.createQuery("Select p From Productos p join fetch p.categoria c Where c.idCategoria = :id")
+				.setParameter("id", idCategoria).setFirstResult(index).setMaxResults(limit).getResultList();
+
+		if (lProducto != null) {
+			return lProducto;
+		}
+		return null;
+	}
+
 
 }

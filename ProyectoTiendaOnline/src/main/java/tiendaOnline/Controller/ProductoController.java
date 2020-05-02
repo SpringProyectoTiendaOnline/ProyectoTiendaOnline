@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Dto.ProductosDto;
+import tiendaOnline.Entity.Categoria;
 import tiendaOnline.Entity.Clientes;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Preguntas;
@@ -124,7 +125,7 @@ public class ProductoController {
 		return "producto/update-producto";
 	}
 
-	@PostMapping("editar-producto/{idProducto}")
+	@PostMapping("/editarProducto/{idProducto}")
 	public String update_producto_post(@PathVariable("idProducto") long id, @ModelAttribute @Valid Productos producto,
 			BindingResult bindingResult, HttpServletRequest request) {
 
@@ -147,10 +148,10 @@ public class ProductoController {
 	}
 
 	@GetMapping("/removeproducto/{idProducto}")
-	public ModelAndView removeProducto(@PathVariable("idProducto") long idProdcuto) {
+	public ModelAndView removeProducto(@PathVariable("idProducto") long idProducto) {
 		ModelAndView mav = new ModelAndView();
 
-		Productos producto = productoServer.findById(idProdcuto);
+		Productos producto = productoServer.findById(idProducto);
 
 		List<LineaCompra> linea = lineaServer.getAll();
 
@@ -170,9 +171,10 @@ public class ProductoController {
 			}
 		}
 
-		if (producto != null) {
-			productoServer.delete(producto);
-		}
+		Categoria categoria = categoriaServer.findByProducto(idProducto);
+		categoriaServer.eliminarProductoCateg(categoria.getIdCategoria(), idProducto);
+
+		productoServer.delete(producto);
 
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.setViewName("producto/list-producto");
@@ -181,21 +183,8 @@ public class ProductoController {
 	}
 
 	@GetMapping("/list-product-user/{idCliente}")
-	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente,
-			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente) {
 		ModelAndView mav = new ModelAndView();
-
-		int currentPage = page.orElse(1);
-		int pageSize = size.orElse(5);
-
-		Page<Productos> productosPage = productoServer.findPaginated(PageRequest.of(currentPage - 1, pageSize));
-		System.err.println(productosPage.getContent());
-		mav.addObject("productoPage", productosPage);
-		int totalPages = productosPage.getTotalPages();
-		if (totalPages > 0) {
-			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-			mav.addObject("pageNumbers", pageNumbers);
-		}
 
 		mav.addObject("Cliente", clienteServer.findById(idCliente));
 		mav.addObject("listaProductos", productoServer.getAll());

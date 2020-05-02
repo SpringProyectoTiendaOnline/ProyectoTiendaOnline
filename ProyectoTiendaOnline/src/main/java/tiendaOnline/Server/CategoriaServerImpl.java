@@ -23,10 +23,11 @@ public class CategoriaServerImpl implements CategoriaServer {
 
 	@Autowired
 	public CategoriaDAO categoriaDao;
-	
+
 	@Autowired
 	public ProductosDAO productosDao;
 
+	private List<Productos> lista = new ArrayList<>();
 
 	@Override
 	@Transactional
@@ -75,7 +76,7 @@ public class CategoriaServerImpl implements CategoriaServer {
 				existe = true;
 			}
 		}
-		
+
 		if (!existe) {
 			Categoria cat = categoriaDao.saveProductoCateg(idCategoria, producto);
 			return cat;
@@ -89,13 +90,13 @@ public class CategoriaServerImpl implements CategoriaServer {
 	public Categoria eliminarProductoCateg(long idCategoria, long idProducto) {
 		Productos producto = productosDao.find(idProducto);
 		Categoria categoria = categoriaDao.find(idCategoria);
-		
-		for (Productos p: categoria.getProducto()) {
+
+		for (Productos p : categoria.getProducto()) {
 			if (p.getIdProducto() == idProducto) {
 				return categoriaDao.eliminarProductoCateg(idCategoria, producto);
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -110,28 +111,37 @@ public class CategoriaServerImpl implements CategoriaServer {
 	public List<Productos> findCategProductos(long idCategoria) {
 		return categoriaDao.findCategProductos(idCategoria);
 	}
-	
+
 	@Override
 	@Transactional
-	public Page<Productos> findPaginatedCategProductos(Pageable pageable, long idCategoria) {
+	public Page<Productos> findPaginatedCategProductos(Pageable pageable, long idCategoria, int index, int limit) {
 		int pageSize = pageable.getPageSize();
 		int currentPage = pageable.getPageNumber();
 		int startItem = currentPage * pageSize;
 
-		List<Productos> lista = new ArrayList<>();
 		List<Productos> listaProducto = categoriaDao.findCategProductos(idCategoria);
+
 		if (lista.size() < startItem) {
 			lista = Collections.emptyList();
 		} else {
 			int toIndex = Math.min(startItem + pageSize, listaProducto.size());
 			lista = listaProducto.subList(startItem, toIndex);
 		}
+
+		System.err.println("...." + pageSize + " " + currentPage + " " + startItem + " ");
+
+		Page<Productos> productoPage = new PageImpl<Productos>(lista, PageRequest.of(currentPage, pageSize),
+				listaProducto.size());
 		
-		Page<Productos> productoPage = new PageImpl<Productos>(lista,PageRequest.of(currentPage, pageSize), listaProducto.size());
+		System.err.println("--- " + productoPage);
 
 		return productoPage;
 	}
 
-	
-	
+	@Override
+	@Transactional
+	public List<Productos> findCategProductosPaginada(long idCategoria, int index, int limit) {
+		return categoriaDao.findCategProductosPaginada(idCategoria, index, limit);
+	}
+
 }

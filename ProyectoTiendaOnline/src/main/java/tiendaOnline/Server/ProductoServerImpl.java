@@ -33,7 +33,7 @@ public class ProductoServerImpl implements ProductoServer {
 	@Override
 	@Transactional
 	public Productos findById(long id) {
-		return productoDAO.find(id);
+		return productoDAO.findById(id);
 
 	}
 

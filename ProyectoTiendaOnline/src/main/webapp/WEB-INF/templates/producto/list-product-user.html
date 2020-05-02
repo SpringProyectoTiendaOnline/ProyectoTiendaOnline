@@ -37,89 +37,153 @@
 
 	<div class="container-fluid">
 		<h1 class="card-header">Lista de Producto :</h1>
-		<br />
-
-		<div class="card-body">
-
-			<!-- card-body -->
-		</div>
-
-		<br />
-
-		<div class="row">
-
-			<div th:each="producto, stats: ${productoPage.content}">
-
-				<div class="col">
-					<div class="card" style="width: 20rem; height: 20rem;">
-						<div class="form-check form-check-inline">
-							<div id="funcionListaProducto"
-								th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
-								<div th:each="lista : ${imagenServer.findByProducto(producto)}">
-									<label class="form-check-label"
-										th:for="'imagen_'+${lista.idImagen}"> <img
-										th:src="${lista.urlImagen}"
-										style="width: 100px; height: 100px" />
-									</label>
-									<!-- each -->
+		<br /> <br />
+		<div th:switch="${categoria}">
+			<div th:case="null">
+				<div class="row">
+					<!-- productoPage.content -->
+					<div th:each="producto, stats: ${listaProductos}">
+						<div class="col">
+							<div class="card" style="width: 20rem;">
+								<div id="funcionListaProducto"
+									th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
+									
+									<div th:each="lista, istat : ${imagenServer.findByProducto(producto)}">
+										<div th:if="${istat.index == 1}">
+											 <img
+												class="card-img-top" th:src="${lista.urlImagen}"
+												style="height:250px" />
+										</div>
+										<!-- each -->
+									</div>
+									<!-- is empty -->
 								</div>
-								<!-- is empty -->
-							</div>
 
-							<div
-								th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
-								<img th:src="@{/imagen/productoSinFoto.png}"
-									style="width: 100px; height: 100px" />
-							</div>
+								<div
+									th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
+									<img class="card-img-top"
+										th:src="@{/imagen/productoSinFoto.png}" style="height:250px"/>
+								</div>
 
-							<!-- form-check -->
+								<hr />
+
+								<div class="card-body">
+									<p style="display: none;" id="idProducto"
+										th:text="${producto.idProducto}"></p>
+									<h5 class="card-title">
+										<a
+											th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+											class="text-right"><span
+											th:text="'Título : ' + ${producto.titulo}"></span> </a>
+									</h5>
+
+									<div class="d-flex flex-row-reverse">
+										<div class="p-2 mb-2 bg-light text-dark">
+											Precio :
+											<p th:text="${producto.precio} + '&euro;'"></p>
+										</div>
+
+										<div class="p-2 mb-2 bg-danger text-white">
+											<p th:text="${producto.descuento} + '%'">
+										</div>
+										<!-- d-flex -->
+									</div>
+									<!-- card-body -->
+								</div>
+								<!-- card -->
+							</div>
+							<!-- col -->
 						</div>
-
-						<hr />
-
-						<div class="card-body">
-							<p style="display: none;" id="idProducto"
-								th:text="${producto.idProducto}"></p>
-							<h5 class="card-title">
-								<a
-									th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
-									class="text-right"><span
-									th:text="'Título : ' + ${producto.titulo}"></span> </a>
-							</h5>
-
-							<div class="d-flex flex-row-reverse">
-								<div class="p-2 mb-2 bg-light text-dark">
-									Precio :
-									<p th:text="${producto.precio} + '&euro;'"></p>
-								</div>
-
-								<div class="p-2 mb-2 bg-danger text-white">
-									<p th:text="${producto.descuento} + '%'">
-								</div>
-								<!-- d-flex -->
-							</div>
-							<!-- card-body -->
-						</div>
-						<!-- card -->
+						<!-- stats -->
 					</div>
-					<!-- col -->
+					<!-- each producto -->
 				</div>
-				<!-- stats -->
+				<br />
 			</div>
-			<!-- each producto -->
-		</div>
-		<br />
 
-		<ul th:if="${productoPage.totalPages > 0}"
-			class="pagination justify-content-center">
-			<li class="page-item" th:each="pageNumber : ${pageNumbers}"><a
-				class="page-link" th:text="${pageNumber}"
-				th:class="${pageNumber==productoPage.number + 1} ? active"
-				th:href="@{/Producto/list-product-user/{idCliente}(idCliente=${session.idUsuario}, size=${productoPage.size}, page=${pageNumber})}"></a>
-			</li>
-		</ul>
-		<!-- row -->
-		<!-- container -->
+			<div th:case="*">
+				<div class="row">
+					<!-- productoPage.content -->
+					<div th:each="producto, stats: ${productoPage.content}">
+						<div class="col">
+							<div class="card" style="width: 20rem; height: 20rem;">
+								<div class="form-check form-check-inline">
+									<div id="funcionListaProducto"
+										th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
+										<div
+											th:each="lista : ${imagenServer.findByProducto(producto)}">
+											<label class="form-check-label"
+												th:for="'imagen_'+${lista.idImagen}"> <img
+												th:src="${lista.urlImagen}"
+												style="width: 100px; height: 100px" />
+											</label>
+											<!-- each -->
+										</div>
+										<!-- is empty -->
+									</div>
+
+									<div
+										th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
+										<img th:src="@{/imagen/productoSinFoto.png}"
+											style="width: 100px; height: 100px" />
+									</div>
+
+									<!-- form-check -->
+								</div>
+
+								<hr />
+
+								<div class="card-body">
+									<p style="display: none;" id="idProducto"
+										th:text="${producto.idProducto}"></p>
+									<h5 class="card-title">
+										<a
+											th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
+											class="text-right"><span
+											th:text="'Título : ' + ${producto.titulo}"></span> </a>
+									</h5>
+
+									<div class="d-flex flex-row-reverse">
+										<div class="p-2 mb-2 bg-light text-dark">
+											Precio :
+											<p th:text="${producto.precio} + '&euro;'"></p>
+										</div>
+
+										<div class="p-2 mb-2 bg-danger text-white">
+											<p th:text="${producto.descuento} + '%'">
+										</div>
+										<!-- d-flex -->
+									</div>
+									<!-- card-body -->
+								</div>
+								<!-- card -->
+							</div>
+							<!-- col -->
+						</div>
+						<!-- stats -->
+					</div>
+					<!-- each producto -->
+				</div>
+
+				<br />
+				<nav aria-label="..." th:if="${productoPage.totalPages > 0}">
+					<ul class="pagination pg-blue pagination-lg justify-content-center">
+						<li class="page-item" th:each="pageNumber : ${pageNumbers}">
+
+							<a class="page-link"
+							th:href="@{/Categoria/lista_producto_nombreCategoria/{idCategoria}(idCategoria = ${categoria.idCategoria}, size=${productoPage.size}, page=${pageNumber})}"
+							th:text=${pageNumber}></a>
+						</li>
+
+					</ul>
+				</nav>
+
+
+
+			</div>
+			<!-- row -->
+			<!-- container -->
+		</div>
 	</div>
 </body>
 </html>

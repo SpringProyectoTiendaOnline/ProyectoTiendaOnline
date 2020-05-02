@@ -16,113 +16,109 @@
 	<br />
 	<div class="container my-2">
 
-		<div class="row">
 
-			<div class="col-lg-6">
+		<div class="col-lg-12">
 
-				<div class="card">
-					<h3 class="card-header bg-primary">El perfil de usuario :</h3>
+			<div class="card">
+				<h3 class="card-header text-light bg-dark">El perfil de usuario :</h3>
 
-					<div class="card-body">
-						<div class="my-3">
+				<div class="card-body">
+					<div class="my-3">
 
-							<p class="text-primary">
-								Nombre : <span class="text-dark" th:text="${Cliente.nombre}"></span>
-							</p>
-							<p class="text-primary">
-								Apellido : <span class="text-dark" th:text="${Cliente.apellido}">
-								</span>
-							</p>
-							<p class="text-primary">
-								Fecha de Nacimiento : <span class="text-dark"
-									th:text="${Cliente.fnacimiento}"> </span>
-							</p>
-							<p class="text-primary">
-								Email : <span class="text-dark" th:text="${Cliente.email}">
-								</span>
-							</p>
+						<p class="text-primary">
+							Nombre : <span class="text-dark" th:text="${Cliente.nombre}"></span>
+						</p>
+						<p class="text-primary">
+							Apellido : <span class="text-dark" th:text="${Cliente.apellido}">
+							</span>
+						</p>
+						<p class="text-primary">
+							Fecha de Nacimiento : <span class="text-dark"
+								th:text="${Cliente.fnacimiento}"> </span>
+						</p>
+						<p class="text-primary">
+							Email : <span class="text-dark" th:text="${Cliente.email}">
+							</span>
+						</p>
 
-							<p class="text-primary">
-								Dirección : <span class="text-dark"
-									th:text="${Cliente.direccion}"></span>
-							</p>
+						<p class="text-primary">
+							Dirección : <span class="text-dark"
+								th:text="${Cliente.direccion}"></span>
+						</p>
 
-							<a class="btn btn-primary"
-								th:href="@{/Cliente/editar-cliente/{idCliente}(idCliente=${Cliente.idCliente})}">Modificar
-								Datos </a> <br />
-							<!-- my-3 -->
-						</div>
-						<!-- card-body -->
+						<a class="btn btn-primary"
+							th:href="@{/Cliente/editar-cliente/{idCliente}(idCliente=${Cliente.idCliente})}">Modificar
+							Datos </a> <br />
+						<!-- my-3 -->
 					</div>
-					<!-- card -->
+					<!-- card-body -->
 				</div>
+				<!-- card -->
 			</div>
+		</div>
 
-			<br /> <br />
+		<br /> <br />
 
-
-			<!-- Datos de BAnco -->
-			<div class="col-lg-6">
-				<div class="card">
-					<h1 class="card-header bg-primary">Datos Bancarios</h1>
-					<div class="card-body">
-						<div class="col-md-6">
-							<a class="btn btn-primary"
-								th:href="@{/Banco/create-banco/{idCliente}(idCliente=${Cliente.idCliente})}">Añadir
-								la cuenta bancaria</a>
-						</div>
-
-						<br />
-
-						<div th:switch="${listaBanco}">
-							<div th:case="null">
-								<p>No hay datos de Bancaria !</p>
-							</div>
-
-							<div th:case="*">
-								<table class="table table-striped table-responsive-md">
-									<thead>
-										<tr>
-											<th>Nombre de Banco:</th>
-											<th>Número de Tarjeta:</th>
-											<th>Titular:</th>
-											<th>Código de Seguridad:</th>
-											<th>Dirección de Factura:</th>
-											<th>Editar:</th>
-											<th>Eliminar:</th>
-										</tr>
-									</thead>
-
-									<tbody>
-										<tr th:each="Banco : ${listaBanco}">
-											<td th:text="${Banco.nombre}"></td>
-											<td th:text="${Banco.numTarjeta}"></td>
-											<td th:text="${Banco.titular}"></td>
-											<td th:text="${Banco.codSeguridad}"></td>
-											<td th:text="${Banco.dirFactura}"></td>
-											<td><a
-												th:href="@{/Banco/editar-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
-												class="btn btn-outline-warning"><i
-													class="fas fa-banco-user ml-2">Editar</i></a></td>
-											<!--  -->
-											<td><a
-												th:href="@{/Banco/delete-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
-												class="btn btn-outline-danger"><i
-													class="fas fa-user-times ml-2">Eliminar</i> </a></td>
-										</tr>
-									</tbody>
-								</table>
-								<!-- th:case -->
-							</div>
-							<!-- lista -->
-						</div>
-						<!-- card-body -->
+		<!-- Datos de BAnco -->
+		<div class="col-lg-12">
+			<div class="card">
+				<h1 class="card-header text-light bg-dark">Datos Bancarios</h1>
+				<div class="card-body">
+					<div class="col-md-6">
+						<a class="btn btn-primary"
+							th:href="@{/Banco/create-banco/{idCliente}(idCliente=${Cliente.idCliente})}">Añadir
+							la cuenta bancaria</a>
 					</div>
-					<!-- card -->
+
+					<br />
+
+					<div th:switch="${listaBanco}">
+						<div th:case="null">
+							<p>No hay datos de Bancaria !</p>
+						</div>
+
+						<div th:case="*">
+							<table class="table table-striped table-responsive-md">
+								<thead>
+									<tr>
+										<th>Nombre de Banco:</th>
+										<th>Número de Tarjeta:</th>
+										<th>Titular:</th>
+										<th>Código de Seguridad:</th>
+										<th>Dirección de Factura:</th>
+										<th>Editar:</th>
+										<th>Eliminar:</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="Banco : ${listaBanco}">
+										<td th:text="${Banco.nombre}"></td>
+										<td th:text="${Banco.numTarjeta}"></td>
+										<td th:text="${Banco.titular}"></td>
+										<td th:text="${Banco.codSeguridad}"></td>
+										<td th:text="${Banco.dirFactura}"></td>
+										<td><a
+											th:href="@{/Banco/editar-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
+											class="btn btn-outline-warning"><i
+												class="fas fa-banco-user ml-2">Editar</i></a></td>
+										<!--  -->
+										<td><a
+											th:href="@{/Banco/delete-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}"
+											class="btn btn-outline-danger"><i
+												class="fas fa-user-times ml-2">Eliminar</i> </a></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- th:case -->
+						</div>
+						<!-- lista -->
+					</div>
+					<!-- card-body -->
 				</div>
-				<!-- col-6 banco-->
+				<!-- card -->
 			</div>
-			<!-- row -->
+			<!-- col-6 banco-->
 		</div>
 		<!-- /container -->
 	</div>

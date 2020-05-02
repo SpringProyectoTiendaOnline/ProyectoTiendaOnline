@@ -71,8 +71,6 @@ public class ClienteController {
 			return mav;
 		}
 
-		System.err.println("save cliente..");
-
 		Clientes clienteSave = ClienteServer.save(cliente);
 		if (clienteSave != null) {
 			mav.addObject("Cliente", clienteSave);
@@ -92,7 +90,7 @@ public class ClienteController {
 			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.setViewName("perfil-cliente");
 		} else {
-			mav.setViewName("index");
+			mav.setViewName("indice");
 		}
 
 		return mav;
@@ -119,18 +117,25 @@ public class ClienteController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/editarCliente/{idCliente}")
 	public ModelAndView post_update_cliente(@PathVariable("idCliente") long id, @ModelAttribute @Valid Clientes cliente,
-			BindingResult result, Model themodel) {
+			BindingResult result, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 
-		Clientes clienteOrig = ClienteServer.findById(id);
 		if (result.hasFieldErrors()) {
 			mav.addObject("Cliente", cliente);
 			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.setViewName("update-cliente");
+			return mav;
+		}
+
+		long idCliente = (long) request.getSession().getAttribute("idUsuario");
+		cliente.setIdCliente(id);
+		Clientes clienteMod = ClienteServer.update(cliente);
+		if (idCliente == 1) {
+			List<Clientes> lCliente = ClienteServer.getAll();
+			mav.addObject("Cliente", ClienteServer.findById(idCliente));
+			mav.addObject("listaCliente", lCliente);
+			mav.setViewName("list-cliente");
 		} else {
-			cliente.setRoles(clienteOrig.getRoles());
-			cliente.setIdCliente(id);
-			Clientes clienteMod = ClienteServer.update(cliente);
 			if (clienteMod != null) {
 				List<Banco> listBanco = bancoServer.findByCliente(clienteMod);
 				mav.addObject("listaBanco", listBanco);
