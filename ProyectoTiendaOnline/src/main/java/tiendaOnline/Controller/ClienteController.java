@@ -1,6 +1,5 @@
 package tiendaOnline.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,14 +7,18 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.DAO.RolRepository;
@@ -54,29 +57,20 @@ public class ClienteController {
 		theModel.addAttribute("Cliente", cliente);
 		return "signup";
 	}
-	//crete-cliente
-	@RequestMapping(method = RequestMethod.POST, value = "/create-cliente")
-	public ModelAndView create_cliente(@ModelAttribute Clientes cliente, BindingResult bindingResult) {
-		ModelAndView mav = new ModelAndView();
-		List<String> mensaje = new ArrayList<String>();
 
-		if (bindingResult.hasErrors()) {
-			for (int i = 0; i < bindingResult.getAllErrors().size(); i++) {
-				mensaje.add(bindingResult.getAllErrors().get(i).getDefaultMessage());
-			}
-			mav.addObject("Error", mensaje);
-			mav.addObject("Cliente", cliente);
-			mav.addObject("listaCategoria", categoriaServer.getAll());
-			mav.setViewName("signup");
-			return mav;
+	// crete-cliente
+	@RequestMapping(method = RequestMethod.POST, value = "/signup")
+	public @ResponseBody ResponseEntity create_cliente(@RequestBody Clientes cliente, BindingResult bindingResult) {
+
+		System.err.println("Create - Cliente : " + cliente);
+
+		if (ClienteServer.findByEmail(cliente.getEmail()) != null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Clientes clienteSave = ClienteServer.save(cliente);
-		if (clienteSave != null) {
-			mav.addObject("Cliente", clienteSave);
-			mav.setViewName("/login");
-		}
-		return mav;
+		ClienteServer.save(cliente);
+		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
 
 	// Perfil de cliente
@@ -96,7 +90,7 @@ public class ClienteController {
 		return mav;
 	}
 
-	//lista de Cliente
+	// lista de Cliente
 	@GetMapping("/list/{idCliente}")
 	public ModelAndView listUsers(@PathVariable("idCliente") long idCliente, Model theModel) {
 		ModelAndView mav = new ModelAndView();
@@ -115,7 +109,8 @@ public class ClienteController {
 		return "update-cliente";
 
 	}
-	//Editar Cliente
+
+	// Editar Cliente
 	@RequestMapping(method = RequestMethod.POST, value = "/editarCliente/{idCliente}")
 	public ModelAndView post_update_cliente(@PathVariable("idCliente") long id, @ModelAttribute @Valid Clientes cliente,
 			BindingResult result, HttpServletRequest request) {

@@ -38,11 +38,15 @@ public class ClienteDAOImpl extends GenericDaoImpl<Clientes> implements ClienteD
 
 	@Override
 	public Clientes findByEmail(String email) {
-		Query query = this.em.createQuery("From Clientes c Where c.email =:email");
-		query.setParameter("email", email);
-		Clientes cliente = (Clientes) query.getSingleResult();
-		if (cliente != null) {
-			return cliente;
+		try {
+			Query query = this.em.createQuery("From Clientes c Where c.email =:email");
+			query.setParameter("email", email);
+			Clientes cliente = (Clientes) query.getSingleResult();
+			if (cliente != null) {
+				return cliente;
+			}
+		} catch (NoResultException n) {
+			return null;
 		}
 		return null;
 	}

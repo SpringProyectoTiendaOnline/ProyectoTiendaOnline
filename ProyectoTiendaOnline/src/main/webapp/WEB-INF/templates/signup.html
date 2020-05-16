@@ -9,6 +9,13 @@
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/typeahead.bundle.min.js}"></script>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 </head>
 
 <body>
@@ -19,31 +26,32 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="col-md-10">
-					<!-- <tr th:each="producto : ${listaProductos}"> -->
-					<div class="alert alert-danger "
+					<!--  <div class="alert alert-danger "
 						th:if="${not #strings.isEmpty(Error)}">
 						<div th:each="error : ${Error}">
 							<p th:text="${error}">
 						</div>
-					</div>
+					</div>-->
 
+					<div id="aviso"></div>
 
-					<form th:action="@{/Cliente/create-cliente}"
-						th:object="${Cliente}" method="post">
+					<!-- th:action="@{/Cliente/create-cliente}" -->
+					<form th:object="${Cliente}" method="post">
 						<div class="row">
-
 							<div class="form-group col-md-8">
-
 								<label for="nombre" class="col-form-label">Nombre : </label> <input
 									type="text" th:field="*{nombre}" class="form-control"
-									id="nombre" name="nombre" placeholder="Nombre">
-
+									id="nombre" name="nombre" placeholder="Nombre" required
+									pattern="[A-Za-z]{5,40}"
+									title="Sólo letras Tamaño mínimo: 5. Tamaño máximo: 40">
 							</div>
 
 							<div class="form-group col-md-8">
 								<label for="apellido" class="col-form-label">Apellido :
 								</label> <input type="text" th:field="*{apellido}" class="form-control"
-									id="apellido" name="apellido" placeholder="Apellido">
+									id="apellido" name="apellido" placeholder="Apellido" required
+									pattern="[A-Za-z]{5,40}"
+									title="Sólo letras Tamaño mínimo: 5. Tamaño máximo: 40">
 
 							</div>
 
@@ -51,46 +59,44 @@
 								<label for="fnacimiento" class="col-form-label">Fecha de
 									Nacimiento : </label> <input type="date" th:field="*{fnacimiento}"
 									class="form-control" id="fnacimiento" name="fnacimiento"
-									min="01-01-1800" placeholder="Ejemplo: 17-02-1987">
+									min="01-01-1888" placeholder="17-02-1987" required>
 							</div>
-
-
 
 							<div class="form-group col-md-8">
 								<label for="email" class="col-form-label">Email : </label> <input
 									type="email" th:field="*{email}" class="form-control"
-									id="email" name="email" placeholder="example@example.com">
-
+									id="email" name="email" placeholder="example@example.com"
+									pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"
+									required>
 							</div>
-
 
 
 							<div class="form-group col-md-8">
 								<label for="direccion" class="col-form-label">Dirección
 									de Envío: </label> <input type="text" th:field="*{direccion}"
 									class="form-control" id="direccion" name="direccion"
-									placeholder="Direccion">
-
+									placeholder="Direccion" minlength="10" maxlength="100" required>
 							</div>
 
 							<div class="form-group col-md-8">
 								<label for="password" class="col-form-label">Password</label> <input
 									type="password" th:field="*{password}" class="form-control"
-									id="password" name="password" placeholder="Password">
-							</div>
-
-							<div class="col-md-6">
-								<input type="submit" class="btn btn-primary" value="Sign Up">
+									id="password" name="password" placeholder="Password"
+									minlength="6" maxlength="80" required>
 							</div>
 
 							<div class="form-group col-md-8"></div>
-
+							<script th:src="@{/js/accionClienteForm.js}"></script>
 						</div>
 					</form>
+
+					<div class="col-md-6">
+						<input type="submit" class="btn btn-primary registrarCliente"
+							id="registrarCliente" name="registrarCliente" value="Sign Up">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
-
 </html>

@@ -41,12 +41,12 @@ public class Clientes implements Serializable {
 	private long idCliente;
 	
 	
-	@NotNull @Size(min=2, max=15, message="La longitud de apellido debe ser entre 2 - 15")
+	@NotNull @Size(min=5, max=40, message="La longitud de nombre debe ser entre 2 - 15")
 	@Column(name = "nombre", nullable = false)
 	@NotEmpty(message = "Debes especificar el nombre")
 	private String nombre;
 	
-	@NotNull @Size(min=2, max=15, message="La longitud de apellido debe ser entre 2 - 15")
+	@NotNull @Size(min=5, max=40, message="La longitud de apellido debe ser entre 2 - 15")
 	@Column(name = "apellido", nullable = false)
 	@NotEmpty(message = "Debes especificar el apellido")
 	private String apellido;

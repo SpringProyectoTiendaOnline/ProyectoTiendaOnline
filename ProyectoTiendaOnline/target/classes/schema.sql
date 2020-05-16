@@ -4,13 +4,13 @@ use tiendaOnline;
 
 drop table if exists Cliente;
 create table Cliente (
-	idCliente bigint not null auto_increment,
-	nombre varchar(225) not null,
-	apellido varchar(225) not null,
-	fnacimiento varchar(225) not null,
-	direccion varchar(225) not null,
-	email varchar(225) not null unique,
-	password varchar(225) not null, 
+	idCliente bigint NOT NULL AUTO_INCREMENT,
+	nombre varchar(225) NOT NULL,
+	apellido varchar(225) NOT NULL,
+	fnacimiento varchar(225) NOT NULL,
+	direccion varchar(225) NOT NULL,
+	email varchar(225) NOT NULL unique,
+	password varchar(225) NOT NULL, 
 	PRIMARY KEY(idCliente)
 );
 
@@ -18,7 +18,7 @@ Drop table if exists Rol;
 CREATE TABLE Rol
 (
    idRol bigint NOT NULL AUTO_INCREMENT,
-   nombreRol VARCHAR (40) NOT NULL,
+   nombreRol varchar (40) NOT NULL,
    PRIMARY KEY (idRol)
 );
 
@@ -36,82 +36,113 @@ CREATE TABLE Clientes_Rol
 drop table if exists Banco;
 create table Banco (
 
-	idBanco bigint not null auto_increment,
-	nombre varchar(225) not null,
-	numTarjeta bigint not null,
-	titular varchar(225) not null,
-	codSeguridad int(3) not null,
-	dirFactura varchar(225) not null,
-	idCliente bigint null,
+	idBanco bigint NOT NULL AUTO_INCREMENT,
+	nombre varchar(225) NOT NULL,
+	numTarjeta bigint NOT NULL,
+	titular varchar(225) NOT NULL,
+	codSeguridad int(3) NOT NULL,
+	dirFactura varchar(225) NOT NULL,
+	idCliente bigint NULL,
 	PRIMARY KEY(idBanco),
 	FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
 );
 
+
 drop table if exists Producto_Categoria;
+drop table if exists ImagenProducto;
+drop table if exists Valoraciones;
+
+
 drop table if exists Productos;
 create table Productos ( 
-	idProducto bigint not null auto_increment,
-	codProducto bigint not null unique, 
-	titulo varchar(255) not null, 
-	descripcion varchar(255) not null,
-	precio float not null, 
-	descuento float not null, 
-	stock bigint not null,
-	valoracionMedia double null, 
-	primary key (idProducto)
+	idProducto bigint NOT NULL AUTO_INCREMENT,
+	codProducto bigint NOT NULL unique, 
+	titulo varchar(255) NOT NULL, 
+	descripcion varchar(255) NOT NULL,
+	precio float NOT NULL, 
+	descuento float NOT NULL, 
+	stock bigint NOT NULL,
+	valoracionMedia double NULL, 
+	PRIMARY KEY (idProducto)
 );
+
 
 drop table if exists Categoria;
 create table Categoria (
-	id_Categoria bigint not null auto_increment,
-	nombre_Categoria varchar(225) not null,
-	primary key (id_Categoria)
+	id_Categoria bigint NOT NULL AUTO_INCREMENT,
+	nombre_Categoria varchar(225) NOT NULL,
+	PRIMARY KEY (id_Categoria)
 );
-drop table if exists Producto_Categoria;
 
+drop table if exists Producto_Categoria;
 create table Producto_Categoria (
-	id_Categoria bigint not null,
-	idProducto bigint not null,
+	id_Categoria bigint NOT NULL AUTO_INCREMENT,
+	idProducto bigint NOT NULL,
 	PRIMARY KEY (id_Categoria, idProducto),
     CONSTRAINT FK_Producto_Categoria_1 FOREIGN KEY (id_Categoria) REFERENCES Categoria (id_Categoria) On delete cascade,
     FOREIGN KEY (idProducto) REFERENCES Productos(idProducto)
 );
+
+drop table if exists ImagenProducto;
+create table ImagenProducto (
+	idImagen bigint NOT NULL AUTO_INCREMENT,
+	urlImagen varchar(225) NOT NULL,
+	idProducto bigint,
+	
+	PRIMARY KEY (idImagen),
+	FOREIGN KEY (idProducto) REFERENCES Productos(idProducto)
+	
+);
+
+drop table if exists Valoraciones;
+create table if Valoraciones (
+	idValoracion bigint NOT NULL AUTO_INCREMENT,
+	idProducto bigint NULL,
+	idCliente bigint NULL,
+	puntuacion bigint NULL,
+	
+	PRIMARY KEY (idValoracion),
+	FOREIGN KEY (idProducto) REFERENCES Productos(idProducto),
+	FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);
+
 	
 
 drop table if exists LineaCompra;
+
 drop table if exists Compra;
 create table Compra (
-	idCompra bigint not null auto_increment,
-	idCliente bigint null,
-	fechaCompra Date null,
-	primary key(idCompra) ,
-	foreign key (idCliente) REFERENCES Cliente (idCliente)
+	idCompra bigint NOT NULL AUTO_INCREMENT,
+	idCliente bigint NULL,
+	fechaCompra Date NULL,
+	PRIMARY KEY(idCompra) ,
+	FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );
 
 
 create table LineaCompra (
-	idLineaCompra bigint not null auto_increment,
-	idCompra bigint null,
-	idProducto bigint null,
-	cantidad bigint null,
-	precioTotal float null,
-	primary key(idLineaCompra),
-	foreign key (idCompra) REFERENCES Compra(idCompra),
-	foreign key (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
+	idLineaCompra bigint NOT NULL AUTO_INCREMENT,
+	idCompra bigint NULL,
+	idProducto bigint NULL,
+	cantidad bigint NULL,
+	precioTotal float NULL,
+	PRIMARY KEY(idLineaCompra),
+	FOREIGN KEY (idCompra) REFERENCES Compra(idCompra),
+	FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
 );
 
 Drop table if exists estadoPedido;
 CREATE TABLE estadoPedido
 (
    idEstado bigint NOT NULL AUTO_INCREMENT,
-   estado VARCHAR (40) NOT NULL,
+   estado varchar (40) NOT NULL,
    PRIMARY KEY (idEstado)
 );
 
 Drop table if exists estado_LineaCompra;
 CREATE TABLE estado_LineaCompra
 (
-   idLineaCompra bigint NOT NULL auto_increment,
+   idLineaCompra bigint NOT NULL AUTO_INCREMENT,
    idEstado bigint NOT NULL,
    PRIMARY KEY (idLineaCompra, idEstado ),
    FOREIGN KEY (idLineaCompra) REFERENCES LineaCompra(idLineaCompra) ON DELETE CASCADE,
@@ -120,32 +151,25 @@ CREATE TABLE estado_LineaCompra
 
 Drop table if exists Preguntas;
 CREATE TABLE Preguntas (
-	idPregunta bigint not null auto_increment,
-	texto varchar(225) not null,
+	idPregunta bigint NOT NULL AUTO_INCREMENT,
+	texto varchar(225) NOT NULL,
 	idCliente bigint,
 	idProducto bigint,
-	primary key (idPregunta),
-	foreign key (idCliente) REFERENCES Cliente (idCliente) On delete cascade,
-	foreign key (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
+	PRIMARY KEY (idPregunta),
+	FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) On delete cascade,
+	FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
 );
 
 Drop table if exists Respuestas;
 Create table respuestas (
-	idRespuesta bigint not null auto_increment,
-	texto varchar(225) not null,
+	idRespuesta bigint NOT NULL AUTO_INCREMENT,
+	texto varchar(225) NOT NULL,
 	idCliente bigint,
 	idPregunta bigint,
-	primary key (idRespuesta),
-	foreign key (idCliente) REFERENCES Cliente (idCliente) On delete cascade,
-	foreign key (idPregunta) REFERENCES Preguntas(idPregunta) ON DELETE NO ACTION
+	PRIMARY KEY (idRespuesta),
+	FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) On delete cascade,
+	FOREIGN KEY (idPregunta) REFERENCES Preguntas(idPregunta) ON DELETE NO ACTION
 );
 	
-Drop table if exists Valoraciones;
-Create table valoraciones (
-	idValoracion bigint not null auto_increment,
-	idProducto bigint,
-	puntuacion  bigint,
-	primary key (idValoracion),
-	foreign key (idProducto) REFERENCES Productos(idProducto) ON DELETE NO ACTION
-);
+
 	

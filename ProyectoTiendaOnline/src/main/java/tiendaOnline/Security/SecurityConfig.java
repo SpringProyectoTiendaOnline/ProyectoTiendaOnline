@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/", "/index", "/Cliente/signup", "/imagen/**", "/Cliente/create-cliente", "/js/**",
+				.antMatchers("/", "login" , "/index", "/Cliente/signup", "/imagen/**", "/js/**",
 						"/css/**", "/Producto/editarProducto/{idProducto}")
 				.permitAll().antMatchers("/admin/**").hasAuthority("admin").anyRequest().authenticated().and()
 				.formLogin().loginPage("/login").usernameParameter("email").loginProcessingUrl("/login")
@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?logout")
 				.permitAll();
 
-		http.cors().and().csrf().ignoringAntMatchers("/ImagenProducto/action-imagenProducto/{idProducto}");
+		http.cors().and().csrf().ignoringAntMatchers("/ImagenProducto/action-imagenProducto/{idProducto}", "/Cliente/signup");
 		// http.headers().frameOptions().disable();
 
 	}

@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -33,7 +34,7 @@ public class Productos implements Serializable {
 	 * 
 	 */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idProducto", nullable = false)
 	private long idProducto;
 	@Column(name = "titulo")
@@ -173,6 +174,7 @@ public class Productos implements Serializable {
 	}
 	
 	
+
 	public double getValoracionMedia() {
 		return valoracionMedia;
 	}

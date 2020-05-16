@@ -18,7 +18,6 @@ import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.*;
 
 @Service
-@Transactional
 public class ProductoServerImpl implements ProductoServer {
 
 	@Autowired
