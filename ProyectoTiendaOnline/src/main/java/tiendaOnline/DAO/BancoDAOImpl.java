@@ -2,7 +2,6 @@ package tiendaOnline.DAO;
 
 import java.util.ArrayList;
 
-
 import java.util.List;
 import javax.persistence.Query;
 import org.springframework.stereotype.Component;
@@ -57,6 +56,24 @@ public class BancoDAOImpl extends GenericDaoImpl<Banco> implements BancoDAO {
 			return banco;
 		}
 
+		return null;
+	}
+
+	@Override
+	public Banco findByNumTarjeta(Banco banco) {
+		try {
+			Query query = this.em
+					.createQuery("From Banco b Where b.numTarjeta =:num AND b.cliente.idCliente =:idCliente");
+			query.setParameter("num", banco.getNumTarjeta());
+			query.setParameter("idCliente", banco.getCliente().getIdCliente());
+			Banco bancos = (Banco) query.getSingleResult();
+
+			if (bancos != null) {
+				return bancos;
+			}
+		} catch (Exception n) {
+			return null;
+		}
 		return null;
 	}
 

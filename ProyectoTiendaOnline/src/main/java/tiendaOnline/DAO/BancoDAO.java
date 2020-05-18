@@ -13,5 +13,7 @@ public interface BancoDAO extends GenericDao<Banco>{
 	public List<Banco> findByCliente(Clientes cliente);
 
 	public Banco findById(long id);
+	
+	public Banco findByNumTarjeta(Banco banco);
 
 }

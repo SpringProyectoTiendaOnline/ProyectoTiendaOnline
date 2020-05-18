@@ -54,4 +54,10 @@ public class BancoServerImpl implements BancoServer {
 		return bancoDAO.findById(id);
 	}
 
+	@Override
+	@Transactional
+	public Banco findByNumTarjeta(Banco banco) {
+		return bancoDAO.findByNumTarjeta(banco);
+	}
+
 }

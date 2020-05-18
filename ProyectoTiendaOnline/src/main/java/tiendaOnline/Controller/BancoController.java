@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.Entity.Banco;
@@ -24,7 +28,7 @@ import tiendaOnline.Server.ClienteServer;
 @Controller
 @RequestMapping("/Banco")
 public class BancoController {
-	
+
 	@Autowired
 	private ClienteServer ClienteServer;
 	@Autowired
@@ -40,35 +44,18 @@ public class BancoController {
 
 	}
 
-	@PostMapping("create-banco/{idCliente}") // id = idCliente
-	public ModelAndView create_banco(@PathVariable("idCliente") long id, @ModelAttribute @Valid Banco banco,
+	@PostMapping("/create-banco/{idCliente}") // id = idCliente
+	public @ResponseBody ResponseEntity create_banco(@PathVariable("idCliente") long id, @RequestBody Banco banco,
 			BindingResult result) {
-		ModelAndView mav = new ModelAndView();
-		Clientes cliente = ClienteServer.findById(id);
-		mav.addObject("Cliente", cliente);
+		banco.setCliente(ClienteServer.findById(id));
+		Banco b = bancoServer.findByNumTarjeta(banco);
 
-		if (!result.hasFieldErrors()) {
-			if (banco != null) {
-				banco.setCliente(cliente);
-				System.err.println(banco.toString());
-				Banco bancoGuard = bancoServer.save(banco);
-				if (bancoGuard != null) {
-					System.out.println("Banco : Guardado");
-					mav.addObject("Cliente", cliente);
-					List<Banco> listaBanco = bancoServer.findByCliente(cliente);
-					mav.addObject("listaBanco", listaBanco);
-					mav.setViewName("perfil-cliente");
-				} else {
-					System.out.println("Banco : No ha sido Guardado");
-					mav.setViewName("signup-banco");
-
-				}
-			}
-		} else {
-			mav.addObject("Cliente", cliente);
-			mav.setViewName("signup-banco");
+		if (b != null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return mav;
+
+		bancoServer.save(banco);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/editar-banco/{idCliente}/{idBanco}")
@@ -81,27 +68,24 @@ public class BancoController {
 		mav.setViewName("update-banco");
 		return mav;
 	}
-	
-	@RequestMapping(method = RequestMethod.POST, value = "editar-banco/{idCliente}/{idBanco}")
-	public ModelAndView post_update_banco(@PathVariable("idBanco") long id, @ModelAttribute @Valid Banco banco,
-			BindingResult result) {
-		ModelAndView mav = new ModelAndView();
-		Banco bancoO = bancoServer.findById(id);
-		if (result.hasFieldErrors()) {
-			mav.addObject("Banco", bancoO);
-			mav.setViewName("update-banco");
-		} else {
-			banco.setIdBanco(id);
-			banco.setCliente(bancoO.getCliente());
-			Banco bancoMod = bancoServer.update(banco);
-			if (bancoMod != null) {
-				List<Banco> listaBanco = bancoServer.findByCliente(bancoMod.getCliente());
-				mav.addObject("listaBanco", listaBanco);
-				mav.addObject("Cliente", bancoMod.getCliente());
-				mav.setViewName("perfil-cliente");
+
+	@RequestMapping(method = RequestMethod.POST, value = "/editar-banco/{idCliente}/{idBanco}")
+	public @ResponseBody ResponseEntity post_update_banco(@PathVariable("idBanco") long idBanco,@PathVariable("idCliente") long idCliente,
+			@RequestBody @Valid Banco banco, BindingResult result) {
+
+		Banco b = bancoServer.findById(idBanco);
+		Clientes c = ClienteServer.findById(idCliente);
+		// Si el numero de tarjeta antiguo != numero de tarjeta nuevo.
+		if (b.getNumTarjeta() != banco.getNumTarjeta()) {
+			// si nueva tarjeta existe para mismo cliente.
+			if (bancoServer.findByNumTarjeta(banco) != null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		}
-		return mav;
+		System.err.println(banco.toString());
+		banco.setCliente(c);
+		bancoServer.update(banco);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete-banco/{idCliente}/{idBanco}")
@@ -118,7 +102,5 @@ public class BancoController {
 		}
 		return mav;
 	}
-
-
 
 }

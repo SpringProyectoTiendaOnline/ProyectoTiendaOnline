@@ -63,7 +63,17 @@ public class ClienteServerImpl implements ClienteServer {
 
 	@Override
 	public Clientes update(Clientes cliente) {
-		cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
+		// Si password no cambiado
+		if (cliente.getPassword().equalsIgnoreCase("")) {
+			Clientes c = findById(cliente.getIdCliente());
+			System.err.println("c Password " + c.getPassword());
+
+			cliente.setPassword(c.getPassword());
+		} else {
+			cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
+		}
+
+		System.err.println("Cliente Password " + cliente.getPassword());
 		return ClienteDao.update(cliente);
 	}
 

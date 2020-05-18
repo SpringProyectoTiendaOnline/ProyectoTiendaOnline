@@ -59,10 +59,9 @@ public class ClienteController {
 	}
 
 	// crete-cliente
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/signup")
 	public @ResponseBody ResponseEntity create_cliente(@RequestBody Clientes cliente, BindingResult bindingResult) {
-
-		System.err.println("Create - Cliente : " + cliente);
 
 		if (ClienteServer.findByEmail(cliente.getEmail()) != null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -111,38 +110,29 @@ public class ClienteController {
 	}
 
 	// Editar Cliente
-	@RequestMapping(method = RequestMethod.POST, value = "/editarCliente/{idCliente}")
-	public ModelAndView post_update_cliente(@PathVariable("idCliente") long id, @ModelAttribute @Valid Clientes cliente,
-			BindingResult result, HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
+	@RequestMapping(method = RequestMethod.POST, value = "/editar-cliente/{idCliente}")
+	public @ResponseBody ResponseEntity post_update_cliente(@PathVariable("idCliente") long idCliente,
+			@RequestBody Clientes cliente, BindingResult result) {
 
-		if (result.hasFieldErrors()) {
-			mav.addObject("Cliente", cliente);
-			mav.addObject("listaCategoria", categoriaServer.getAll());
-			mav.setViewName("update-cliente");
-			return mav;
-		}
+		System.err.println(cliente);
 
-		long idCliente = (long) request.getSession().getAttribute("idUsuario");
-		cliente.setIdCliente(id);
-		Clientes clienteMod = ClienteServer.update(cliente);
-		if (idCliente == 1) {
-			List<Clientes> lCliente = ClienteServer.getAll();
-			mav.addObject("Cliente", ClienteServer.findById(idCliente));
-			mav.addObject("listaCliente", lCliente);
-			mav.setViewName("list-cliente");
-		} else {
-			if (clienteMod != null) {
-				List<Banco> listBanco = bancoServer.findByCliente(clienteMod);
-				mav.addObject("listaBanco", listBanco);
-				mav.addObject("Cliente", clienteMod);
-				mav.addObject("listaCategoria", categoriaServer.getAll());
-				mav.setViewName("perfil-cliente");
+		Clientes clienteAnt = ClienteServer.findById(idCliente);
+
+		cliente.setRoles(clienteAnt.getRoles());
+		
+		// si email antiguo != email nuevo.
+		if (!clienteAnt.getEmail().equalsIgnoreCase(cliente.getEmail())) {
+			// si nuevo email existe
+			if (ClienteServer.findByEmail(cliente.getEmail()) != null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 
 		}
 
-		return mav;
+		cliente.setIdCliente(idCliente);
+		ClienteServer.update(cliente);
+		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete-cliente/{idCliente}")
