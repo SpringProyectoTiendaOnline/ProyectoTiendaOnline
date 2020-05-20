@@ -209,6 +209,7 @@ public class ProductoController {
 		return mav;
 	}
 
+	//Perfil de producto
 	@GetMapping("/perfil-producto/{idProducto}")
 	public ModelAndView perfil_producto(@PathVariable("idProducto") long idProducto) {
 		ModelAndView mav = new ModelAndView();
