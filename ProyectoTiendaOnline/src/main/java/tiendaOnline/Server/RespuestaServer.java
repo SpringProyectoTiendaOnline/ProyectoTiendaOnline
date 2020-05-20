@@ -6,11 +6,13 @@ import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Respuestas;
 
 public interface RespuestaServer {
-	
+
 	public Respuestas save(Respuestas respuesta);
-	
+
 	public List<Respuestas> findByPreguntas(Preguntas preguntas);
-	
+
 	public Respuestas find(Respuestas respuesta);
-	
+
+	public void delete(Respuestas respuesta);
+
 }

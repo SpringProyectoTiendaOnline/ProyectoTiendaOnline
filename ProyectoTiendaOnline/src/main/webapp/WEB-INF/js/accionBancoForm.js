@@ -3,11 +3,13 @@ $(document).ready(function() {
 		ValidarTJ();
 	});
 
-	$("#addBanco").click(function() {
+	$("#addBanco").submit(function() {
+		event.preventDefault();
 		registrarBanco();
 	});
 
-	$("#modificarBanco").click(function() {
+	$("#modificarBanco").submit(function() {
+		event.preventDefault();
 		modificarBanco();
 	});
 

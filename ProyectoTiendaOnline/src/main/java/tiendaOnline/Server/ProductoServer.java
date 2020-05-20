@@ -24,13 +24,11 @@ public interface ProductoServer {
 	public Productos update(Productos producto);
 
 	public List<Productos> getAll();
-	
+
 	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto);
 
 	public List<Productos> findByCategoria(Categoria categoria);
-	
-	
-	public Page<Productos> findPaginated(Pageable pageable);
-	
+
+	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit);
 
 }

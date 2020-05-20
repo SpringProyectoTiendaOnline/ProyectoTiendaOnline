@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,9 +49,11 @@ public class ClienteController {
 	private RolRepository rol;
 	@Autowired
 	private CategoriaServer categoriaServer;
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	// Registrar Cliente
-	@GetMapping("/signup")
+	@RequestMapping(method = RequestMethod.GET, value = "/signup")
 	public String showForm(Model theModel) {
 		Clientes cliente = new Clientes();
 		theModel.addAttribute("listaCategoria", categoriaServer.getAll());
@@ -62,7 +65,7 @@ public class ClienteController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/signup")
 	public @ResponseBody ResponseEntity create_cliente(@RequestBody Clientes cliente, BindingResult bindingResult) {
-
+		// comprobar si existe el correo electronico.
 		if (ClienteServer.findByEmail(cliente.getEmail()) != null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -100,6 +103,7 @@ public class ClienteController {
 		return mav;
 	}
 
+	// GET - Editar Cliente
 	@RequestMapping(method = RequestMethod.GET, value = "/editar-cliente/{idCliente}")
 	public String get_update_cliente(@PathVariable("idCliente") long id, Model model) {
 		Clientes cliente = ClienteServer.findById(id);
@@ -110,16 +114,13 @@ public class ClienteController {
 	}
 
 	// Editar Cliente
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/editar-cliente/{idCliente}")
 	public @ResponseBody ResponseEntity post_update_cliente(@PathVariable("idCliente") long idCliente,
 			@RequestBody Clientes cliente, BindingResult result) {
 
-		System.err.println(cliente);
-
 		Clientes clienteAnt = ClienteServer.findById(idCliente);
 
-		cliente.setRoles(clienteAnt.getRoles());
-		
 		// si email antiguo != email nuevo.
 		if (!clienteAnt.getEmail().equalsIgnoreCase(cliente.getEmail())) {
 			// si nuevo email existe
@@ -129,8 +130,18 @@ public class ClienteController {
 
 		}
 
-		cliente.setIdCliente(idCliente);
-		ClienteServer.update(cliente);
+		// Si password ant != passowrd nuevo
+		if (!passwordEncoder.matches(cliente.getPassword(), clienteAnt.getPassword())) {
+			clienteAnt.setPassword(passwordEncoder.encode(cliente.getPassword()));
+		}
+
+		clienteAnt.setApellido(cliente.getApellido());
+		clienteAnt.setNombre(cliente.getNombre());
+		clienteAnt.setDireccion(cliente.getDireccion());
+		clienteAnt.setEmail(cliente.getEmail());
+		clienteAnt.setFnacimiento(cliente.getFnacimiento());
+
+		ClienteServer.update(clienteAnt);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
@@ -173,7 +184,6 @@ public class ClienteController {
 			}
 
 			if (cliente != null) {
-				rol.delete(cliente.getRoles().iterator().next());
 				ClienteServer.delete(cliente);
 			}
 

@@ -30,17 +30,23 @@ public class LineaDeCompraDAOImpl extends GenericDaoImpl<LineaCompra> implements
 
 	@Override
 	public List<LineaCompra> findByProducto(Productos productos) {
-		@SuppressWarnings("unchecked")
-		List<LineaCompra> lista = this.em.createQuery("From LineaCompra c Where c.idProducto =:id")
-				.setParameter("id", productos.getIdProducto()).getResultList();
+		try {
+			@SuppressWarnings("unchecked")
+			List<LineaCompra> lista = this.em
+					.createQuery("From LineaCompra c join fetch c.productos p Where p.idProducto = :id")
+					.setParameter("id", productos.getIdProducto()).getResultList();
 
-		if (lista != null) {
-			return lista;
+			if (lista != null) {
+				return lista;
+			}
+		} catch (Exception e) {
+			return null;
 		}
 
 		return null;
 	}
-	//"From Compra c join fetch c.clientes cl Where  cl.idCliente = :id")
+
+	// "From Compra c join fetch c.clientes cl Where cl.idCliente = :id")
 	@Override
 	public List<LineaCompra> findByCompra(Compra compra) {
 		@SuppressWarnings("unchecked")

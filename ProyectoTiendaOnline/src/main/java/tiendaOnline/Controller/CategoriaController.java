@@ -64,69 +64,26 @@ public class CategoriaController {
 		return mav;
 	}
 
+	//listar producto por categorias.
 	@RequestMapping(method = RequestMethod.GET, value = "/lista_producto_nombreCategoria/{idCategoria}")
 	public ModelAndView listaProductoCategoria(@PathVariable("idCategoria") long idCategoria, Model theModel,
 			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
 		ModelAndView mav = new ModelAndView();
-		
+
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(4);
 
 		Page<Productos> productosPage = categoriaServer
 				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria, result, 4);
 		mav.addObject("productoPage", productosPage);
-		
+
 		int totalPages = productosPage.getTotalPages();
-		
+
 		if (totalPages > 0) {
 			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
 			mav.addObject("pageNumbers", pageNumbers);
 		}
 
-		/*mav.addObject("categoria", categoriaServer.findById(idCategoria));
-		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
-		mav.addObject("imagenServer", imagenServer);
-		mav.addObject("listaCategoria", categoriaServer.getAll());
-		mav.setViewName("producto/list-product-user");*/
-		
-		mav.addObject("categoria", categoriaServer.findById(idCategoria));
-		mav.addObject("imagenServer", imagenServer);
-		mav.addObject("listaCategoria", categoriaServer.getAll());
-		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
-		mav.setViewName("producto/list-product-user");
-		result = result + 4;
-
-		return mav;
-
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/lista_4producto_nombreCategoria/{idCategoria}")
-	public ModelAndView listaProductoCategoriaPaginada(@PathVariable("idCategoria") long idCategoria, Model theModel,
-			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-		ModelAndView mav = new ModelAndView();
-
-		
-		/*int currentPage = page.orElse(1);
-		int pageSize = size.orElse(5);
-
-		Page<Productos> productosPage = categoriaServer
-				.findPaginatedCategProductos(PageRequest.of(currentPage - 1, pageSize), idCategoria, result, 4);
-		mav.addObject("productoPage", productosPage);
-		
-		int totalPages = productosPage.getTotalPages();
-		if (totalPages > 0) {
-			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-			mav.addObject("pageNumbers", pageNumbers);
-		}
-
-		result = result + 4;
-
-		mav.addObject("categoria", categoriaServer.findById(idCategoria));
-		mav.addObject("listaProductos", categoriaServer.findCategProductosPaginada(idCategoria, result, 4));
-		mav.addObject("imagenServer", imagenServer);
-		mav.addObject("listaCategoria", categoriaServer.getAll());
-		mav.setViewName("producto/list-product-user");*/
-		
 		mav.addObject("categoria", categoriaServer.findById(idCategoria));
 		mav.addObject("imagenServer", imagenServer);
 		mav.addObject("listaCategoria", categoriaServer.getAll());
@@ -165,6 +122,7 @@ public class CategoriaController {
 		return mav;
 	}
 
+	//el perfil de categoria.
 	@RequestMapping(method = RequestMethod.GET, value = "/{idCategoria}")
 	public ModelAndView perfilCategoria(@PathVariable("idCategoria") long idCategoria) {
 		ModelAndView mav = new ModelAndView();
@@ -175,6 +133,7 @@ public class CategoriaController {
 		return mav;
 	}
 
+	//insertar proudcto dentro de la categoria
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/insertarProducto/{idCategoria}")
 	public @ResponseBody ResponseEntity insertarProducto(@PathVariable("idCategoria") long idCategoria,

@@ -82,7 +82,6 @@ public class BancoController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		}
-		System.err.println(banco.toString());
 		banco.setCliente(c);
 		bancoServer.update(banco);
 		return new ResponseEntity<>(HttpStatus.OK);

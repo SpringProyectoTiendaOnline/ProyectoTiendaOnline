@@ -22,6 +22,8 @@ public class ProductoServerImpl implements ProductoServer {
 
 	@Autowired
 	private ProductosDAO productoDAO;
+	
+	List<Productos> lista = new ArrayList<>();
 
 	@Override
 	@Transactional
@@ -85,21 +87,25 @@ public class ProductoServerImpl implements ProductoServer {
 
 	@Override
 	@Transactional
-	public Page<Productos> findPaginated(Pageable pageable) {
+	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit) {
 		int pageSize = pageable.getPageSize();
 		int currentPage = pageable.getPageNumber();
 		int startItem = currentPage * pageSize;
 
-		List<Productos> lista = new ArrayList<>();
-		List<Productos> listaProducto = productoDAO.getAll();
+		List<Productos> listaProducto = getAll();
+
 		if (lista.size() < startItem) {
 			lista = Collections.emptyList();
 		} else {
 			int toIndex = Math.min(startItem + pageSize, listaProducto.size());
 			lista = listaProducto.subList(startItem, toIndex);
 		}
+
+		System.err.println("...." + pageSize + " " + currentPage + " " + startItem + " ");
+
+		Page<Productos> productoPage = new PageImpl<Productos>(lista, PageRequest.of(currentPage, pageSize),
+				listaProducto.size());
 		
-		Page<Productos> productoPage = new PageImpl<Productos>(lista,PageRequest.of(currentPage, pageSize), listaProducto.size());
 
 		return productoPage;
 	}

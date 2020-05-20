@@ -2,7 +2,6 @@ package tiendaOnline.Server;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,12 @@ public class RespuestaServerImpl implements RespuestaServer {
 	@Transactional
 	public Respuestas find(Respuestas respuesta) {
 		return respuestaDAO.find(respuesta);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Respuestas respuesta) {
+		 respuestaDAO.delete(respuesta);
 	}
 
 }

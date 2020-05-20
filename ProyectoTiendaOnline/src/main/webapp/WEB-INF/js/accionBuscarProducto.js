@@ -32,9 +32,8 @@ function buscarProducto(productoDto) {
 		xhr.setRequestHeader(header, token);
 	});// ajaxSend
 
-	var url = "http://localhost:8080/ProyectoTiendaOnline/Producto/perfil-producto/"
+	window.location.href = "http://localhost:8080/ProyectoTiendaOnline/Producto/perfil-producto/"
 			+ productoDto.idProducto;
-	window.open(url);
 	$('#buscarProducto').val("");
 
 };

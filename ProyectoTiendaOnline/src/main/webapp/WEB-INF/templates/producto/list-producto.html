@@ -18,6 +18,10 @@
 <script th:src="@{/js/typeahead.bundle.min.js}"></script>
 
 <title>Gestión de productos</title>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 </head>
 <body>
 	<nav th:replace="fragmentos/header_loader"></nav>
@@ -27,10 +31,13 @@
 	<div class="container my-2">
 		<div class="card">
 
-			<div class="card-header">
+			<div class="card-header bg-dark text-white">
 				<h1>Gestión de Producto</h1>
 			</div>
+
 			<div class="card-body">
+
+				<div id="aviso"></div>
 				<a href="#" th:href="@{/Producto/create-producto}">
 					<button class="btn btn-lg btn-primary btn-block" type="submit">
 						<span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Agregar
@@ -52,38 +59,37 @@
 
 					<tbody th:if="${listaProductos != null}">
 						<tr th:each="producto : ${listaProductos}">
+						
+							<td style="display: none;" id="idProducto"
+								th:text="${producto.idProducto}"></td>
 							<td><a href=#
 								th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
 								type="button" class="btn btn-primary"><span
 									th:text="${producto.codProducto}"></span></a></td>
 							<!--   Comprobar si imagen tiene foto o no  -->
-
-
 							<td th:text=" ${producto.titulo}"></td>
 							<td th:text=" ${producto.descripcion}"></td>
 							<td th:text=" ${producto.precio}"></td>
 							<td th:text=" ${producto.descuento}"></td>
 							<td th:text=" ${producto.stock}"></td>
+
 							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a href=#
 								th:href="@{/Producto/editar-producto/{idProducto}(idProducto=${producto.idProducto})}">
 									<button type="button" class="btn btn-info">
 										<span class="glyphicon glyphicon-pencil" aria-hidden="true">Editar</span>
 									</button>
 							</a></td>
+							<!-- th:href="@{/Producto/removeproducto/{idProducto}(idProducto=${producto.idProducto})}" -->
 							<td sec:authorize="hasAuthority('ROL_ADMIN')"><a
-								th:href="@{/Producto/removeproducto/{idProducto}(idProducto=${producto.idProducto})}">
-									<button type="button" class="btn btn-danger">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true">Eliminar</span>
-									</button>
-							</a></td>
+								class="btn btn-danger borrarProducto" id="borrarProducto"><i>&times;</i></a></td>
 						</tr>
 
 						<tr th:if="${listaProductos == null}">
-							<td>No hay más productos</td>
+							<td>No hay productos !</td>
 						</tr>
 					</tbody>
 				</table>
-
+				<script th:src="@{/js/accionProductoForm.js}"></script>
 
 				<!-- card-body -->
 			</div>

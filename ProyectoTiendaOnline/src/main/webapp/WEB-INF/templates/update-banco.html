@@ -26,7 +26,8 @@
 			<div class="card-body">
 				<div class="col-md-8">
 					<!-- th:action="@{/Banco/editar-banco/{idCliente}/{idBanco}(idCliente=${Cliente.idCliente},idBanco=${Banco.idBanco})}" -->
-					<form action="#" th:object="${Banco}" method="post">
+					<form action="#" th:object="${Banco}" method="post"
+						id="modificarBanco">
 						<div class="row">
 							<input id="idCliente" type="hidden"
 								th:value="${Cliente.idCliente}"> <input id="idBanco"
@@ -35,18 +36,21 @@
 							<div class="form-group col-md-8">
 								<label for="nombre" class="col-form-label">Nombre : </label> <input
 									type="text" th:field="*{nombre}" class="form-control"
-									id="nombre" name="nombre" placeholder="Nombre" required
-									pattern="[A-Za-z]{3,40}"
-									title="Sólo letras Tamaño mínimo: 3. Tamaño máximo: 40">
+									id="nombre" name="nombre" placeholder="Nombre"
+									pattern="[A-Za-z]*{3,40}"
+									title="Sólo letras Tamaño mínimo: 3. Tamaño máximo: 40"
+									required>
 							</div>
 
 
 							<div class="form-group col-md-8">
+
 								<label for="numTarjeta" class="col-form-label"> Número
 									de Tarjeta : </label> <input type="text" th:field="*{numTarjeta}"
 									class="form-control" id="numTarjeta" name="numTarjeta"
 									maxlength="19" placeholder="Ejemplo: xxxx xxxx xxxx xxxx"
-									required pattern="[0-9]{15,19}">
+									pattern="[0-9]{13,19}" required>
+
 								<!-- mensaje de error de numero de banco -->
 								<div id="errorNumBanco"></div>
 							</div>
@@ -56,16 +60,17 @@
 								<label for="titular" class="col-form-label"> Titular : </label>
 								<input type="text" th:field="*{titular}" class="form-control"
 									id="titular" name="titular" placeholder="Ejemplo: Juan"
-									pattern="[A-Za-z]{3,40}"
-									title="Sólo letras Tamaño mínimo: 3. Tamaño máximo: 40">
+									pattern="[A-Za-z]*{3,40}"
+									title="Sólo letras Tamaño mínimo: 3. Tamaño máximo: 40"
+									required>
 							</div>
 
 							<div class="form-group col-md-8">
 								<label for="codSeguridad" class="col-form-label">Código
 									de Seguridad : </label> <input type="text" th:field="*{codSeguridad}"
 									class="form-control" id="codSeguridad" name="codSeguridad"
-									maxlength="3" size="3" placeholder="012" pattern="[0-9]{5,40}"
-									required title="Sólo número, 3 dígitos">
+									minlength="3" maxlength="3" size="3" placeholder="012"
+									pattern="[0-9]{3}" title="Sólo número, 3 dígitos" required>
 							</div>
 
 
@@ -74,16 +79,15 @@
 								<label for="dirFactura" class="col-form-label">Dirección
 									de Factura: </label> <input type="text" th:field="*{dirFactura}"
 									class="form-control" id="dirFactura" name="dirFactura"
-									placeholder="C/ XXXX NX PX ">
+									placeholder="C/ XXXX NX PX " minlength="5" maxlength="200"
+									title="Sólo letras y numeros. Tamaño mínimo: 5. Tamaño máximo: 200"
+									required>
 							</div>
 
 
 							<div class="col-md-6">
-								<input type="submit" class="btn btn-primary modificarBanco"
-									id="modificarBanco" value="Modificar">
+								<input type="submit" class="btn btn-primary" value="Modificar">
 							</div>
-
-							<div class="form-group col-md-8"></div>
 
 						</div>
 					</form>

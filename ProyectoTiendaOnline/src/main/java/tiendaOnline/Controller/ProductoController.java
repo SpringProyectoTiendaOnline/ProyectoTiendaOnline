@@ -1,7 +1,5 @@
 package tiendaOnline.Controller;
 
-import java.io.IOException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import tiendaOnline.Dto.ProductosDto;
 import tiendaOnline.Entity.Categoria;
 import tiendaOnline.Entity.Clientes;
+import tiendaOnline.Entity.ImagenProducto;
 import tiendaOnline.Entity.LineaCompra;
 import tiendaOnline.Entity.Preguntas;
 import tiendaOnline.Entity.Productos;
@@ -75,119 +71,138 @@ public class ProductoController {
 	@Autowired
 	private CategoriaServer categoriaServer;
 
-	@GetMapping("/create-producto")
+	private int result = 0;
+
+	@RequestMapping(method = RequestMethod.GET, value = "/create-producto")
 	public String productsForm(Model model) {
 		Productos producto = new Productos();
 		model.addAttribute("products", producto);
 		return "producto/add-producto";
 	}
 
-	@PostMapping("/create-producto")
-	public ModelAndView addProducto(@ModelAttribute @Valid Productos producto, BindingResult bindingResult,
-			HttpSession session) throws IOException {
-		ModelAndView mav = new ModelAndView();
-		String mensaje = "";
+	// Crear el producto desde el formulario
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(method = RequestMethod.POST, value = "/create-producto")
+	public @ResponseBody ResponseEntity addProducto(@RequestBody Productos producto, BindingResult bindingResult) {
 
-		Productos find = productoServer.findByCodProducto(producto.getCodProducto());
+		Productos p = productoServer.findByCodProducto(producto.getCodProducto());
 
-		// Comprobar si hay error
-		if (bindingResult.hasFieldErrors()) {
-			mav.addObject("products", producto);
-			mav.setViewName("producto/add-producto");
-		} else {
-			// Comprobar si existe el codigo de Producto
-			if (find != null) {
-				mensaje = "Existe el codigo de Producto";
-				mav.addObject("products", producto);
-
-				mav.setViewName("producto/add-producto");
-			} else {
-				// Guardar
-				Productos productoSave = productoServer.save(producto);
-				// Si ha guardado, guarda el imagen
-				if (productoSave != null) {
-				}
-				List<Productos> listaProducto = productoServer.getAll();
-				mav.addObject("listaProductos", listaProducto);
-				mav.setViewName("producto/list-producto");
-			}
-
+		// si el codigo de producto existe.
+		if (p != null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
+		producto.setValoracionMedia(0);
+		productoServer.save(producto);
+		return new ResponseEntity(HttpStatus.OK);
 
-		mav.addObject("msg", mensaje);
-
-		return mav;
 	}
 
-	@GetMapping("/editar-producto/{idProducto}")
+	@RequestMapping(method = RequestMethod.GET, value = "/editar-producto/{idProducto}")
 	public String update_producto(@PathVariable("idProducto") long id, Model model) {
 		model.addAttribute("products", productoServer.findById(id));
 		return "producto/update-producto";
 	}
 
-	@PostMapping("/editarProducto/{idProducto}")
-	public String update_producto_post(@PathVariable("idProducto") long id, @ModelAttribute @Valid Productos producto,
-			BindingResult bindingResult, HttpServletRequest request) {
+	// Editar el producto a través del formulario
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(method = RequestMethod.POST, value = "/editar-producto/{idProducto}")
+	public @ResponseBody ResponseEntity update_producto_post(@PathVariable("idProducto") long id,
+			@RequestBody @Valid Productos producto, HttpServletRequest request) {
 
-		if (bindingResult.hasFieldErrors()) {
-			request.setAttribute("products", producto);
-			return "redirect:/Producto/editar-producto/" + id;
-		} else {
-			producto.setIdProducto(id);
-			productoServer.update(producto);
+		Productos p = productoServer.findById(id);
+		// si codproducto antiguo no es lo mismo que de nuevo.
+		if (p.getCodProducto() != producto.getCodProducto()) {
+			if (productoServer.findByCodProducto(producto.getCodProducto()) != null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+			}
 		}
-		return "redirect:/Producto/list-producto";
+		producto.setValoracionMedia(p.getValoracionMedia());
+		productoServer.update(producto);
+		return new ResponseEntity(HttpStatus.OK);
+
 	}
 
 	@GetMapping("/list-producto")
 	public ModelAndView listAllProductos(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+
 		mav.addObject("listaProductos", productoServer.getAll());
 		mav.setViewName("producto/list-producto");
 		return mav;
 	}
 
-	@GetMapping("/removeproducto/{idProducto}")
-	public ModelAndView removeProducto(@PathVariable("idProducto") long idProducto) {
-		ModelAndView mav = new ModelAndView();
+	@RequestMapping(method = RequestMethod.DELETE, value = "/removeproducto/{idProducto}")
+	public @ResponseBody ResponseEntity<Object> removeProducto(@PathVariable("idProducto") long idProducto) {
 
 		Productos producto = productoServer.findById(idProducto);
 
-		List<LineaCompra> linea = lineaServer.getAll();
+		List<LineaCompra> linea = lineaServer.findByProducto(producto);
+		List<Preguntas> preguntas = preguntasServer.findByProductos(producto);
+		Categoria categoria = categoriaServer.findByProducto(idProducto);
+		List<ImagenProducto> imagen = imagenServer.findByProducto(producto);
 
 		if (producto != null) {
-			for (int i = 0; i < linea.size(); i++) {
-				if (linea.get(i).getProductos() != null) {
-					if (linea.get(i).getProductos().getIdProducto() == producto.getIdProducto()) {
-						linea.get(i).setProductos(null);
-						LineaCompra lineaComp = lineaServer.update(linea.get(i));
-						if (lineaComp != null) {
-							System.out.println(lineaComp + " : Edidtar");
-						}
-					} else {
+			if (linea != null) {
+				for (int i = 0; i < linea.size(); i++) {
+					linea.get(i).setProductos(null);
+					LineaCompra lineaComp = lineaServer.update(linea.get(i));
+					System.err.println(lineaComp + " : Edidtar");
+
+				}
+			}
+
+			if (preguntas != null) {
+				for (int i = 0; i < preguntas.size(); i++) {
+					preguntasServer.delete(preguntas.get(i));
+					List<Respuestas> respuestas = respuestaServer.findByPreguntas(preguntas.get(i));
+					for (int j = 0; j < respuestas.size(); j++) {
+						respuestaServer.delete(respuestas.get(i));
 					}
+				}
+			}
+
+			if (categoria != null) {
+				categoriaServer.eliminarProductoCateg(categoria.getIdCategoria(), idProducto);
+			}
+
+			if (imagen != null) {
+				for (int i = 0; i < imagen.size(); i++) {
+					imagenServer.delete(imagen.get(i));
 				}
 
 			}
+
+			productoServer.delete(producto);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-
-		Categoria categoria = categoriaServer.findByProducto(idProducto);
-		categoriaServer.eliminarProductoCateg(categoria.getIdCategoria(), idProducto);
-
-		productoServer.delete(producto);
-
-		mav.addObject("listaProductos", productoServer.getAll());
-		mav.setViewName("producto/list-producto");
-		return mav;
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 	}
 
 	@GetMapping("/list-product-user/{idCliente}")
-	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente) {
+	public ModelAndView listAllProductosForClients(@PathVariable("idCliente") long idCliente,
+			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
 		ModelAndView mav = new ModelAndView();
 
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(4);
+
+		Page<Productos> productoPage = productoServer.paginadaProducto(PageRequest.of(currentPage - 1, pageSize),
+				result, 4);
+
+		int totalPages = productoPage.getTotalPages();
+
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+			mav.addObject("pageNumbers", pageNumbers);
+		}
+
+		result = result + 4;
+		mav.addObject("productoPage", productoPage);
+
 		mav.addObject("Cliente", clienteServer.findById(idCliente));
-		mav.addObject("listaProductos", productoServer.getAll());
+		// mav.addObject("listaProductos", productoServer.getAll());
 		mav.addObject("imagenServer", imagenServer);
 		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.setViewName("producto/list-product-user");
@@ -201,6 +216,8 @@ public class ProductoController {
 		List<Preguntas> lPreguntas = preguntasServer.findByProductos(productoServer.findById(idProducto));
 
 		mav.addObject("listaPreguntas", lPreguntas);
+		mav.addObject("listaCategoria", categoriaServer.getAll());
+
 		mav.addObject("Producto", productoServer.findById(idProducto));
 		mav.addObject("ListaImagen", imagenServer.findByProducto(productoServer.findById(idProducto)));
 		mav.setViewName("producto/perfil-producto");
@@ -259,6 +276,7 @@ public class ProductoController {
 		if (preg == null) {
 			return null;
 		}
+
 		return preg;
 	}
 
@@ -268,7 +286,6 @@ public class ProductoController {
 
 		Preguntas preguntas = preguntasServer.findById(idPregunta);
 		List<Respuestas> listRespuesta = respuestaServer.findByPreguntas(preguntas);
-		System.err.println(".........");
 		mav.addObject("listaRespuestas", listRespuesta);
 		mav.addObject("Pregunta", preguntas);
 		mav.setViewName("respuesta-producto");

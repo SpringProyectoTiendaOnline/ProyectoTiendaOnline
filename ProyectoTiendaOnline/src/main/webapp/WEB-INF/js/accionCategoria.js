@@ -26,10 +26,7 @@ $(document).ready(
 				modificarNombreCategoria();
 			});
 
-			$('#borrarCategoria').click(function() {
-				accionEliminarCategoria();
-			});
-
+	
 		});
 
 // Crear typeahead
@@ -255,7 +252,6 @@ function accionEliminarCategoria() {
 																		// se
 																		// cierra
 																		// "tr"
-
 	// token de html
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");

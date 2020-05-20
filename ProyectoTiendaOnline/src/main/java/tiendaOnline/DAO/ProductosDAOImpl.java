@@ -41,6 +41,7 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 	@Override
 	public Productos findByCodProducto(long codProducto) {
 		try {
+
 			Query query = this.em.createQuery("Select p From Productos p Where p.codProducto = :codigo");
 			query.setParameter("codigo", codProducto);
 			Productos producto = (Productos) query.getSingleResult();
@@ -50,7 +51,7 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}
@@ -66,7 +67,6 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 				return listaProducto;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 		return null;
