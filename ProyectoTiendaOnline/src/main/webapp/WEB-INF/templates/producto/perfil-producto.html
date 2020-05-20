@@ -155,7 +155,8 @@
 													<script>
 														function obtenerIdImagen(
 																idImagen) {
-															document.getElementById("showIdImagenProducto").value = idImagen;
+															document
+																	.getElementById("showIdImagenProducto").value = idImagen;
 														}
 													</script>
 													<!-- form-check -->
@@ -247,18 +248,19 @@
 					<h3 class="card-header">¿Tienes Algunas preguntas?</h3>
 					<div class="card-body">
 						<div class="col-md-10">
-							<div class="form-group">
-								<label for="textoPregunta">Escribe tus Preguntas</label>
+						
+							<form id="enviarPregunta">
+								<div class="form-group">
+									<label for="textoPregunta">Escribe tus Preguntas</label>
 
-								<textarea class="form-control" id="textoPregunta"
-									name="textoPregunta" rows="4"></textarea>
-								<br />
-								<button class="btn btn-primary mb-2 enviarPregunta"
-									id="enviarPregunta">Enviar</button>
+									<textarea class="form-control" id="textoPregunta"
+										name="textoPregunta" rows="4" minlength="3" maxlength="250"></textarea>
+									<br />
+									<button type="submit" class="btn btn-primary mb-2">Enviar</button>
 
-							</div>
+								</div>
 
-
+							</form>
 							<div id="listaPregunta" th:switch="${listaPreguntas}">
 								<div class="lead" th:case="*">
 									<div th:each="pregunta : ${listaPreguntas}">

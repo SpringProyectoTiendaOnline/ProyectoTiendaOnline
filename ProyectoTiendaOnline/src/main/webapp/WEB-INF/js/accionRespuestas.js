@@ -1,11 +1,10 @@
-
 $(document).ready(function() {
-	$("#buttonEnviarRespuesta").click(function() {
+	$("#buttonEnviarRespuesta").submit(function() {
+		event.preventDefault();
 		addRespuestas();
 	});
 
 });
-
 
 function addRespuestas() {
 	var idPregunta = document.getElementById('idPregunta').value;
@@ -30,8 +29,10 @@ function addRespuestas() {
 
 	console.log(idPregunta + " " + respuestaData);
 
-	$.ajax({
-				url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviar-respuesta/"+ idPregunta,
+	$
+			.ajax({
+				url : "http://localhost:8080/ProyectoTiendaOnline/Producto/enviar-respuesta/"
+						+ idPregunta,
 				type : "POST",
 				cache : false,
 				data : respuestaData,
@@ -39,10 +40,10 @@ function addRespuestas() {
 
 				success : function(response) {
 					console.log(response);
-					var text = "<p>"+textoRespuesta+"</p><hr />";
+					var text = "<p>" + textoRespuesta + "</p><hr />";
 					$("#listaRespuesta").append(text);
 					$('#textoRespuesta').val("");
-						
+
 				},
 
 				error : function(xhr, status, error) {

@@ -1,12 +1,13 @@
 $(document).ready(function() {
-	$("#enviarPregunta").click(function() {
+	$("#enviarPregunta").submit(function() {
+		event.preventDefault();
 		addPreguntas();
 	});
 
-	$("#showRespuesta").click(function() {
+	/*$("#showRespuesta").click(function() {
 		var idPregunta = document.getElementById('idPregunta').value;
 		openRespuesta(idPregunta);
-	});
+	});*/
 
 });
 
@@ -59,7 +60,7 @@ function addPreguntas() {
 					$('#textoPregunta').val("");
 
 				},// success
- 
+
 				error : function(xhr, status, error) {
 					console.log("error de enviar la pregunta");
 				}

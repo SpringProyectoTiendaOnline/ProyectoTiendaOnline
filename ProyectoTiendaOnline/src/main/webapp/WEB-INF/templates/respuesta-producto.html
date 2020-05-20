@@ -46,14 +46,14 @@
 					Pregunta : <span th:text="${Pregunta.texto}"></span>
 				</h6>
 
-				<div class="form-group">
-					<label for="textoRespuesta">Respuesta : </label>
-					<textarea class="form-control" id="textoRespuesta"
-						name="textoRespuesta" rows="3"></textarea>
-				</div>
-				<button type="submit"
-					class="btn btn-primary mb-2 buttonEnviarRespuesta"
-					id="buttonEnviarRespuesta" name="buttonEnviarRespuesta">Enviar</button>
+				<form id="buttonEnviarRespuesta">
+					<div class="form-group">
+						<label for="textoRespuesta">Respuesta : </label>
+						<textarea class="form-control" id="textoRespuesta"
+							name="textoRespuesta" rows="3" minlength="3" maxlength="250"></textarea>
+					</div>
+					<input type="submit" class="btn btn-primary mb-2" />
+				</form>
 
 				<hr />
 				<script th:src="@{/js/accionRespuestas.js}"></script>
