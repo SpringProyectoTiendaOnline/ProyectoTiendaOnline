@@ -36,7 +36,10 @@
 							<div class="form-group col-md-8">
 								<label for="titulo" class="col-form-label">Título : </label> <input
 									type="text" th:field="*{titulo}" class="form-control"
-									id="titulo" name="titulo" placeholder="titulo">
+									id="titulo" name="titulo" placeholder="Titulo del producto"
+									required
+									pattern="[A-Za-z0-9]{3,40}"
+									title="Tamaño máximo: 40">
 							</div>
 
 
@@ -44,7 +47,9 @@
 								<label for="descripcion" class="col-form-label">
 									Descripción : </label> <input type="text" th:field="*{descripcion}"
 									class="form-control" id="descripcion" name="descripcion"
-									placeholder="Escribe la descripción del producto">
+									placeholder="Escribe la descripción del producto" required
+									pattern="[A-Za-z]{0,200}"
+									title="Tamaño máximo: 200">
 							</div>
 
 
@@ -52,14 +57,16 @@
 								<label for="codProducto" class="col-form-label"> Código
 									de Producto : </label> <input type="text" th:field="*{codProducto}"
 									class="form-control" id="codProducto" name="codProducto"
-									placeholder="Escribe el código de Producto">
+									placeholder="Escribe el código de Producto" pattern="[0-9]{1,5}"
+									required title="Solo numeros">
 							</div>
 
 							<div class="form-group col-md-8">
 								<label for="precio" class="col-form-label"> Precio : </label> <input
 									type="number" step="0.01" th:field="*{precio}"
 									class="form-control" id="precio" name="precio"
-									placeholder="Escribe el precio del producto">
+									placeholder="Escribe el precio del producto" pattern="[0-9]{1,5}"
+									required title="Solo numeros">
 							</div>
 
 
@@ -68,14 +75,16 @@
 								<label for="descuento" class="col-form-label"> Descuento
 									: </label> <input type="number" step="0.01" th:field="*{descuento}"
 									class="form-control" id="descuento" name="descuento"
-									placeholder="Escribe si quiere aplicar el descuento">
+									placeholder="Escribe si quiere aplicar el descuento" pattern="[0-9]{1,5}"
+									required title="Solo numeros">
 							</div>
 
 							<div class="form-group col-md-8">
 								<label for="stock" class="col-form-label"> Stock : </label> <input
 									type="number" th:field="*{stock}" class="form-control"
 									id="stock" name="stock"
-									placeholder="Escribe la cantidad de Stock">
+									placeholder="Escribe la cantidad de Stock" pattern="[0-9]{1,5}"
+									required title="Solo numeros">
 							</div>
 
 
