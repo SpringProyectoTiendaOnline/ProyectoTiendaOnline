@@ -31,7 +31,7 @@
 	<br />
 
 	<div class="container col-md-12">
-		<h1 class="card-header bg-dark text-light">Productos de oferta :</h1>
+		<h1 class="card-header bg-dark text-light" id="productosOferta" th:utext="#{h1.productosOferta}"></h1>
 		<br />
 		<!--  <script th:src="@{/js/accionHome.js}"></script>-->
 
@@ -72,13 +72,18 @@
 								<h5 class="card-title">
 									<a
 										th:href="@{/Producto/perfil-producto/{idProducto}(idProducto=${producto.idProducto})}"
-										class="text-right"><span
-										th:text="'Título : ' + ${producto.titulo}"></span> </a>
+										class="text-right">
+						<label for="titulo" id="titulo" class="col-form-label" th:utext="#{label.titulo}"></label>
+										
+										<span
+										th:text="${producto.titulo}"></span> </a>
 								</h5>
 
 								<div class="d-flex flex-row-reverse">
 									<div class="p-2 mb-2 bg-light text-dark">
-										Precio :
+															<label for="precio" id="precio" class="col-form-label" th:utext="#{label.precio}"></label>
+						
+										
 										<p th:text="${producto.precio} + '&euro;'"></p>
 									</div>
 

@@ -32,11 +32,44 @@
 				<li class="nav-item active"><a class="nav-link"
 					th:href="@{/index}">Home <span class="sr-only">(current)</span>
 				</a></li>
-				<li class="nav-item"><a class="nav-link" href="login">Log
-						In</a></li>
+				
+				<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Idioma
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item"
+					th:href="@{?lang=es}">Español </a>
+					            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+					th:href="@{?lang=en}">Ingles</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+					th:href="@{?lang=ch}">Chino </a>
+					            <div class="dropdown-divider"></div>
+					              <div class="dropdown-divider"></div>
+            <a class="dropdown-item"
+					th:href="@{?lang=fr}">Francés </a>
+					
+          </div>
+        </li>
+				
+				<li class="nav-item active">
+				<a class="nav-link"
+					th:href="@{login}">Log in <span class="sr-only">(current)</span>
+				</a>
+						</li>
+						
+						
+						
+						
+						
+						
 			</ul>
+			
+			
 		</div>
+		
 	</nav>
 </body>
 </html>
-
