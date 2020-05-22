@@ -29,6 +29,11 @@ public interface ProductoServer {
 
 	public List<Productos> findByCategoria(Categoria categoria);
 
-	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit);
+	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit, List<Productos> listaProducto);
+	
+
+	
+	public List<Productos> getProductoDescuentoMayorQue0();
+
 
 }

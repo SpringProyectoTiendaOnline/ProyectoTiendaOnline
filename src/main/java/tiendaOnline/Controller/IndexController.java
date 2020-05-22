@@ -44,7 +44,7 @@ public class IndexController {
 		int pageSize = size.orElse(8);
 
 		Page<Productos> productoPage = productoServer.paginadaProducto(PageRequest.of(currentPage - 1, pageSize),
-				result, 8);
+				result, 8, productoServer.getProductoDescuentoMayorQue0());
 
 		int totalPages = productoPage.getTotalPages();
 

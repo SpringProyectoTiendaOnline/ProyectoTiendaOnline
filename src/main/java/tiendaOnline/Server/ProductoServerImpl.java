@@ -87,12 +87,12 @@ public class ProductoServerImpl implements ProductoServer {
 
 	@Override
 	@Transactional
-	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit) {
+	public Page<Productos> paginadaProducto(Pageable pageable, int index, int limit, List<Productos> productos) {
 		int pageSize = pageable.getPageSize();
 		int currentPage = pageable.getPageNumber();
 		int startItem = currentPage * pageSize;
 
-		List<Productos> listaProducto = getAll();
+		List<Productos> listaProducto = productos;
 
 		if (lista.size() < startItem) {
 			lista = Collections.emptyList();
@@ -108,5 +108,10 @@ public class ProductoServerImpl implements ProductoServer {
 		
 
 		return productoPage;
+	}
+
+	@Override
+	public List<Productos> getProductoDescuentoMayorQue0() {
+		return productoDAO.getProductoDescuentoMayorQue0();
 	}
 }

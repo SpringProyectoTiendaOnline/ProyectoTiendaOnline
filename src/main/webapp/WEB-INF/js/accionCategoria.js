@@ -26,7 +26,11 @@ $(document).ready(
 				modificarNombreCategoria();
 			});
 
-	
+			$('#buttonSaveCategoria').submit(function() {
+				event.preventDefault();
+				accionCrearCategoria();
+			});
+
 		});
 
 // Crear typeahead
@@ -248,10 +252,10 @@ function modificarNombreCategoria() {
 function accionEliminarCategoria() {
 	var obj = $(this);
 	var idCategoria = $(this).closest("tr").find("#idCategoria").text();// si
-																		// encuentra,
-																		// se
-																		// cierra
-																		// "tr"
+	// encuentra,
+	// se
+	// cierra
+	// "tr"
 	// token de html
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
@@ -283,6 +287,75 @@ function accionEliminarCategoria() {
 							+ "La categoria no ha sido eliminado" + "</div>"
 							+ "";
 					$('#aviso').html(aviso);
+				}
+			});
+
+}
+
+function accionCrearCategoria() {
+
+	var nombreCategoria = $('#nombreCategoria').val();
+
+	console.log(nombreCategoria);
+
+	// token de html
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+
+	$(document).ajaxSend(function(e, xhr, options) {
+		// hace la petición AJAX y establece los datos en la cabecera
+		xhr.setRequestHeader(header, token);
+	});// ajaxSend
+
+	$
+			.ajax({
+				url : "http://localhost:8080/ProyectoTiendaOnline/Categoria/create-categoria",
+				contentType : "application/json; charset=utf-8",
+				method : "POST",
+				data : nombreCategoria,
+				dataType : 'text',
+				cache : false,
+				success : function(response) {
+					console.log(response);
+					$('#aviso2').html("");
+
+					if (Object.keys(response).length === 0) {
+						var aviso = "<div class='alert alert-danger' role='alert'>"
+								+ "La categoria no ha sido añadido, porque ya exite el nombre de categoria"
+								+ "</div>" + "";
+						$('#aviso2').html(aviso);
+						
+					} else {
+
+						var aviso = "<div class='alert alert-success' role='alert'>"
+								+ "La categoría ha sido creado !"
+								+ "</div>"
+								+ "";
+						$('#aviso2').html(aviso);
+
+						var input = "<td style='display: none;' id='idCategoria'>"
+								+ response.idCategoria
+								+ "</td>"
+								+ "<td>"
+								+ nombreCategoria
+								+ "</td>"
+								+ "<td sec:authorize='hasAuthority('ROL_ADMIN')'><a class='btn btn-primary' href='http://localhost:8080/ProyectoTiendaOnline/Categoria/"
+								+ response.idCategoria
+								+ "'><i class='fas fa-edit'></i></a></td>"
+								+ "<td sec:authorize='hasAuthority('ROL_ADMIN')'><a class='btn btn-danger borrarCategoria' id='borrarCategoria'><i class='fas fa-times'></i></a></td>";
+						$('#tablaCategoria').append(input);
+
+						$('#nombreCategoria').val("");
+
+					}
+
+				},
+
+				error : function(xhr, status, error) {
+					var aviso = "<div class='alert alert-danger' role='alert'>"
+							+ "La categoria no ha sido añadido, porque ya exite el nombre de categoria"
+							+ "</div>" + "";
+					$('#aviso2').html(aviso);
 				}
 			});
 

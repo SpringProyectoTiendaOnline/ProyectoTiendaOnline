@@ -64,7 +64,7 @@ public class CategoriaController {
 		return mav;
 	}
 
-	//listar producto por categorias.
+	// listar producto por categorias.
 	@RequestMapping(method = RequestMethod.GET, value = "/lista_producto_nombreCategoria/{idCategoria}")
 	public ModelAndView listaProductoCategoria(@PathVariable("idCategoria") long idCategoria, Model theModel,
 			@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
@@ -97,32 +97,25 @@ public class CategoriaController {
 
 	// Crear la categoria
 	@RequestMapping(method = RequestMethod.POST, value = "/create-categoria")
-	public ModelAndView crear_Categoria(@ModelAttribute("categoria") @Valid Categoria categoria, BindingResult result) {
-		ModelAndView mav = new ModelAndView();
-		List<Object> mensaje = new ArrayList<>();
-		if (result.hasErrors()) {
-			mensaje.addAll(result.getAllErrors());
-			mav.addObject("Mensaje", result.getAllErrors());
+	public @ResponseBody Categoria crear_Categoria(@RequestBody String nombreCategoria) {
+
+		System.err.println(nombreCategoria);
+
+		if (categoriaServer.findByNombre(nombreCategoria) != null) {
+			return null;
 		}
 
-		if (categoriaServer.findByNombre(categoria.getNombreCategoria()) == null) {
-			Categoria categSave = categoriaServer.save(categoria);
-			if (categSave != null) {
-				mav.addObject("categoria", new Categoria());
-			}
-		} else {
-			mensaje.add("Existe la categoria con este nombre !");
-			mav.addObject("Mensaje", mensaje);
-		}
+		Categoria categoria = new Categoria();
+		categoria.setNombreCategoria(nombreCategoria);
+		categoria.setProducto(null);
 
-		List<Categoria> listaCategoria = categoriaServer.getAll();
-		mav.addObject("listaCategoria", listaCategoria);
-		mav.setViewName("categoria/list-categoria");
+		Categoria categSave = categoriaServer.save(categoria);
 
-		return mav;
+		return categSave;
+
 	}
 
-	//el perfil de categoria.
+	// el perfil de categoria.
 	@RequestMapping(method = RequestMethod.GET, value = "/{idCategoria}")
 	public ModelAndView perfilCategoria(@PathVariable("idCategoria") long idCategoria) {
 		ModelAndView mav = new ModelAndView();
@@ -133,7 +126,7 @@ public class CategoriaController {
 		return mav;
 	}
 
-	//insertar proudcto dentro de la categoria
+	// insertar proudcto dentro de la categoria
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/insertarProducto/{idCategoria}")
 	public @ResponseBody ResponseEntity insertarProducto(@PathVariable("idCategoria") long idCategoria,

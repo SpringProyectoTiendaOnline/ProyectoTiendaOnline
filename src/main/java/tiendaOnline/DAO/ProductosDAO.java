@@ -20,6 +20,7 @@ public interface ProductosDAO extends GenericDao<Productos>{
 	public List<ProductosDto> findByNombreAndCodProducto(String nombreCodProducto);
 	
 	public List<Productos> findByCategoria(Categoria categoria);
-
+	
+	public List<Productos> getProductoDescuentoMayorQue0();
 
 }

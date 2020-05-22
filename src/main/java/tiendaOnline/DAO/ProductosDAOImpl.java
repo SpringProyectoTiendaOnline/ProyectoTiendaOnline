@@ -126,4 +126,17 @@ public class ProductosDAOImpl extends GenericDaoImpl<Productos> implements Produ
 
 	}
 
+	@Override
+	public List<Productos> getProductoDescuentoMayorQue0() {
+
+		@SuppressWarnings("unchecked")
+		List<Productos> productos = this.em.createQuery("From Productos p where p.descuento > 0.00").getResultList();
+
+		if (productos != null) {
+			return productos;
+		}
+
+		return null;
+	}
+
 }

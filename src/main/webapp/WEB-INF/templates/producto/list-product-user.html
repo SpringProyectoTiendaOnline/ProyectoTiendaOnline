@@ -36,7 +36,7 @@
 	<br />
 
 	<div class="container-fluid">
-		<h1 class="card-header bg-dark text-white">Lista de Producto :</h1>
+		<h1 class="card-header bg-dark text-white">Todos los Productos :</h1>
 		<br /> <br />
 		<div th:switch="${categoria}">
 			<div th:case="null">
@@ -48,7 +48,6 @@
 								<!-- comprobar si tiene imagen o no  -->
 								<div id="funcionListaProducto"
 									th:if="${not #lists.isEmpty(producto.imagen)}">
-
 									<div th:each="imagen, istat : ${producto.imagen}">
 										<div th:if="${istat.index == 0}">
 											<img class="card-img-top"
@@ -60,8 +59,7 @@
 									<!-- is empty -->
 								</div>
 
-								<div
-									th:if="${#lists.isEmpty(producto.imagen)}">
+								<div th:if="${#lists.isEmpty(producto.imagen)}">
 									<img class="card-img-top"
 										th:src="@{/imagen/productoSinFoto.png}" style="height: 250px" />
 								</div>
@@ -114,7 +112,7 @@
 				</nav>
 				<br />
 			</div>
-			
+
 
 			<div th:case="*">
 				<div class="row">
@@ -124,21 +122,21 @@
 							<div class="card" style="width: 20rem; height: 20rem;">
 								<div class="form-check form-check-inline">
 									<div id="funcionListaProducto"
-										th:if="${not #lists.isEmpty(imagenServer.findByProducto(producto))}">
-										<div
-											th:each="lista : ${imagenServer.findByProducto(producto)}">
+										th:if="${not #lists.isEmpty(producto.imagen)}">
+										<div th:each="imagen : ${producto.imagen}">
 											<label class="form-check-label"
-												th:for="'imagen_'+${lista.idImagen}"> <img
-												th:src="${lista.urlImagen}"
-												style="width: 100px; height: 100px" />
+												th:for="'imagen_'+${imagen.idImagen}"> 
+											<img
+												class="card-img-top"
+												th:src="@{/ImagenProducto/imagen/{idProducto}/{idImagen}(idProducto=${producto.idProducto}, idImagen=${imagen.idImagen})}"
+												style="height: 100px; width: 100px" />
 											</label>
 											<!-- each -->
 										</div>
 										<!-- is empty -->
 									</div>
 
-									<div
-										th:if="${#lists.isEmpty(imagenServer.findByProducto(producto))}">
+									<div th:if="${#lists.isEmpty(producto.imagen)}">
 										<img th:src="@{/imagen/productoSinFoto.png}"
 											style="width: 100px; height: 100px" />
 									</div>

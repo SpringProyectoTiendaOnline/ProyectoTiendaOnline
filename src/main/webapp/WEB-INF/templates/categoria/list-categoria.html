@@ -29,22 +29,17 @@
 		<div class="card">
 			<h1 class="card-header">Gestión Categoría</h1>
 			<div class="card-body">
-				<div class="alert alert-danger" role="alert"
-					th:if="${Mensaje != null}">
-					<div th:each="error : ${Mensaje}">
-						<p th:text="${error.defaultMessage}">
-					</div>
-				</div>
+
 				<!-- Button trigger modal -->
 				<button type="button" class="btn btn-primary" data-toggle="modal"
 					data-target="#addCategoria">Añadir Categoría</button>
 
 				<br />
-
 				<div id="aviso"></div>
 
-				<form action="#" th:action="@{/Categoria/create-categoria}"
-					th:object="${categoria}" method="post">
+				<!-- th:action="@{/Categoria/create-categoria}" -->
+				<form action="#" th:object="${categoria}" method="post"
+					id="buttonSaveCategoria">
 					<!-- Modal -->
 					<div class="modal fade" id="addCategoria" tabindex="-1"
 						role="dialog" aria-labelledby="addCategoriaLabel"
@@ -67,12 +62,11 @@
 
 
 								<div class="modal-body">
+									<div id="aviso2"></div>
 
 									<div class="form-group col-md-8">
 										<label for="nombreCategoria" class="col-form-label">Nombre
-											Categoría : </label> 
-										
-										<input type="text" th:field="*{nombreCategoria}"
+											Categoría : </label> <input type="text" th:field="*{nombreCategoria}"
 											class="form-control" id="nombreCategoria"
 											name="nombreCategoria" placeholder="Nombre de Categoría">
 									</div>
@@ -82,9 +76,10 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal">Close</button>
-									
-									<input type="submit" class="btn btn-primary buttonSaveCategoria" id ="buttonSaveCategoria" value="Save">
+
+									<input type="submit" class="btn btn-primary" value="Save">
 									<!-- / modal footer -->
+
 								</div>
 							</div>
 							<!-- /modal dialog -->
@@ -94,18 +89,16 @@
 					<!-- / form de añadir la categoria -->
 				</form>
 				<br /> <br />
-				<table id="tablaCategoria" class="table table-hover">
+				<table class="table table-hover">
 					<thead class="thead-dark">
 						<tr>
-							<th scope="col">#</th>
 							<th scope="col">Nombre Categoria</th>
 							<th scope="col">Editar</th>
 							<th scope="col">Eliminar</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="tablaCategoria">
 						<tr th:each="categoria, iter : ${listaCategoria}">
-							<td scope="row" th:text="${iter.index + 1}"></td>
 							<td style="display: none;" id="idCategoria"
 								th:text="${categoria.idCategoria}"></td>
 							<td th:text="${categoria.nombreCategoria}"></td>
