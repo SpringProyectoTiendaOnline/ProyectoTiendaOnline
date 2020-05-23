@@ -83,18 +83,20 @@ function agregarValoracion (puntuacion){
 	
 	$.ajax({
       url: "http://localhost:8080/ProyectoTiendaOnline/Producto/agregarvaloracion/"+idProducto+"/"+puntuacion,
+	  cache : false,
       contentType: "application/json; charset=utf-8",
       type: "POST",
+	  
       success: function (response) {
-    	  
-        $('#aviso').html("");
+   	  
+          $('#aviso').html("");
 
-    	 var aviso2 ="<div class='alert alert-primary' role='alert'>"+ "Gracias por valorarlo!!"+ "</div>" + 	"";
+    	 var aviso2 ="" +"<div class='alert alert-primary' role='alert'>"+ "Gracias por valorarlo !!"+ "</div>" + "";
       	
       	$('#aviso').html(aviso2);
-      	$('#aviso').html("");
 
-    	  
+        $('#aviso').html("");
+
     	
 		},
 		error: function(xhr, status, error) {
@@ -112,7 +114,13 @@ function agregarValoracion (puntuacion){
 
 			
 		}
+		
+		
 
   });
+	
+	
+	 
+
 	
 }

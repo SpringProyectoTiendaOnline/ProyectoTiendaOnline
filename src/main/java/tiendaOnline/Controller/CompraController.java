@@ -236,7 +236,7 @@ public class CompraController {
 				carrito.clear();
 			}
 		} else {
-			mensajeError = "No tienes datos de Bancaria!  Ir a perfil introducirselo";
+			mensajeError = "No tienes datos de cuenta bancaria!  Ir al perfil para introducirlos";
 			mav.addObject("msg", mensajeError);
 		}
 

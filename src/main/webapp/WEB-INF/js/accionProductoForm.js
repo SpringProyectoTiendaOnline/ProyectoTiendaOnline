@@ -26,7 +26,7 @@ function validaForm() {
 	// Campos de texto
 	if ($("#titulo").val() == "") {
 		aviso += "<div class='alert alert-danger'>"
-				+ "El campo titulo no puede ser vacio" + "</div>";
+				+ "El campo titulo no puede estar vacio" + "</div>";
 
 		$("#titulo").focus(); // Esta función coloca el foco de escritura del
 		// usuario en el campo Nombre directamente.
@@ -34,7 +34,7 @@ function validaForm() {
 
 	if ($("#titulo").val().length < 5) {
 		aviso = "<div class='alert alert-danger'>"
-				+ "El campo titulo, su caracter no puede ser menor que 5 "
+				+ "El campo titulo, la longitud no puede ser menor que 5 "
 				+ "</div>";
 		$("#titulo").focus(); // Esta función coloca el foco de escritura del
 		// usuario en el campo Nombre directamente.
@@ -42,13 +42,13 @@ function validaForm() {
 
 	if ($("#descripcion").val() == "") {
 		aviso += "<div class='alert alert-danger'>"
-				+ "El campo descripcion no puede ser vacio" + "</div>";
+				+ "El campo descripcion no puede estar vacio" + "</div>";
 		$("#descripcion").focus();
 	}
 
 	if ($("#descripcion").val().length < 5) {
 		aviso += "<div class='alert alert-danger'>"
-				+ "El campo descripcion, su caracter no puede ser menor que 5 "
+				+ "El campo descripcion, la longitud no puede ser menor que 5 "
 				+ "</div>";
 		$("#descripcion").focus(); // Esta función coloca el foco de escritura
 		// del usuario en el campo Nombre
@@ -149,7 +149,7 @@ function createProducto() {
 					$('#stock').val(stock);
 
 					aviso = "<div class='alert alert-danger'>"
-							+ "Ya Existe el código de producto." + "</div>";
+							+ "Ya existe el código del producto." + "</div>";
 					$('#aviso').html(aviso);
 
 				}
@@ -215,7 +215,7 @@ function modificarProducto() {
 					$('#stock').val(stock);
 
 					aviso = "<div class='alert alert-danger'>"
-							+ "Ya Existe el código de producto." + "</div>";
+							+ "Ya existe el código del producto." + "</div>";
 					$('#aviso').html(aviso);
 
 				}// error

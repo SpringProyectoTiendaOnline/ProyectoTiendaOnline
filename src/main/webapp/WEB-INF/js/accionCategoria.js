@@ -106,7 +106,7 @@ function addProductoCategoria(productoDto) {
 				error : function(xhr, status, error) {
 
 					var aviso = "<div class='alert alert-danger' role='alert'>"
-							+ "El producto ya imparte en esta categoria"
+							+ "El producto ya pertenece a esta categoria"
 							+ "</div>";
 					$('#buscarProducto').val("");
 					$('#aviso').html(aviso);
@@ -150,7 +150,7 @@ function eliminarProductoCategoria() {
 
 				error : function(xhr, status, error) {
 					var aviso = "<div class='alert alert-danger' role='alert'>"
-							+ "El producto ya no imparte este categoria"
+							+ "El producto ya no pertenece a esta categoria"
 							+ "</div>" + "";
 					$('#aviso').html(aviso);
 				}
@@ -222,7 +222,7 @@ function modificarNombreCategoria() {
 				cache : false,
 				success : function(response) {
 					var aviso = "<div class='alert alert-success' role='alert'>"
-							+ "El nombre de Categoria  ha sido modificado !"
+							+ "El nombre de la Categoria ha sido modificado !"
 							+ "</div>" + "";
 					$('#aviso').html(aviso);
 
@@ -241,7 +241,7 @@ function modificarNombreCategoria() {
 
 				error : function(xhr, status, error) {
 					var aviso = "<div class='alert alert-danger' role='alert'>"
-							+ "El nombre de Categoria no ha sido modificado por causa del servidor"
+							+ "El nombre de la Categoria no ha sido modificado debido al servidor"
 							+ "</div>" + "";
 					$('#aviso').html(aviso);
 				}
@@ -277,14 +277,14 @@ function accionEliminarCategoria() {
 					// producyo
 
 					var aviso = "<div class='alert alert-success' role='alert'>"
-							+ "La categoria ha sido eliminado" + "</div>" + "";
+							+ "La categoria ha sido eliminada" + "</div>" + "";
 					$('#aviso').html(aviso);
 
 				},
 
 				error : function(xhr, status, error) {
 					var aviso = "<div class='alert alert-danger' role='alert'>"
-							+ "La categoria no ha sido eliminado" + "</div>"
+							+ "La categoria no ha sido eliminada" + "</div>"
 							+ "";
 					$('#aviso').html(aviso);
 				}
@@ -321,14 +321,14 @@ function accionCrearCategoria() {
 
 					if (Object.keys(response).length === 0) {
 						var aviso = "<div class='alert alert-danger' role='alert'>"
-								+ "La categoria no ha sido añadido, porque ya exite el nombre de categoria"
+								+ "La categoria no ha sido añadida, puede que ya exista el nombre de la categoria"
 								+ "</div>" + "";
 						$('#aviso2').html(aviso);
 						
 					} else {
 
 						var aviso = "<div class='alert alert-success' role='alert'>"
-								+ "La categoría ha sido creado !"
+								+ "La categoría ha sido creada !"
 								+ "</div>"
 								+ "";
 						$('#aviso2').html(aviso);
@@ -353,7 +353,7 @@ function accionCrearCategoria() {
 
 				error : function(xhr, status, error) {
 					var aviso = "<div class='alert alert-danger' role='alert'>"
-							+ "La categoria no ha sido añadido, porque ya exite el nombre de categoria"
+							+ "La categoria no ha sido añadida, puede que ya exista el nombre de la categoria"
 							+ "</div>" + "";
 					$('#aviso2').html(aviso);
 				}

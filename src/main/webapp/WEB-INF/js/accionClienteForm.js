@@ -140,7 +140,7 @@ function modificarCliente() {
 					$('#aviso').html("");
 					console.log("Modificar Cliente :  OK");
 
-					aviso = "<div class='alert alert-success'> Los datos de Cliente ha sido modificado correctamente";
+					aviso = "<div class='alert alert-success'> Los datos del Cliente han sido modificados correctamente";
 					+"</div>";
 					$('#aviso').html(aviso);
 

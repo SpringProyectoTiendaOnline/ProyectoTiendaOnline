@@ -62,7 +62,7 @@ function addPreguntas() {
 				},// success
 
 				error : function(xhr, status, error) {
-					console.log("error de enviar la pregunta");
+					console.log("error al enviar la pregunta");
 				}
 
 			});
