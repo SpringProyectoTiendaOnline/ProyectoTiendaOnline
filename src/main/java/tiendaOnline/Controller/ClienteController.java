@@ -33,10 +33,10 @@ import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
 import tiendaOnline.Server.LineaDeCompraServer;
 
+
 @Controller
 @RequestMapping(value = "/Cliente")
 public class ClienteController {
-
 	@Autowired
 	private ClienteServer ClienteServer;
 	@Autowired

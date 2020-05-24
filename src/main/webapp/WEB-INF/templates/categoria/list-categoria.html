@@ -98,7 +98,7 @@
 						</tr>
 					</thead>
 					<tbody id="tablaCategoria">
-						<tr th:each="categoria, iter : ${listaCategoria}">
+						<tr sec:authorize="hasAuthority('ROL_ADMIN')" th:each="categoria, iter : ${listaCategoria}">
 							<td style="display: none;" id="idCategoria"
 								th:text="${categoria.idCategoria}"></td>
 							<td th:text="${categoria.nombreCategoria}"></td>

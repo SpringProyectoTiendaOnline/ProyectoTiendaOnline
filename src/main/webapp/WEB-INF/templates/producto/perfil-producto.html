@@ -253,17 +253,26 @@
 						</p>
 
 						<p class="card-text" th:switch="${Producto.stock}">
-							<span class="font-weight-bold">Stock : </span><span th:case="'0'">No
-								Stock</span> <span th:case="*" class="text-success">Stock</span>
+							<span class="font-weight-bold">Stock : </span> <span
+								th:case="'0'">No Stock </span> <span th:case="*"
+								class="text-success">Stock - <span
+								th:text="'Queda ' + ${Producto.stock}"></span></span>
 						</p>
+
+						<div class="alert alert-info" th:if="${Producto.stock == 0 }">El
+							producto está agotado !</div>
+
 						<div
-							sec:authorize="hasAuthority('ROL_Usuario') || hasAuthority('ROL_ADMIN')">
+							sec:authorize="hasAuthority('ROL_Usuario') || hasAuthority('ROL_ADMIN')"
+							th:if="${Producto.stock > 0}">
 							<a href="#"
 								th:href="@{/Compra/comprarProducto/{idCliente}/{idProducto}(idCliente = ${session.idUsuario}, idProducto = ${Producto.idProducto})}">
 								<button type="button" class="btn btn-outline-success">
 									Añadir al Carrito</button>
 							</a>
 						</div>
+
+
 
 						<div sec:authorize="isAnonymous()">
 							<h5 class="alert alert-info">
@@ -301,8 +310,8 @@
 
 									<textarea class="form-control" id="textoPregunta"
 										name="textoPregunta" rows="4" minlength="3" maxlength="250"></textarea>
-									<br />
-									<button type="submit" class="btn btn-primary mb-2">Enviar</button>
+									<br /> <input type="submit" class="btn btn-primary mb-2"
+										value="Enviar">
 
 								</div>
 

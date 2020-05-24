@@ -95,8 +95,6 @@ function agregarValoracion (puntuacion){
       	
       	$('#aviso').html(aviso2);
 
-        $('#aviso').html("");
-
     	
 		},
 		error: function(xhr, status, error) {

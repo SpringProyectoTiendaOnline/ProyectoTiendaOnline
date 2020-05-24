@@ -104,7 +104,7 @@
 						<li class="page-item" th:each="pageNumber : ${pageNumbers}">
 
 							<a class="page-link"
-							th:href="@{/Producto/list-product-user/{idCliente}(idCliente = ${Cliente.idCliente}, size=${productoPage.size}, page=${pageNumber})}"
+							th:href="@{/Producto/list-product-user/{idCliente}(idCliente = ${session.idCliente}, size=${productoPage.size}, page=${pageNumber})}"
 							th:text=${pageNumber}></a>
 						</li>
 

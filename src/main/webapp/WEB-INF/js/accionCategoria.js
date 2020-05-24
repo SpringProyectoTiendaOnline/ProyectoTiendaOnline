@@ -324,7 +324,7 @@ function accionCrearCategoria() {
 								+ "La categoria no ha sido añadida, puede que ya exista el nombre de la categoria"
 								+ "</div>" + "";
 						$('#aviso2').html(aviso);
-						
+
 					} else {
 
 						var aviso = "<div class='alert alert-success' role='alert'>"
@@ -333,7 +333,8 @@ function accionCrearCategoria() {
 								+ "";
 						$('#aviso2').html(aviso);
 
-						var input = "<td style='display: none;' id='idCategoria'>"
+						var input = "<tr sec:authorize='hasAuthority('ROL_ADMIN')'>"
+								+ "<td style='display: none;' id='idCategoria'>"
 								+ response.idCategoria
 								+ "</td>"
 								+ "<td>"
@@ -342,7 +343,9 @@ function accionCrearCategoria() {
 								+ "<td sec:authorize='hasAuthority('ROL_ADMIN')'><a class='btn btn-primary' href='http://localhost:8080/ProyectoTiendaOnline/Categoria/"
 								+ response.idCategoria
 								+ "'><i class='fas fa-edit'></i></a></td>"
-								+ "<td sec:authorize='hasAuthority('ROL_ADMIN')'><a class='btn btn-danger borrarCategoria' id='borrarCategoria'><i class='fas fa-times'></i></a></td>";
+								+ "<td sec:authorize='hasAuthority('ROL_ADMIN')'><a class='btn btn-danger borrarCategoria' id='borrarCategoria'><i class='fas fa-times'></i></a></td>"
+								+ "</tr>";
+
 						$('#tablaCategoria').append(input);
 
 						$('#nombreCategoria').val("");

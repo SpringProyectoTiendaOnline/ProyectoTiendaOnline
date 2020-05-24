@@ -77,7 +77,7 @@
 															</div>
 														</td>
 
-														<td th:text="${pedido.precioTotal / pedido.cantidad}"></td>
+														<td th:text="${pedido.productos.precio * pedido.cantidad} + '&euro;'"></td>
 														<td th:text="${pedido.cantidad}"></td>
 														<td th:text="${pedido.precioTotal} + '&euro;'"></td>
 														<td th:text="${pedido.estado.iterator().next().estado}"></td>

@@ -196,6 +196,7 @@ public class CompraController {
 		List<Banco> listaBanco = bancoServer.findByCliente(cliente);
 		Date nowDate = new Date();
 		String mensajeError = "";
+		
 		if (listaBanco != null) {
 			if (carrito != null) {
 				compra.setFechaCompra(nowDate);
@@ -215,14 +216,13 @@ public class CompraController {
 						productoServer.update(producto);
 
 						if (producto != null) {
-							System.err.println("Producto Mod" + producto);
-
 						}
+						
 						linea.setProductos(key);
 						linea.setCantidad(carrito.get(key));
 						linea.setCompra(compra);
 						linea.setPrecioTotal(
-								carrito.get(key) * key.getPrecio() - (key.getPrecio() * key.getDescuento()));
+								carrito.get(key) * key.getPrecio() - (key.getPrecio() * carrito.get(key) * key.getDescuento() / 100));
 						Set<EstadoPedido> list = new HashSet<EstadoPedido>();
 						EstadoPedido estadoPedido = estado.getOne(1);
 						list.add(estadoPedido);

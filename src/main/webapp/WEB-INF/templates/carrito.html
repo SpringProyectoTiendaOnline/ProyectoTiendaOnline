@@ -43,11 +43,11 @@
 									<td th:each="entry : ${producto}" th:text="${entry.key.precio}">
 									</td>
 									<td th:each="entry : ${producto}"
-										th:text="${entry.key.descuento}"></td>
+										th:text="${entry.key.descuento} + '%' "></td>
 									<td th:each="entry : ${producto}" th:text="${entry.value}">
 									</td>
 									<td th:each="entry : ${producto}"
-										th:text="${entry.key.precio * entry.value}"></td>
+										th:text="${(entry.key.precio * entry.value)- ((entry.key.precio * entry.value) * (entry.key.descuento / 100))}"></td>
 
 									<td th:each="entry : ${producto}"><a
 										th:href="@{/Compra/eliminar-producto-carrito/{idCliente}/{idProducto}(idCliente=${Cliente.idCliente},idProducto=${entry.key.idProducto})}">
