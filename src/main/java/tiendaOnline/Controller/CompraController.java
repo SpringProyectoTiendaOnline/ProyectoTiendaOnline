@@ -1,5 +1,6 @@
 package tiendaOnline.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.HashMap;
@@ -78,19 +79,19 @@ public class CompraController {
 
 		@SuppressWarnings("unchecked")
 		HashMap<Productos, Long> carrito = (HashMap<Productos, Long>) sesion.getAttribute("sessionCarrito");
-		Map<String, Object> mensaje = new HashMap<>();
+
 		boolean existe = false;
 
 		if (producto != null) {
 			// si no queda el stock de producto
 			if (producto.getStock() == 0) {
-				mensaje.put("msg", "Ya no queda el producto !");
 
 			} else {
 
 				if (carrito == null) {
 					carrito = new HashMap<Productos, Long>();
 					carrito.put(producto, (long) 1);
+					producto.setStock(producto.getStock() - 1);
 
 				} else {
 					// Imprimimos el Map con un Iterador
@@ -106,23 +107,23 @@ public class CompraController {
 					}
 
 					if (existe) {
-						if (producto.getStock() > carrito.get(producto)) {
+						if (producto.getStock() > 0) {
 							carrito.put(producto, (long) carrito.get(producto) + 1);
+							producto.setStock(producto.getStock() - 1);
 						} else {
-							mensaje.put("msg", "El producto sólo queda : " + producto.getStock());
 						}
+
 					} else {
 						carrito.put(producto, (long) 1);
-
+						producto.setStock(producto.getStock() - 1);
 					}
 				}
 			}
 			sesion.setAttribute("sessionCarrito", carrito);
-
 		}
+
 		mav.addObject("listaCategoria", categoriaServer.getAll());
 		mav.addObject("Producto", producto);
-		mav.addObject("msg", mensaje);
 		mav.addObject("ListaImagen", imagenServer.findByProducto(producto));
 		mav.setViewName("producto/perfil-producto");
 
@@ -196,7 +197,7 @@ public class CompraController {
 		List<Banco> listaBanco = bancoServer.findByCliente(cliente);
 		Date nowDate = new Date();
 		String mensajeError = "";
-		
+
 		if (listaBanco != null) {
 			if (carrito != null) {
 				compra.setFechaCompra(nowDate);
@@ -217,12 +218,12 @@ public class CompraController {
 
 						if (producto != null) {
 						}
-						
+
 						linea.setProductos(key);
 						linea.setCantidad(carrito.get(key));
 						linea.setCompra(compra);
-						linea.setPrecioTotal(
-								carrito.get(key) * key.getPrecio() - (key.getPrecio() * carrito.get(key) * key.getDescuento() / 100));
+						linea.setPrecioTotal(carrito.get(key) * key.getPrecio()
+								- (key.getPrecio() * carrito.get(key) * key.getDescuento() / 100));
 						Set<EstadoPedido> list = new HashSet<EstadoPedido>();
 						EstadoPedido estadoPedido = estado.getOne(1);
 						list.add(estadoPedido);

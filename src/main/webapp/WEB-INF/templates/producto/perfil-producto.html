@@ -255,12 +255,12 @@
 						<p class="card-text" th:switch="${Producto.stock}">
 							<span class="font-weight-bold">Stock : </span> <span
 								th:case="'0'">No Stock </span> <span th:case="*"
-								class="text-success">Stock - <span
-								th:text="'Queda ' + ${Producto.stock}"></span></span>
+								class="text-success">Stock </span>
 						</p>
 
 						<div class="alert alert-info" th:if="${Producto.stock == 0 }">El
 							producto está agotado !</div>
+
 
 						<div
 							sec:authorize="hasAuthority('ROL_Usuario') || hasAuthority('ROL_ADMIN')"
