@@ -52,7 +52,7 @@ public class ClienteController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	// Registrar Cliente
+	// GET - Registrar Cliente
 	@RequestMapping(method = RequestMethod.GET, value = "/signup")
 	public String showForm(Model theModel) {
 		Clientes cliente = new Clientes();
@@ -61,11 +61,12 @@ public class ClienteController {
 		return "signup";
 	}
 
-	// crete-cliente
+	// POST - crear el cliente
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.POST, value = "/signup")
 	public @ResponseBody ResponseEntity create_cliente(@RequestBody Clientes cliente, BindingResult bindingResult) {
-		// comprobar si existe el correo electronico.
+		
+		// comprobar si existe el correo electronico dentro del base de datos, si en caso no existe pues se guardará.
 		if (ClienteServer.findByEmail(cliente.getEmail()) != null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -75,7 +76,7 @@ public class ClienteController {
 
 	}
 
-	// Perfil de cliente
+	// GET - Perfil de cliente
 	@RequestMapping(method = RequestMethod.GET, value = "/perfil-cliente/{idCliente}")
 	public ModelAndView profile(HttpServletRequest request, @PathVariable("idCliente") long idCliente) {
 		ModelAndView mav = new ModelAndView();
@@ -92,8 +93,8 @@ public class ClienteController {
 		return mav;
 	}
 
-	// lista de Cliente
-	@GetMapping("/list/{idCliente}")
+	// GET - Enviar la lista de Cliente
+	@RequestMapping(method = RequestMethod.GET, value = "/list/{idCliente}")
 	public ModelAndView listUsers(@PathVariable("idCliente") long idCliente, Model theModel) {
 		ModelAndView mav = new ModelAndView();
 		List<Clientes> lCliente = ClienteServer.getAll();
@@ -154,17 +155,21 @@ public class ClienteController {
 
 		if (cliente != null) {
 			List<Banco> listaBanco = bancoServer.findByCliente(cliente);
-			List<Compra> compra = compraServer.findByCliente(cliente);
-
+			
+			//si dentro del banco existe el cliente.
 			if (listaBanco != null) {
 				for (int i = 0; i < listaBanco.size(); i++) {
 					bancoServer.delete(listaBanco.get(i).getIdBanco());
 				}
 			}
+			
+			List<Compra> compra = compraServer.findByCliente(cliente);
 
 			if (compra != null) {
 				for (int i = 0; i < compra.size(); i++) {
+					
 					List<LineaCompra> linea = lineaServer.findByCompra(compra.get(i));
+					
 					if (linea != null) {
 						for (int j = 0; j < linea.size(); j++) {
 							linea.get(i).setProductos(null);
@@ -173,6 +178,7 @@ public class ClienteController {
 								lineaServer.delete(linea.get(j).getIdLineaCompra());
 							}
 						}
+						
 						compra.get(i).setClientes(null);
 						Compra compMod = compraServer.update(compra.get(i));
 						if (compMod != null) {
@@ -188,6 +194,7 @@ public class ClienteController {
 			}
 
 			List<Clientes> listaCliente = ClienteServer.getAll();
+			
 			mav.addObject("listaCategoria", categoriaServer.getAll());
 			mav.addObject("listaCliente", listaCliente);
 			mav.setViewName("list-cliente");

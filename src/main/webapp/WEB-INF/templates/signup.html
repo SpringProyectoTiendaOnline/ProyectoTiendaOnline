@@ -38,7 +38,7 @@
 								<label for="nombre" class="col-form-label">Nombre : </label> <input
 									type="text" th:field="*{nombre}" class="form-control"
 									id="nombre" name="nombre" placeholder="Nombre" required
-									pattern="[A-Za-z]*{3,40}" minlength="3" maxlength="40"
+									pattern="[A-Za-z]{3,40}" minlength="3" maxlength="40"
 									title="Sólo letras, carácter mínimo: 3. carácter máximo: 40">
 							</div>
 
@@ -46,7 +46,7 @@
 								<label for="apellido" class="col-form-label">Apellido :
 								</label> <input type="text" th:field="*{apellido}" class="form-control"
 									id="apellido" name="apellido" placeholder="Apellido" required
-									pattern="[A-Za-z]*{3,40}" minlength="3" maxlength="40"
+									pattern="[A-Za-z]{3,40}" minlength="3" maxlength="40"
 									title="Sólo letras, carácter mínimo: 3. carácter máximo: 40">
 
 							</div>
