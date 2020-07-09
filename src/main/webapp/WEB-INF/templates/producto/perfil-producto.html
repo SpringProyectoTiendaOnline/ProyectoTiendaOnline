@@ -68,7 +68,6 @@
 							<!-- case * imagen -->
 							<div class="mdb-lightbox">
 								<figure class="col-md-4">
-									<!--  <a th:href=${imagen.urlImagen} data-size="1600x1067">-->
 									<div th:each="imagen : ${Producto.imagen}">
 										<img alt="picture"
 											th:src="@{/ImagenProducto/imagen/{idProducto}/{idImagen}(idProducto=${Producto.idProducto}, idImagen=${imagen.idImagen})}"
@@ -97,7 +96,7 @@
 						<div sec:authorize="hasAuthority('ROL_ADMIN')">
 							<!-- Añadir imagen -->
 							<button type="button" class="btn btn-primary" data-toggle="modal"
-								data-target="#addImagenes">Modificación Imágenes</button>
+								data-target="#addImagenes">Modificar Imágenes</button>
 
 							<form action="#" id="uploadFile"
 								th:action="@{/ImagenProducto/action-imagenProducto/{idProducto}(idProducto=${Producto.idProducto})}"
@@ -261,15 +260,21 @@
 						<div class="alert alert-info" th:if="${Producto.stock == 0 }">El
 							producto está agotado !</div>
 
+						<br />
+
+						<div class="avisoCarrito" id="avisoCarrito"></div>
 
 						<div
 							sec:authorize="hasAuthority('ROL_Usuario') || hasAuthority('ROL_ADMIN')"
 							th:if="${Producto.stock > 0}">
-							<a href="#"
-								th:href="@{/Compra/comprarProducto/{idCliente}/{idProducto}(idCliente = ${session.idUsuario}, idProducto = ${Producto.idProducto})}">
-								<button type="button" class="btn btn-outline-success">
-									Añadir al Carrito</button>
-							</a>
+
+							<div class="col-md-4">
+								<button type="submit"
+									class="btn btn-lg btn-primary btn-block addCarrito"
+									id="addCarrito">Añadir al Carrito</button>
+							</div>
+
+							<script th:src="@{/js/accionCompraCarrito.js}"></script>
 						</div>
 
 

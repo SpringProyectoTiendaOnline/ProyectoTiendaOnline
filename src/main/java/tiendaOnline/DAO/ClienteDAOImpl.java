@@ -53,11 +53,15 @@ public class ClienteDAOImpl extends GenericDaoImpl<Clientes> implements ClienteD
 
 	@Override
 	public List<Clientes> getAll() {
-		Query query = this.em.createQuery("From Clientes");
-		@SuppressWarnings("unchecked")
-		List<Clientes> listaCliente = query.getResultList();
-		if (listaCliente != null) {
-			return listaCliente;
+		try {
+			Query query = this.em.createQuery("From Clientes");
+			@SuppressWarnings("unchecked")
+			List<Clientes> listaCliente = query.getResultList();
+			if (listaCliente != null) {
+				return listaCliente;
+			}
+		} catch (Exception e) {
+			return null;
 		}
 		return null;
 	}

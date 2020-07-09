@@ -1,13 +1,11 @@
 package tiendaOnline.Controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -15,12 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tiendaOnline.DAO.EstadoRepository;
@@ -34,7 +36,6 @@ import tiendaOnline.Server.BancoServer;
 import tiendaOnline.Server.CategoriaServer;
 import tiendaOnline.Server.ClienteServer;
 import tiendaOnline.Server.CompraServer;
-import tiendaOnline.Server.ImagenProductoServer;
 import tiendaOnline.Server.LineaDeCompraServer;
 import tiendaOnline.Server.ProductoServer;
 
@@ -55,8 +56,6 @@ public class CompraController {
 	@Autowired
 	private EstadoRepository estado;
 	@Autowired
-	private ImagenProductoServer imagenServer;
-	@Autowired
 	private CategoriaServer categoriaServer;
 
 	@GetMapping("/show-carrito/{idCliente}")
@@ -68,10 +67,10 @@ public class CompraController {
 		return mav;
 	}
 
-	@GetMapping("/comprarProducto/{idCliente}/{idProducto}")
-	public ModelAndView comprarProducto(HttpServletRequest request, @PathVariable("idCliente") long idCliente,
-			@PathVariable("idProducto") long idProducto) {
-		ModelAndView mav = new ModelAndView();
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(method = RequestMethod.POST, value = "/comprarProducto/{idCliente}/{idProducto}")
+	public @ResponseBody ResponseEntity comprarProducto(HttpServletRequest request,
+			@PathVariable("idCliente") long idCliente, @PathVariable("idProducto") long idProducto) {
 		HttpSession sesion = request.getSession(true);
 
 		Productos producto = productoServer.findById(idProducto);
@@ -120,14 +119,19 @@ public class CompraController {
 				}
 			}
 			sesion.setAttribute("sessionCarrito", carrito);
+			return new ResponseEntity<>(HttpStatus.OK);
+
 		}
+		
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-		mav.addObject("listaCategoria", categoriaServer.getAll());
-		mav.addObject("Producto", producto);
-		mav.addObject("ListaImagen", imagenServer.findByProducto(producto));
-		mav.setViewName("producto/perfil-producto");
+		/*
+		 * mav.addObject("listaCategoria", categoriaServer.getAll());
+		 * mav.addObject("Producto", producto); mav.addObject("ListaImagen",
+		 * imagenServer.findByProducto(producto));
+		 * mav.setViewName("producto/perfil-producto");
+		 */
 
-		return mav;
 	}
 
 	// Eliminar el producto desde el carrito
