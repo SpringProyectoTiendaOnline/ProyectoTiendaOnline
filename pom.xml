@@ -40,7 +40,7 @@
 		<hibernate.version>5.4.12.Final</hibernate.version>
 		<hibernate.validator>6.1.2.Final</hibernate.validator>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-		<mysql.connector.version>8.0.19</mysql.connector.version>
+		<mysql.connector.version>8.0.28</mysql.connector.version>
 		<spring.security.version>5.3.0.RELEASE</spring.security.version>
 		<thymeleaf.spring-security.version>3.0.4.RELEASE</thymeleaf.spring-security.version>
 		<javax.api.anotacion.validation.version>3.0.0</javax.api.anotacion.validation.version>
