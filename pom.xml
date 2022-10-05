@@ -46,7 +46,7 @@
 		<javax.api.anotacion.validation.version>3.0.0</javax.api.anotacion.validation.version>
 		<javax.api.validation.version>2.0.0.Final</javax.api.validation.version>
 		<javax.glassfish.validation.version>2.2.6</javax.glassfish.validation.version>
-		<jaction.xml.version>2.10.2</jaction.xml.version>
+		<jaction.xml.version>2.12.6.1</jaction.xml.version>
 
 	</properties>
 
